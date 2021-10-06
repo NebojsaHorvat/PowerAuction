@@ -27,6 +27,7 @@ public class CreateAssetFlow extends FlowLogic<SignedTransaction> {
     private final String title;
     private final String description;
     private final String imageURL;
+    private final LocalDateTime expires;
 
     /**
      * Constructor to initialise flows parameters received from rpc.
@@ -35,10 +36,11 @@ public class CreateAssetFlow extends FlowLogic<SignedTransaction> {
      * @param description of the asset to be issued in ledger
      * @param imageURL is a url of an image of the asset
      */
-    public CreateAssetFlow(String title, String description, String imageURL) {
+    public CreateAssetFlow(String title, String description, String imageURL, LocalDateTime expires) {
         this.title = title;
         this.description = description;
         this.imageURL = imageURL;
+        this.expires = expires;
     }
 
 
@@ -54,11 +56,11 @@ public class CreateAssetFlow extends FlowLogic<SignedTransaction> {
         final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0); // METHOD 1
         // final Party notary = getServiceHub().getNetworkMapCache().getNotary(CordaX500Name.parse("O=Notary,L=London,C=GB")); // METHOD 2
 
-        // TODO require date from client
-        LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
+
+//        LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
         // Create the output states
         Asset output = new Asset(new UniqueIdentifier(), title, description, imageURL,
-                getOurIdentity(), expires.atZone(ZoneId.systemDefault()).toInstant(),false, null);
+                getOurIdentity(), expires.atZone(ZoneId.systemDefault()).toInstant(),false, false);
 
         // Build the transaction, add the output states and the command to the transaction.
         TransactionBuilder transactionBuilder = new TransactionBuilder(notary)

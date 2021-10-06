@@ -1,0 +1,5 @@
+run vaultQuery contractStateType: net.corda.samples.auction.states.Asset
+
+run vaultQuery contractStateType: net.corda.samples.auction.states.AuctionState
+
+run gracefulShutdown

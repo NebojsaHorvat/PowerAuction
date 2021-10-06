@@ -53,7 +53,8 @@ public class FlowTests {
 
     @Test
     public void testCreateAssetFlow() throws Exception {
-        CreateAssetFlow flow = new CreateAssetFlow("Test Asset", "Dummy Asset", "http://abc.com/dummy.png");
+        LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
+        CreateAssetFlow flow = new CreateAssetFlow("Test Asset", "Dummy Asset", "http://abc.com/dummy.png",expires);
         CordaFuture<SignedTransaction> future = a.startFlow(flow);
         network.runNetwork();
         SignedTransaction signedTransaction = future.get();
@@ -63,7 +64,8 @@ public class FlowTests {
 
     @Test
     public void testCreateAuctionFlow() throws Exception {
-        CreateAssetFlow assetflow = new CreateAssetFlow("Test Asset", "Dummy Asset", "http://abc.com/dummy.png");
+        LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
+        CreateAssetFlow assetflow = new CreateAssetFlow("Test Asset", "Dummy Asset", "http://abc.com/dummy.png",expires);
         CordaFuture<SignedTransaction> future = a.startFlow(assetflow);
         network.runNetwork();
         SignedTransaction signedTransaction = future.get();

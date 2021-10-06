@@ -60,8 +60,10 @@ public class Controller {
     @PostMapping("asset/create")
     public APIResponse<Void> createAsset(@RequestBody Forms.AssetForm assetForm){
         try{
+            // TODO izmeni da se vreme uzima iz forme
+            LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
             activeParty.startFlowDynamic(CreateAssetFlow.class, assetForm.getTitle(), assetForm.getDescription(),
-                    assetForm.getImageUrl()).getReturnValue().get();
+                    assetForm.getImageUrl(),expires).getReturnValue().get();
             return APIResponse.success();
         }catch(Exception e){
             return APIResponse.error(e.getMessage());
@@ -206,6 +208,7 @@ public class Controller {
     @PostMapping("setup")
     public APIResponse<Void> setupDemoData(){
         try {
+            LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
             partyAProxy.startFlowDynamic(CreateAssetFlow.class,
                     "Mona Lisa",
                     "The most famous painting in the world, a masterpiece by Leonardo da Vinci, the mysterious woman with " +
@@ -213,14 +216,14 @@ public class Controller {
                             "Florence merchant Francesco del Giocondo. It did represent an innovation in art -- the painting" +
                             " is the earliest known Italian portrait to focus so closely on the sitter in a half-length " +
                             "portrait.",
-                    "img/Mona_Lisa.jpg");
+                    "img/Mona_Lisa.jpg",expires);
 
             partyAProxy.startFlowDynamic(CreateAssetFlow.class,
                     "The Last Supper",
                     "Yet another masterpiece by Leonardo da Vinci, painted in an era when religious imagery was still " +
                             "a dominant artistic theme, \"The Last Supper\" depicts the last time Jesus broke bread with " +
                             "his disciples before his crucifixion.",
-                    "img/The_Last_Supper.jpg");
+                    "img/The_Last_Supper.jpg",expires);
 
 
             partyBProxy.startFlowDynamic(CreateAssetFlow.class,
@@ -228,14 +231,14 @@ public class Controller {
                     "Painted by Vincent van Gogh, this comparatively abstract painting is the signature example of " +
                             "van Gogh's innovative and bold use of thick brushstrokes. The painting's striking blues and " +
                             "yellows and the dreamy, swirling atmosphere have intrigued art lovers for decades.",
-                    "img/The_Scary_Night.jpg");
+                    "img/The_Scary_Night.jpg",expires);
 
             partyCProxy.startFlowDynamic(CreateAssetFlow.class,
                     "The Scream",
                     "First things first -- \"The Scream\" is not a single work of art. According to a British Museum's blog," +
                             " there are two paintings, two pastels and then an unspecified number of prints. Date back to " +
                             "the the year 1893, this masterpiece is a work of Edvard Munch",
-                    "img/The_Scream.jpg");
+                    "img/The_Scream.jpg",expires);
 
             activeParty = partyAProxy;
         }catch (Exception e){

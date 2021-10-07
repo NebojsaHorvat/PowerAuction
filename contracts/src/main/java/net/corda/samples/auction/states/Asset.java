@@ -16,8 +16,8 @@ import java.util.List;
  * An ownable states to represent an asset that could be put on auction.
  */
 @BelongsToContract(AssetContract.class)
-//public class Asset implements OwnableState, LinearState, SchedulableState {
-public class Asset implements OwnableState, LinearState {
+public class Asset implements OwnableState, LinearState, SchedulableState {
+//public class Asset implements OwnableState, LinearState {
 
 
     private final UniqueIdentifier linearId;
@@ -100,14 +100,14 @@ public class Asset implements OwnableState, LinearState {
         return linearId;
     }
 
-//    @Nullable
-//    @Override
-//    public ScheduledActivity nextScheduledActivity(@NotNull StateRef thisStateRef, @NotNull FlowLogicRefFactory flowLogicRefFactory) {
-//        if(expired)
-//            return null;
-//
-//        FlowLogicRef flowLogicRef = flowLogicRefFactory.create(
-//                "net.corda.samples.auction.flows.CheckDeliveryFlow.CheckDeliveryInitiator", linearId);
-//        return new ScheduledActivity(flowLogicRef, deliveryTime);
-//    }
+    @Nullable
+    @Override
+    public ScheduledActivity nextScheduledActivity(@NotNull StateRef thisStateRef, @NotNull FlowLogicRefFactory flowLogicRefFactory) {
+        if(expired)
+            return null;
+
+        FlowLogicRef flowLogicRef = flowLogicRefFactory.create(
+                "net.corda.samples.auction.flows.CheckDeliveryFlow.CheckDeliveryInitiator", thisStateRef);
+        return new ScheduledActivity(flowLogicRef, deliveryTime);
+    }
 }

@@ -2,6 +2,7 @@ package net.corda.samples.auction.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.StateAndRef;
+import net.corda.core.contracts.StateRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
@@ -23,13 +24,13 @@ public class CheckDeliveryFlow {
     @SchedulableFlow
     @InitiatingFlow
     public static class CheckDeliveryInitiator extends FlowLogic<SignedTransaction>{
-        private final UniqueIdentifier promiseId;
+        private final StateRef promiseRef;
 
         /**
-         * @param promiseId is the unique identifier of the promise which delivery is being checked .
+         * @param promiseRef is the unique identifier of the promise which delivery is being checked .
          */
-        public CheckDeliveryInitiator(UniqueIdentifier promiseId) {
-            this.promiseId = promiseId;
+        public CheckDeliveryInitiator(StateRef promiseRef) {
+            this.promiseRef = promiseRef;
         }
 
         @Override
@@ -39,12 +40,14 @@ public class CheckDeliveryFlow {
             // Query the vault to fetch a list of all AuctionState state, and filter the results based on the auctionId
             // to fetch the desired AuctionState state from the vault. This filtered state would be used as input to the
             // transaction.
-            List<StateAndRef<Asset>> assetStateAndRefs = getServiceHub().getVaultService()
-                    .queryBy(Asset.class).getStates();
-            StateAndRef<Asset> inputStateAndRef = assetStateAndRefs.stream().filter(assetStateAndRef -> {
-                Asset asset = assetStateAndRef.getState().getData();
-                return asset.getLinearId().toString().equals(this.promiseId.toString());
-            }).findAny().orElseThrow(() -> new IllegalArgumentException("Asset with id "+promiseId.toString()+" Not Found"));
+//            List<StateAndRef<Asset>> assetStateAndRefs = getServiceHub().getVaultService()
+//                    .queryBy(Asset.class).getStates();
+//            StateAndRef<Asset> inputStateAndRef = assetStateAndRefs.stream().filter(assetStateAndRef -> {
+//                Asset asset = assetStateAndRef.getState().getData();
+//                return asset.getLinearId().toString().equals(this.promiseId.toString());
+//            }).findAny().orElseThrow(() -> new IllegalArgumentException("Asset with id "+promiseId.toString()+" Not Found"));
+
+            StateAndRef<Asset> inputStateAndRef = getServiceHub().toStateAndRef(promiseRef);
 
             //get the notary from the input state.
             Party notary = inputStateAndRef.getState().getNotary();

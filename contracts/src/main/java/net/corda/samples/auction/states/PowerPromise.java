@@ -4,19 +4,24 @@ import net.corda.core.contracts.*;
 import net.corda.core.flows.FlowLogicRef;
 import net.corda.core.flows.FlowLogicRefFactory;
 import net.corda.core.identity.AbstractParty;
-import net.corda.samples.auction.contracts.AssetContract;
+import net.corda.core.identity.Party;
+import net.corda.samples.auction.contracts.PowerPromiseContract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * An ownable states to represent an asset that could be put on auction.
  */
-@BelongsToContract(AssetContract.class)
-public class Asset implements OwnableState, LinearState, SchedulableState {
+@BelongsToContract(PowerPromiseContract.class)
+public class PowerPromise implements OwnableState, LinearState, SchedulableState {
 //public class Asset implements OwnableState, LinearState {
 
 
@@ -25,21 +30,31 @@ public class Asset implements OwnableState, LinearState, SchedulableState {
     private final String description;
     private final String imageUrl;
     private final AbstractParty owner;
+    private final Party supplier;
+
 
     private final Instant deliveryTime;
     private final Boolean expired;
     private final Boolean delivered;
+    private final Double powerSuppliedInKW;
+    private final Double powerSupplyDurationInMin;
+    private final Double powerProducedInKWh;
 
-    public Asset(UniqueIdentifier linearId, String title, String description, String imageUrl,
-                 AbstractParty owner, Instant deliveryTime, Boolean expired, Boolean delivered) {
+    public PowerPromise(UniqueIdentifier linearId, String title, String description, String imageUrl,
+                        AbstractParty owner, Party supplier, Instant deliveryTime, Boolean expired, Boolean delivered,
+                        Double powerSuppliedInKW, Double powerSupplyDurationInMin) {
         this.linearId = linearId;
-        this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;
         this.owner = owner;
+        this.supplier = supplier;
         this.deliveryTime = deliveryTime;
         this.expired = expired;
         this.delivered = delivered;
+        this.powerSuppliedInKW = powerSuppliedInKW;
+        this.powerSupplyDurationInMin = powerSupplyDurationInMin;
+        this.powerProducedInKWh = powerSuppliedInKW*powerSupplyDurationInMin/60;
+        this.title = title;
     }
 
     @NotNull
@@ -65,9 +80,10 @@ public class Asset implements OwnableState, LinearState, SchedulableState {
     @NotNull
     @Override
     public CommandAndState withNewOwner(@NotNull AbstractParty newOwner) {
-        return new CommandAndState(new AssetContract.Commands.TransferAsset(),
-                new Asset(this.getLinearId(), this.getTitle(), this.getDescription(),
-                        this.getImageUrl(), newOwner, this.deliveryTime, this.expired,this.delivered ));
+        return new CommandAndState(new PowerPromiseContract.Commands.TransferPowerPromise(),
+                new PowerPromise(this.getLinearId(), this.getTitle() , this.getDescription(),
+                        this.getImageUrl(), newOwner, this.supplier , this.deliveryTime, this.expired,this.delivered, this.powerSuppliedInKW,
+                        this.powerSupplyDurationInMin));
     }
 
     public String getTitle() {
@@ -92,6 +108,22 @@ public class Asset implements OwnableState, LinearState, SchedulableState {
 
     public Boolean getDelivered() {
         return delivered;
+    }
+
+    public Double getPowerSuppliedInKW() {
+        return powerSuppliedInKW;
+    }
+
+    public Double getPowerSupplyDurationInMin() {
+        return powerSupplyDurationInMin;
+    }
+
+    public Double getPowerProducedInKWh() {
+        return powerProducedInKWh;
+    }
+
+    public Party getSupplier() {
+        return supplier;
     }
 
     @NotNull

@@ -7,7 +7,7 @@ import net.corda.core.node.NetworkParameters;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.samples.auction.flows.CreateAssetFlow;
 import net.corda.samples.auction.flows.CreateAuctionFlow;
-import net.corda.samples.auction.states.Asset;
+import net.corda.samples.auction.states.PowerPromise;
 import net.corda.samples.auction.states.AuctionState;
 import net.corda.testing.node.MockNetwork;
 import net.corda.testing.node.MockNetworkParameters;
@@ -54,24 +54,24 @@ public class FlowTests {
     @Test
     public void testCreateAssetFlow() throws Exception {
         LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
-        CreateAssetFlow flow = new CreateAssetFlow("Test Asset", "Dummy Asset", "http://abc.com/dummy.png",expires);
+        CreateAssetFlow flow = new CreateAssetFlow("Test Asset", "Dummy Asset", "http://abc.com/dummy.png",expires,11.1,11.1);
         CordaFuture<SignedTransaction> future = a.startFlow(flow);
         network.runNetwork();
         SignedTransaction signedTransaction = future.get();
-        Asset asset = (Asset) signedTransaction.getTx().getOutput(0);
-        assertNotNull(asset);
+        PowerPromise powerPromise = (PowerPromise) signedTransaction.getTx().getOutput(0);
+        assertNotNull(powerPromise);
     }
 
     @Test
     public void testCreateAuctionFlow() throws Exception {
         LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
-        CreateAssetFlow assetflow = new CreateAssetFlow("Test Asset", "Dummy Asset", "http://abc.com/dummy.png",expires);
+        CreateAssetFlow assetflow = new CreateAssetFlow("Test Asset", "Dummy Asset", "http://abc.com/dummy.png",expires,11.1,11.1);
         CordaFuture<SignedTransaction> future = a.startFlow(assetflow);
         network.runNetwork();
         SignedTransaction signedTransaction = future.get();
-        Asset asset = (Asset) signedTransaction.getTx().getOutput(0);
+        PowerPromise powerPromise = (PowerPromise) signedTransaction.getTx().getOutput(0);
         CreateAuctionFlow.CreateAuctionInitiator auctionFlow = new CreateAuctionFlow.CreateAuctionInitiator(Amount.parseCurrency("1000 USD"),
-                asset.getLinearId().getId(), LocalDateTime.ofInstant(Instant.now().plusMillis(30000), ZoneId.systemDefault()));
+                powerPromise.getLinearId().getId(), LocalDateTime.ofInstant(Instant.now().plusMillis(30000), ZoneId.systemDefault()));
         CordaFuture<SignedTransaction> future1 = a.startFlow(auctionFlow);
         network.runNetwork();
         SignedTransaction transaction = future1.get();

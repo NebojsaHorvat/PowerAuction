@@ -8,7 +8,7 @@ import net.corda.core.utilities.OpaqueBytes;
 import net.corda.finance.contracts.asset.Cash;
 import net.corda.finance.flows.CashIssueAndPaymentFlow;
 import net.corda.samples.auction.flows.*;
-import net.corda.samples.auction.states.Asset;
+import net.corda.samples.auction.states.PowerPromise;
 import net.corda.samples.auction.states.AuctionState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -48,9 +48,9 @@ public class Controller {
     }
 
     @GetMapping("asset/list")
-    public APIResponse<List<StateAndRef<Asset>>> getAssetList(){
+    public APIResponse<List<StateAndRef<PowerPromise>>> getAssetList(){
         try{
-            List<StateAndRef<Asset>> assetList = activeParty.vaultQuery(Asset.class).getStates();
+            List<StateAndRef<PowerPromise>> assetList = activeParty.vaultQuery(PowerPromise.class).getStates();
             return APIResponse.success(assetList);
         }catch(Exception e){
             return APIResponse.error(e.getMessage());
@@ -209,36 +209,50 @@ public class Controller {
     public APIResponse<Void> setupDemoData(){
         try {
             LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
+            Double powerSuppliedInKW = 11.1;
+            Double powerSupplyDurationInMin = 120.0;
+            String title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             partyAProxy.startFlowDynamic(CreateAssetFlow.class,
-                    "Mona Lisa",
+                    "10 KW/h 01.11.2021.",
                     "The most famous painting in the world, a masterpiece by Leonardo da Vinci, the mysterious woman with " +
                             "the enigmatic smile. The sitter in the painting is thought to be Lisa Gherardini, the wife of " +
                             "Florence merchant Francesco del Giocondo. It did represent an innovation in art -- the painting" +
                             " is the earliest known Italian portrait to focus so closely on the sitter in a half-length " +
                             "portrait.",
-                    "img/Mona_Lisa.jpg",expires);
-
+                    "img/power.jpg",expires,11.1,11.1);
+            powerSuppliedInKW = 55.0;
+            powerSupplyDurationInMin = 60.0;
+            title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             partyAProxy.startFlowDynamic(CreateAssetFlow.class,
-                    "The Last Supper",
+                    "1000 KW/h 12.12.2021.",
                     "Yet another masterpiece by Leonardo da Vinci, painted in an era when religious imagery was still " +
                             "a dominant artistic theme, \"The Last Supper\" depicts the last time Jesus broke bread with " +
                             "his disciples before his crucifixion.",
-                    "img/The_Last_Supper.jpg",expires);
+                    "img/power.jpg",expires,11.1,11.1);
 
-
+            powerSuppliedInKW = 999.0;
+            powerSupplyDurationInMin = 60.0;
+            title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             partyBProxy.startFlowDynamic(CreateAssetFlow.class,
-                    "The Starry Night",
+                    "111 KW/h 9.11.2021.",
                     "Painted by Vincent van Gogh, this comparatively abstract painting is the signature example of " +
                             "van Gogh's innovative and bold use of thick brushstrokes. The painting's striking blues and " +
                             "yellows and the dreamy, swirling atmosphere have intrigued art lovers for decades.",
-                    "img/The_Scary_Night.jpg",expires);
+                    "img/power.jpg",expires,11.1,11.1);
 
+            powerSuppliedInKW = 10000.0;
+            powerSupplyDurationInMin = 120.0;
+            title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             partyCProxy.startFlowDynamic(CreateAssetFlow.class,
-                    "The Scream",
+                    title,
                     "First things first -- \"The Scream\" is not a single work of art. According to a British Museum's blog," +
                             " there are two paintings, two pastels and then an unspecified number of prints. Date back to " +
                             "the the year 1893, this masterpiece is a work of Edvard Munch",
-                    "img/The_Scream.jpg",expires);
+                    "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
 
             activeParty = partyAProxy;
         }catch (Exception e){

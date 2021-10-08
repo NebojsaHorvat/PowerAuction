@@ -10,15 +10,15 @@ It has a full-functional client included and an angular UI to interact with the 
 
 ### States
 
-- `Asset`: It is an `OwnableState` that represents an asset that could be put on auction. The owner
-of the asset should be able to put this asset on an auction.
+- `Asset`: It is an `OwnableState` that represents an powerPromise that could be put on auction. The owner
+of the powerPromise should be able to put this powerPromise on an auction.
 
 - `AuctionState`: It represents the auction. It is designed as a `SchedulableState`, such that auction
 could be scheduled to be made inactive, once the auction deadline is reached.
 
 ### Contracts:
 
-- `AssetContract`: It is used to govern the evolution of the asset. In this case mostly change of
+- `AssetContract`: It is used to govern the evolution of the powerPromise. In this case mostly change of
 ownership. Left black for simplicity. Has two commands, `CreateAsset` and `TransferAsset`.
 
 - `AuctionContract`: It governs the evolution of the auction. The has the following commands:
@@ -30,17 +30,17 @@ ownership. Left black for simplicity. Has two commands, `CreateAsset` and `Trans
   - `EndAuction`: Validation rules governing end of the auction i.e making the auction inactive
     once the auction bidding deadline has been reached.
 
-  - `Settlement`: Validation rules for settlement of the auction i.e. transfer of asset to the
+  - `Settlement`: Validation rules for settlement of the auction i.e. transfer of powerPromise to the
     highest bidder and the highest bid amount transfer to the auctioneer.
 
   - `Exit`: Rules governing the exit (consumption/deletion) of the auction state.
 
 ### Flows:
 
-- `CreateAssetFlow`: This flow is used create an asset. Implemented in `CreateAssetFlow.java`
+- `CreateAssetFlow`: This flow is used create an powerPromise. Implemented in `CreateAssetFlow.java`
 
-- `CreateAuctionFlow`: This flow is used to create an auction. Once an asset has been created using
-the`CreateAssetFlow`, this flow can be used to put the asset on auction. The `AuctionState`
+- `CreateAuctionFlow`: This flow is used to create an auction. Once an powerPromise has been created using
+the`CreateAssetFlow`, this flow can be used to put the powerPromise on auction. The `AuctionState`
 references to the `Asset` using a `StatePointer`.
 
 Refer here to learn more about StatePointer: https://medium.com/corda/linking-corda-states-using-statepointer-16e24e5e602
@@ -54,7 +54,7 @@ the corresponding auction as inactive, so that it stop receiving bids.
 - `AuctionSettlementFlow`: It is used to settle an auction once the bidding deadline has passed. It internally triggers two flows:
 
   - `AuctionDvPFlow`: This flow takes care of the dvp operation for settlement of the auction. It
-    transfers the asset on auction to the highest bidder and the highest bid amount is transferred to
+    transfers the powerPromise on auction to the highest bidder and the highest bid amount is transferred to
     the auctioneer. It happens as an atomic transaction.
 
   - `AuctionExitFlow`: Once the auction us settled, this flow is used to exit the auction state. This
@@ -94,13 +94,13 @@ may use the skip button if you wish to setup the deata yourself.
 
 2. The demo data setup would have created some assets from each of the parties. The assets
 can be found under MyAssets Section. These assets could be put on auction. New assets can
-be create using the create asset button.
+be create using the create powerPromise button.
 The drop down at the top right corner can be used to toggle between parties.
 The balance next to it indicates the current active parties cash balance. Cash can be
 issued using the Issue Cash Button.
 ![Landing Page](./snaps/landing.png)
 
-3. Click on an asset to put it on auction. Input the `Base Price` and the `Auction Deadline`
+3. Click on an powerPromise to put it on auction. Input the `Base Price` and the `Auction Deadline`
 and click in the Create Auction button to Create the Auction.
 ![Create Auction](./snaps/CreateAuction.png)
 
@@ -126,8 +126,8 @@ highest bidder. Considering PartyC is the highest bidder, switch to PartyC.
 
 Notice the below things that would happed on auction settlement:
 
-- Auctioned Assets ownership would be transferred to the highest bidder. The asset would
-now appear in the auction winners asset list (My Assets section).
+- Auctioned Assets ownership would be transferred to the highest bidder. The powerPromise would
+now appear in the auction winners powerPromise list (My Assets section).
 - The auctioneers cash balance would be credited with amount equivalent to the highest bid.
 - The highest bidders (PartyC in this case) cash balance would also be debited with amount
 equivalent to the highest bid.

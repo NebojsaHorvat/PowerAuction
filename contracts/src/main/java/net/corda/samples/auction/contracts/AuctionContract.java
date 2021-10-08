@@ -4,7 +4,7 @@ import net.corda.core.contracts.Command;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
 import net.corda.core.transactions.LedgerTransaction;
-import net.corda.samples.auction.states.Asset;
+import net.corda.samples.auction.states.PowerPromise;
 import net.corda.samples.auction.states.AuctionState;
 
 // ************
@@ -90,7 +90,7 @@ public class AuctionContract implements Contract {
     private void verifyExit(LedgerTransaction tx){
         Command command = tx.getCommand(0);
         AuctionState auctionState = (AuctionState) tx.getInput(0);
-        Asset asset = (Asset) tx.getReferenceInput(0);
+        PowerPromise powerPromise = (PowerPromise) tx.getReferenceInput(0);
 
         if(auctionState.getActive())
             throw new IllegalArgumentException("Auction is Active");
@@ -101,7 +101,7 @@ public class AuctionContract implements Contract {
                             && command.getSigners().contains(auctionState.getWinner().getOwningKey())))
                 throw new IllegalArgumentException("Auctioneer and Winner must Sign");
 
-            if (!(asset.getOwner().getOwningKey().equals(auctionState.getWinner().getOwningKey())))
+            if (!(powerPromise.getOwner().getOwningKey().equals(auctionState.getWinner().getOwningKey())))
                 throw new IllegalArgumentException("Auction not settled yet");
         }else{
             if (!(command.getSigners().contains(auctionState.getAuctioneer().getOwningKey())))

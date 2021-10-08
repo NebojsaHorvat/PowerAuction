@@ -40,7 +40,7 @@
     <div class="header" ng-show="!appCtrl.landingScreen">
         <div style="display: inline-block;">
             <div class="logo">
-                Auction Demo
+                Power management Prototype
             </div>
             <div style="margin-top: -10px; text-align: center;">Powered by
                 <image class="power-by" src="img/corda.png" alt="Corda"/></div>
@@ -64,7 +64,7 @@
             <span>{{appCtrl.balance}} USD</span>
         </div>
         <div style="display: inline-block; float: right; margin-top: 15px; padding: 5px">
-            <button ng-click="appCtrl.openCreateAssetModal()" class="btn btn-sm btn-primary">New Asset</button>
+            <button ng-click="appCtrl.openCreateAssetModal()" class="btn btn-sm btn-primary">New PowerPromise</button>
         </div>
         <div style="display: inline-block; float: right; margin-top: 15px; padding: 5px">
             <button ng-click="appCtrl.openIssueCashModal()" class="btn btn-sm btn-primary">Issue Cash</button>
@@ -144,7 +144,7 @@
                         <image style="width: 100px;" src="/img/spinner.svg"></image>
                     </div>
                 </div>
-                <div class="col-md-12"><h3>My Assets</h3></div>
+                <div class="col-md-12"><h3>My PowerPromises</h3></div>
                 <div class="col-md-12 nodata" style="font-size:20px;" ng-if="!appCtrl.assets || appCtrl.assets.length == 0">
                     No Assets Found
                 </div>

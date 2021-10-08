@@ -12,7 +12,7 @@ import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.finance.workflows.asset.CashUtils;
-import net.corda.samples.auction.states.Asset;
+import net.corda.samples.auction.states.PowerPromise;
 import net.corda.samples.auction.states.AuctionState;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,8 +70,8 @@ public class AuctionDvPFlow {
 
             // Use the vaultQuery with the previously created queryCriteria to fetch th assetState to be used as input
             // in the transaction.
-            StateAndRef<Asset> assetStateAndRef = getServiceHub().getVaultService().
-                    queryBy(Asset.class, queryCriteria).getStates().get(0);
+            StateAndRef<PowerPromise> assetStateAndRef = getServiceHub().getVaultService().
+                    queryBy(PowerPromise.class, queryCriteria).getStates().get(0);
 
             // Use the withNewOwner() of the Ownable states get the command and the output states to be used in the
             // transaction from ownership transfer of the asset.

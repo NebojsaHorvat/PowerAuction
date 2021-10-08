@@ -3,19 +3,14 @@ package net.corda.samples.auction.flows;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.StateRef;
-import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.samples.auction.contracts.AuctionContract;
-import net.corda.samples.auction.states.Asset;
-import net.corda.samples.auction.states.AuctionState;
+import net.corda.samples.auction.states.PowerPromise;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 
 //Scheduled Flows must be annotated with @SchedulableFlow.
@@ -44,11 +39,11 @@ public class CheckDeliveryFlow extends FlowLogic<SignedTransaction>{
 //                return asset.getLinearId().toString().equals(this.promiseId.toString());
 //            }).findAny().orElseThrow(() -> new IllegalArgumentException("Asset with id "+promiseId.toString()+" Not Found"));
 
-        StateAndRef<Asset> inputStateAndRef = getServiceHub().toStateAndRef(promiseRef);
+        StateAndRef<PowerPromise> inputStateAndRef = getServiceHub().toStateAndRef(promiseRef);
 
         //get the notary from the input state.
         Party notary = inputStateAndRef.getState().getNotary();
-        Asset inputState = inputStateAndRef.getState().getData();
+        PowerPromise inputState = inputStateAndRef.getState().getData();
 
         // Check used to restrict the flow execution to be only done by the auctioneer.
         // TODO promeniti da ovo moze da radi samo onaj ko odrzava mrezu
@@ -57,8 +52,10 @@ public class CheckDeliveryFlow extends FlowLogic<SignedTransaction>{
 
             // Create the output state, mark tge auction as inactive
             // TODO stavi da ovo delievered bude random true/false
-            Asset outputState = new Asset(inputState.getLinearId(),inputState.getTitle(),inputState.getDescription(),
-                    inputState.getImageUrl(),inputState.getOwner(), inputState.getDeliveryTime(), true, true);
+
+            PowerPromise outputState = new PowerPromise(inputState.getLinearId(),inputState.getTitle(),inputState.getDescription(),
+                    inputState.getImageUrl(),inputState.getOwner(),inputState.getSupplier(), inputState.getDeliveryTime(), true, true,
+                    inputState.getPowerSuppliedInKW(), inputState.getPowerSupplyDurationInMin());
 
 
             // Build the transaction.

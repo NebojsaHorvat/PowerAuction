@@ -6,15 +6,14 @@ import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
-import net.corda.samples.auction.contracts.AssetContract;
-import net.corda.samples.auction.states.Asset;
+import net.corda.samples.auction.contracts.PowerPromiseContract;
+import net.corda.samples.auction.states.PowerPromise;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.TimeZone;
 
 
 /**
@@ -28,6 +27,8 @@ public class CreateAssetFlow extends FlowLogic<SignedTransaction> {
     private final String description;
     private final String imageURL;
     private final LocalDateTime expires;
+    private final Double powerSuppliedInKW;
+    private final Double powerSupplyDurationInMin;
 
     /**
      * Constructor to initialise flows parameters received from rpc.
@@ -36,11 +37,15 @@ public class CreateAssetFlow extends FlowLogic<SignedTransaction> {
      * @param description of the asset to be issued in ledger
      * @param imageURL is a url of an image of the asset
      */
-    public CreateAssetFlow(String title, String description, String imageURL, LocalDateTime expires) {
+    // TODO izbaci title i descirption posto su nepotrebni i onda moras menjati i kontroler i fronend
+    public CreateAssetFlow(String title, String description, String imageURL, LocalDateTime expires,
+                           Double powerSuppliedInKW, Double powerSupplyDurationInMin) {
         this.title = title;
         this.description = description;
         this.imageURL = imageURL;
         this.expires = expires;
+        this.powerSupplyDurationInMin = powerSupplyDurationInMin;
+        this.powerSuppliedInKW = powerSuppliedInKW;
     }
 
 
@@ -59,13 +64,16 @@ public class CreateAssetFlow extends FlowLogic<SignedTransaction> {
 
 //        LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
         // Create the output states
-        Asset output = new Asset(new UniqueIdentifier(), title, description, imageURL,
-                getOurIdentity(), expires.atZone(ZoneId.systemDefault()).toInstant(),false, false);
+        String title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
+                DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
+        PowerPromise output = new PowerPromise(new UniqueIdentifier(),title, description, imageURL,
+                getOurIdentity(),getOurIdentity(), expires.atZone(ZoneId.systemDefault()).toInstant(),false, false,
+                powerSuppliedInKW,powerSupplyDurationInMin);
 
         // Build the transaction, add the output states and the command to the transaction.
         TransactionBuilder transactionBuilder = new TransactionBuilder(notary)
                 .addOutputState(output)
-                .addCommand(new AssetContract.Commands.CreateAsset(),
+                .addCommand(new PowerPromiseContract.Commands.CreatePowerPromise(),
                         Arrays.asList(getOurIdentity().getOwningKey())); // Required Signers
 
         // Verify the transaction

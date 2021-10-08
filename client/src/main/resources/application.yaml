@@ -1,10 +1,13 @@
-partyA:
+powerCompany:
   host: localhost:10006
 
-partyB:
+prosumer1:
   host: localhost:10009
 
-partyC:
+prosumer2:
   host: localhost:10012
+
+prosumer3:
+  host: localhost:10015
 
 server.port: 8085

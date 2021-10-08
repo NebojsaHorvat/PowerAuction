@@ -12,7 +12,7 @@ app.controller('AppController', function($http, toastr, $uibModal) {
 
     demoApp.landingScreen = true;
     demoApp.homeScreen = false;
-    demoApp.activeParty = "PartyA";
+    demoApp.activeParty = "prosumer1";
     demoApp.assetMap = {};
     demoApp.balance = 0;
     demoApp.showSpinner = false;
@@ -92,7 +92,8 @@ app.controller('AppController', function($http, toastr, $uibModal) {
           if(response.data && response.data.status){
                 demoApp.assets = [];
                 for(let i in response.data.data){
-                    if(response.data.data[i].state.data.owner.includes(demoApp.activeParty)){
+                    if(response.data.data[i].state.data.owner.toLowerCase().includes(demoApp.activeParty)){
+//                    if(response.data.data[i].state.data.owner.includes(demoApp.activeParty)){
                         demoApp.assets.push(response.data.data[i]);
                     }
                     demoApp.assetMap[response.data.data[i].state.data.linearId.id] = response.data.data[i]
@@ -209,7 +210,7 @@ app.controller('CashModalCtrl', function ($http, $uibModalInstance, $uibModal, d
     const cashModalModel = this;
 
     cashModalModel.form = {};
-    cashModalModel.form.party = "PartyA";
+    cashModalModel.form.party = "prosumer1";
     cashModalModel.issueCash = () => {
         if(cashModalModel.form.amount == undefined){
            toastr.error("Please enter amount to be issued");
@@ -249,7 +250,7 @@ app.controller('AuctionModalCtrl', function ($http, $uibModalInstance, $uibModal
 
     auctionModalModel.placeBid = (auctionId) => {
         auctionModalModel.bidForm.auctionId = auctionId;
-        if(auctionModalModel.auction.state.data.auctioneer.includes(auctionModalModel.activeParty)){
+        if(auctionModalModel.auction.state.data.auctioneer.toLowerCase().includes(auctionModalModel.activeParty)){
            toastr.error("Can't Bid on your own Auction");
            return;
         }

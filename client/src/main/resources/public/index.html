@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Auction Demo Powered By Corda</title>
+    <title>Power management prototype</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
@@ -42,8 +42,6 @@
             <div class="logo">
                 Power management Prototype
             </div>
-            <div style="margin-top: -10px; text-align: center;">Powered by
-                <image class="power-by" src="img/corda.png" alt="Corda"/></div>
         </div>
         <div style="display: inline-block;float: right;margin: 15px 0;padding: 0 5px;">
             <div class="dropdown">
@@ -53,9 +51,10 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-                    <li><a href="#" ng-show="appCtrl.activeParty != 'PartyA'" ng-click="appCtrl.switchParty('PartyA')">Party A</a></li>
-                    <li><a href="#" ng-show="appCtrl.activeParty != 'PartyB'" ng-click="appCtrl.switchParty('PartyB')">Party B</a></li>
-                    <li><a href="#" ng-show="appCtrl.activeParty != 'PartyC'" ng-click="appCtrl.switchParty('PartyC')">Party C</a></li>
+                    <li><a href="#" ng-show="appCtrl.activeParty != 'powerCompany'" ng-click="appCtrl.switchParty('powerCompany')">Power company</a></li>
+                    <li><a href="#" ng-show="appCtrl.activeParty != 'prosumer1'" ng-click="appCtrl.switchParty('prosumer1')">Prosumer 1</a></li>
+                    <li><a href="#" ng-show="appCtrl.activeParty != 'prosumer2'" ng-click="appCtrl.switchParty('prosumer2')">Prosumer 2</a></li>
+                    <li><a href="#" ng-show="appCtrl.activeParty != 'prosumer3'" ng-click="appCtrl.switchParty('prosumer3')">Prosumer 3</a></li>
                 </ul>
             </div>
         </div>
@@ -85,7 +84,7 @@
                     <div class ="home-btns">
                         <div class="title">Auction Demo</div>
                         <button class="btn btn-primary" ng-click="appCtrl.setupData()">Setup Demo Data</button>
-                        <button class="btn btn-secondary" ng-click="appCtrl.skipDataSetup('PartyA')">Skip</button>
+                        <button class="btn btn-secondary" ng-click="appCtrl.skipDataSetup('prosumer1')">Skip</button>
                     </div>
                 </div>
                 <div class="col-md-1"></div>
@@ -144,9 +143,9 @@
                         <image style="width: 100px;" src="/img/spinner.svg"></image>
                     </div>
                 </div>
-                <div class="col-md-12"><h3>My PowerPromises</h3></div>
+                <div class="col-md-12"><h3>My Power Promises</h3></div>
                 <div class="col-md-12 nodata" style="font-size:20px;" ng-if="!appCtrl.assets || appCtrl.assets.length == 0">
-                    No Assets Found
+                    No Power Promises Found
                 </div>
                 <div class="col-md-3" ng-repeat="asset in appCtrl.assets">
                     <div class="box-wrapper">
@@ -210,9 +209,10 @@
             <div class="form-group">
                 <label for="partySelector">Issue to</label>
                 <select class="form-control" id="partySelector" ng-model="cashModalCtrl.form.party">
-                    <option value="PartyA">Party A</option>
-                    <option value="PartyB">Party B</option>
-                    <option value="PartyC">Party C</option>
+                    <option value="powerCompany">Power Company</option>
+                    <option value="prosumer1">Prosumer 1</option>
+                    <option value="prosumer2">Prosumer 2</option>
+                    <option value="prosumer3">Prosumer 3</option>
                 </select>
             </div>
         </div>
@@ -281,10 +281,10 @@
                                 </div>
                                 <div style="text-align: right;">
                                     <button ng-click="auctionModalCtrl.cancel()" type="button" class="btn btn-default">Close</button>
-                                    <button ng-if="auctionModalCtrl.auction.state.data.winner && auctionModalCtrl.auction.state.data.winner.includes(auctionModalCtrl.activeParty)"
+                                    <button ng-if="auctionModalCtrl.auction.state.data.winner && auctionModalCtrl.auction.state.data.winner.toLowerCase().includes(auctionModalCtrl.activeParty)"
                                             ng-click="auctionModalCtrl.payAndSettle()"
                                             type="button" class="btn btn-primary">Pay & Settle</button>
-                                    <button ng-if="!auctionModalCtrl.auction.state.data.winner && auctionModalCtrl.auction.state.data.auctioneer.includes(auctionModalCtrl.activeParty)"
+                                    <button ng-if="!auctionModalCtrl.auction.state.data.winner && auctionModalCtrl.auction.state.data.auctioneer.toLowerCase().includes(auctionModalCtrl.activeParty)"
                                             ng-click="auctionModalCtrl.exit()"
                                             type="button" class="btn btn-primary">Delete</button>
                                 </div>

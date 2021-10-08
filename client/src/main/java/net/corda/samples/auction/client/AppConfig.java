@@ -14,31 +14,40 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
 
-    @Value("${partyA.host}")
-    private String partyAHostAndPort;
+    @Value("${powerCompany.host}")
+    private String powerCompanyHostAndPort;
 
-    @Value("${partyB.host}")
-    private String partyBHostAndPort;
+    @Value("${prosumer1.host}")
+    private String prosumer1HostAndPort;
 
-    @Value("${partyC.host}")
-    private String partyCHostAndPort;
+    @Value("${prosumer2.host}")
+    private String prosumer2HostAndPort;
+
+    @Value("${prosumer3.host}")
+    private String prosumer3HostAndPort;
 
     @Bean(destroyMethod = "")  // Avoids node shutdown on rpc disconnect
-    public CordaRPCOps partyAProxy(){
-        CordaRPCClient partyAClient = new CordaRPCClient(NetworkHostAndPort.parse(partyAHostAndPort));
-        return partyAClient.start("user1", "test").getProxy();
+    public CordaRPCOps powerCompanyProxy(){
+        CordaRPCClient powerCompanyClient = new CordaRPCClient(NetworkHostAndPort.parse(powerCompanyHostAndPort));
+        return powerCompanyClient.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps partyBProxy(){
-        CordaRPCClient partyBClient = new CordaRPCClient(NetworkHostAndPort.parse(partyBHostAndPort));
-        return partyBClient.start("user1", "test").getProxy();
+    public CordaRPCOps prosumer1Proxy(){
+        CordaRPCClient prosumer1Client = new CordaRPCClient(NetworkHostAndPort.parse(prosumer1HostAndPort));
+        return prosumer1Client.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps partyCProxy(){
-        CordaRPCClient partyCClient = new CordaRPCClient(NetworkHostAndPort.parse(partyCHostAndPort));
-        return partyCClient.start("user1", "test").getProxy();
+    public CordaRPCOps prosumer2Proxy(){
+        CordaRPCClient prosumer2Client = new CordaRPCClient(NetworkHostAndPort.parse(prosumer2HostAndPort));
+        return prosumer2Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps prosumer3Proxy(){
+        CordaRPCClient prosumer3Client = new CordaRPCClient(NetworkHostAndPort.parse(prosumer3HostAndPort));
+        return prosumer3Client.start("user1", "test").getProxy();
     }
 
     /**
@@ -46,7 +55,7 @@ public class AppConfig implements WebMvcConfigurer {
      */
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
-        ObjectMapper mapper =  JacksonSupport.createDefaultMapper(partyAProxy());
+        ObjectMapper mapper =  JacksonSupport.createDefaultMapper(powerCompanyProxy());
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(mapper);
         return converter;

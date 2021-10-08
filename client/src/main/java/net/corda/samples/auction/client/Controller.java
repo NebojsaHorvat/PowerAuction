@@ -25,16 +25,19 @@ import java.util.concurrent.ExecutionException;
 public class Controller {
 
     @Autowired
-    private CordaRPCOps partyAProxy;
+    private CordaRPCOps powerCompanyProxy;
 
     @Autowired
-    private CordaRPCOps partyBProxy;
+    private CordaRPCOps prosumer1Proxy;
 
     @Autowired
-    private CordaRPCOps partyCProxy;
+    private CordaRPCOps prosumer2Proxy;
 
     @Autowired
-    @Qualifier("partyAProxy")
+    private CordaRPCOps prosumer3Proxy;
+
+    @Autowired
+    @Qualifier("prosumer1Proxy")
     private CordaRPCOps activeParty;
 
     @GetMapping("list")
@@ -189,12 +192,14 @@ public class Controller {
 
     @PostMapping(value = "switch-party/{party}")
     public APIResponse<Long> switchParty(@PathVariable String party){
-        if(party.equals("PartyA")){
-            activeParty = partyAProxy;
-        }else if(party.equals("PartyB")){
-            activeParty = partyBProxy;
-        }else if(party.equals("PartyC")){
-            activeParty = partyCProxy;
+        if(party.equals("powerCompany")){
+            activeParty = powerCompanyProxy;
+        }else if(party.equals("prosumer1")){
+            activeParty = prosumer1Proxy;
+        }else if(party.equals("prosumer2")){
+            activeParty = prosumer2Proxy;
+        }else if(party.equals("prosumer3")){
+            activeParty = prosumer3Proxy;
         }else{
             return APIResponse.error("Unrecognised Party");
         }
@@ -213,48 +218,48 @@ public class Controller {
             Double powerSupplyDurationInMin = 120.0;
             String title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            partyAProxy.startFlowDynamic(CreateAssetFlow.class,
+            prosumer1Proxy.startFlowDynamic(CreateAssetFlow.class,
                     "10 KW/h 01.11.2021.",
                     "The most famous painting in the world, a masterpiece by Leonardo da Vinci, the mysterious woman with " +
                             "the enigmatic smile. The sitter in the painting is thought to be Lisa Gherardini, the wife of " +
                             "Florence merchant Francesco del Giocondo. It did represent an innovation in art -- the painting" +
                             " is the earliest known Italian portrait to focus so closely on the sitter in a half-length " +
                             "portrait.",
-                    "img/power.jpg",expires,11.1,11.1);
+                    "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
             powerSuppliedInKW = 55.0;
             powerSupplyDurationInMin = 60.0;
             title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            partyAProxy.startFlowDynamic(CreateAssetFlow.class,
+            prosumer1Proxy.startFlowDynamic(CreateAssetFlow.class,
                     "1000 KW/h 12.12.2021.",
                     "Yet another masterpiece by Leonardo da Vinci, painted in an era when religious imagery was still " +
                             "a dominant artistic theme, \"The Last Supper\" depicts the last time Jesus broke bread with " +
                             "his disciples before his crucifixion.",
-                    "img/power.jpg",expires,11.1,11.1);
+                    "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
 
             powerSuppliedInKW = 999.0;
             powerSupplyDurationInMin = 60.0;
             title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            partyBProxy.startFlowDynamic(CreateAssetFlow.class,
+            prosumer2Proxy.startFlowDynamic(CreateAssetFlow.class,
                     "111 KW/h 9.11.2021.",
                     "Painted by Vincent van Gogh, this comparatively abstract painting is the signature example of " +
                             "van Gogh's innovative and bold use of thick brushstrokes. The painting's striking blues and " +
                             "yellows and the dreamy, swirling atmosphere have intrigued art lovers for decades.",
-                    "img/power.jpg",expires,11.1,11.1);
+                    "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
 
             powerSuppliedInKW = 10000.0;
             powerSupplyDurationInMin = 120.0;
             title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            partyCProxy.startFlowDynamic(CreateAssetFlow.class,
+            prosumer3Proxy.startFlowDynamic(CreateAssetFlow.class,
                     title,
                     "First things first -- \"The Scream\" is not a single work of art. According to a British Museum's blog," +
                             " there are two paintings, two pastels and then an unspecified number of prints. Date back to " +
                             "the the year 1893, this masterpiece is a work of Edvard Munch",
                     "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
 
-            activeParty = partyAProxy;
+            activeParty = prosumer1Proxy;
         }catch (Exception e){
             return APIResponse.error(e.getMessage());
         }

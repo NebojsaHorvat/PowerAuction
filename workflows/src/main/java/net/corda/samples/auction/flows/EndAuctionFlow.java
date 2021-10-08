@@ -82,20 +82,20 @@ public class EndAuctionFlow {
     }
 
 
-//    @InitiatedBy(EndAuctionInitiator.class)
-//    public static class EndAuctionResponder extends FlowLogic<SignedTransaction> {
-//
-//        private FlowSession counterpartySession;
-//
-//        public EndAuctionResponder(FlowSession counterpartySession) {
-//            this.counterpartySession = counterpartySession;
-//        }
-//
-//        @Override
-//        @Suspendable
-//        public SignedTransaction call() throws FlowException {
-//            return subFlow(new ReceiveFinalityFlow(counterpartySession));
-//        }
-//    }
+    @InitiatedBy(EndAuctionInitiator.class)
+    public static class EndAuctionResponder extends FlowLogic<SignedTransaction> {
+
+        private FlowSession counterpartySession;
+
+        public EndAuctionResponder(FlowSession counterpartySession) {
+            this.counterpartySession = counterpartySession;
+        }
+
+        @Override
+        @Suspendable
+        public SignedTransaction call() throws FlowException {
+            return subFlow(new ReceiveFinalityFlow(counterpartySession));
+        }
+    }
 
 }

@@ -107,7 +107,7 @@ public class Asset implements OwnableState, LinearState, SchedulableState {
             return null;
 
         FlowLogicRef flowLogicRef = flowLogicRefFactory.create(
-                "net.corda.samples.auction.flows.CheckDeliveryFlow.CheckDeliveryInitiator", thisStateRef);
+                "net.corda.samples.auction.flows.CheckDeliveryFlow", thisStateRef);
         return new ScheduledActivity(flowLogicRef, deliveryTime);
     }
 }

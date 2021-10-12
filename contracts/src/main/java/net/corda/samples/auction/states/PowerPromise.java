@@ -31,6 +31,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     private final String imageUrl;
     private final AbstractParty owner;
     private final Party supplier;
+    private final Party powerCompany;
 
 
     private final Instant deliveryTime;
@@ -42,7 +43,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
 
     public PowerPromise(UniqueIdentifier linearId, String title, String description, String imageUrl,
                         AbstractParty owner, Party supplier, Instant deliveryTime, Boolean expired, Boolean delivered,
-                        Double powerSuppliedInKW, Double powerSupplyDurationInMin) {
+                        Double powerSuppliedInKW, Double powerSupplyDurationInMin, Party powerCompany) {
         this.linearId = linearId;
         this.description = description;
         this.imageUrl = imageUrl;
@@ -55,12 +56,13 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
         this.powerSupplyDurationInMin = powerSupplyDurationInMin;
         this.powerProducedInKWh = powerSuppliedInKW*powerSupplyDurationInMin/60;
         this.title = title;
+        this.powerCompany = powerCompany;
     }
 
     @NotNull
     @Override
     public List<AbstractParty> getParticipants() {
-        return Arrays.asList(owner);
+        return Arrays.asList(owner, powerCompany);
     }
 
     @NotNull
@@ -83,7 +85,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
         return new CommandAndState(new PowerPromiseContract.Commands.TransferPowerPromise(),
                 new PowerPromise(this.getLinearId(), this.getTitle() , this.getDescription(),
                         this.getImageUrl(), newOwner, this.supplier , this.deliveryTime, this.expired,this.delivered, this.powerSuppliedInKW,
-                        this.powerSupplyDurationInMin));
+                        this.powerSupplyDurationInMin, this.powerCompany));
     }
 
     public String getTitle() {
@@ -124,6 +126,10 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
 
     public Party getSupplier() {
         return supplier;
+    }
+
+    public Party getPowerCompany() {
+        return powerCompany;
     }
 
     @NotNull

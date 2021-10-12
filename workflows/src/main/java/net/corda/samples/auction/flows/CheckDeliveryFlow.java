@@ -55,7 +55,7 @@ public class CheckDeliveryFlow extends FlowLogic<SignedTransaction>{
 
             PowerPromise outputState = new PowerPromise(inputState.getLinearId(),inputState.getTitle(),inputState.getDescription(),
                     inputState.getImageUrl(),inputState.getOwner(),inputState.getSupplier(), inputState.getDeliveryTime(), true, true,
-                    inputState.getPowerSuppliedInKW(), inputState.getPowerSupplyDurationInMin());
+                    inputState.getPowerSuppliedInKW(), inputState.getPowerSupplyDurationInMin(), inputState.getPowerCompany());
 
 
             // Build the transaction.

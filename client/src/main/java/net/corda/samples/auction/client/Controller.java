@@ -65,7 +65,7 @@ public class Controller {
         try{
             // TODO izmeni da se vreme uzima iz forme
             LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
-            activeParty.startFlowDynamic(CreateAssetFlow.class, assetForm.getTitle(), assetForm.getDescription(),
+            activeParty.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class, assetForm.getTitle(), assetForm.getDescription(),
                     assetForm.getImageUrl(),expires).getReturnValue().get();
             return APIResponse.success();
         }catch(Exception e){
@@ -218,8 +218,8 @@ public class Controller {
             Double powerSupplyDurationInMin = 120.0;
             String title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            prosumer1Proxy.startFlowDynamic(CreateAssetFlow.class,
-                    "10 KW/h 01.11.2021.",
+            prosumer1Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
+                    title,
                     "The most famous painting in the world, a masterpiece by Leonardo da Vinci, the mysterious woman with " +
                             "the enigmatic smile. The sitter in the painting is thought to be Lisa Gherardini, the wife of " +
                             "Florence merchant Francesco del Giocondo. It did represent an innovation in art -- the painting" +
@@ -230,8 +230,8 @@ public class Controller {
             powerSupplyDurationInMin = 60.0;
             title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            prosumer1Proxy.startFlowDynamic(CreateAssetFlow.class,
-                    "1000 KW/h 12.12.2021.",
+            prosumer1Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
+                    title,
                     "Yet another masterpiece by Leonardo da Vinci, painted in an era when religious imagery was still " +
                             "a dominant artistic theme, \"The Last Supper\" depicts the last time Jesus broke bread with " +
                             "his disciples before his crucifixion.",
@@ -241,8 +241,8 @@ public class Controller {
             powerSupplyDurationInMin = 60.0;
             title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            prosumer2Proxy.startFlowDynamic(CreateAssetFlow.class,
-                    "111 KW/h 9.11.2021.",
+            prosumer2Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
+                    title,
                     "Painted by Vincent van Gogh, this comparatively abstract painting is the signature example of " +
                             "van Gogh's innovative and bold use of thick brushstrokes. The painting's striking blues and " +
                             "yellows and the dreamy, swirling atmosphere have intrigued art lovers for decades.",
@@ -252,7 +252,7 @@ public class Controller {
             powerSupplyDurationInMin = 120.0;
             title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            prosumer3Proxy.startFlowDynamic(CreateAssetFlow.class,
+            prosumer3Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "First things first -- \"The Scream\" is not a single work of art. According to a British Museum's blog," +
                             " there are two paintings, two pastels and then an unspecified number of prints. Date back to " +

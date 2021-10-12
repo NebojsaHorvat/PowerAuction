@@ -37,10 +37,10 @@ ownership. Left black for simplicity. Has two commands, `CreateAsset` and `Trans
 
 ### Flows:
 
-- `CreateAssetFlow`: This flow is used create an powerPromise. Implemented in `CreateAssetFlow.java`
+- `CreatePowerPromiseFlow`: This flow is used create an powerPromise. Implemented in `CreatePowerPromiseFlow.java`
 
 - `CreateAuctionFlow`: This flow is used to create an auction. Once an powerPromise has been created using
-the`CreateAssetFlow`, this flow can be used to put the powerPromise on auction. The `AuctionState`
+the`CreatePowerPromiseFlow`, this flow can be used to put the powerPromise on auction. The `AuctionState`
 references to the `Asset` using a `StatePointer`.
 
 Refer here to learn more about StatePointer: https://medium.com/corda/linking-corda-states-using-statepointer-16e24e5e602

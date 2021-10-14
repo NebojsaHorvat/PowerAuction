@@ -70,12 +70,12 @@ public class AuctionDvPFlow {
 
             // Use the vaultQuery with the previously created queryCriteria to fetch th assetState to be used as input
             // in the transaction.
-            StateAndRef<PowerPromise> assetStateAndRef = getServiceHub().getVaultService().
+            StateAndRef<PowerPromise> powerPromiseStateAndRef = getServiceHub().getVaultService().
                     queryBy(PowerPromise.class, queryCriteria).getStates().get(0);
 
             // Use the withNewOwner() of the Ownable states get the command and the output states to be used in the
             // transaction from ownership transfer of the asset.
-            CommandAndState commandAndState = assetStateAndRef.getState().getData()
+            CommandAndState commandAndState = powerPromiseStateAndRef.getState().getData()
                     .withNewOwner(auctionState.getWinner());
 
             // Obtain a reference to a notary we wish to use.
@@ -100,7 +100,7 @@ public class AuctionDvPFlow {
             transactionBuilder = txAndKeysPair.getFirst();
 
             // Update the transaction builder with the input and output for the asset's ownership transfer.
-            transactionBuilder.addInputState(assetStateAndRef)
+            transactionBuilder.addInputState(powerPromiseStateAndRef)
                     .addOutputState(commandAndState.getOwnableState())
                     .addCommand(commandAndState.getCommand(),
                             Arrays.asList(auctionState.getAuctioneer().getOwningKey()));
@@ -116,11 +116,13 @@ public class AuctionDvPFlow {
 
             // Collect counterparty signature.
             FlowSession auctioneerFlow = initiateFlow(auctionState.getAuctioneer());
+            FlowSession powerCompanyFlow = initiateFlow(powerPromiseStateAndRef.getState().getData().getPowerCompany());
             SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction,
-                    Arrays.asList(auctioneerFlow)));
+                    Arrays.asList(auctioneerFlow,powerCompanyFlow)));
+//                    Arrays.asList(auctioneerFlow)));
 
             // Notarize the transaction and record tge update in participants ledger.
-            return subFlow(new FinalityFlow(signedTransaction, (auctioneerFlow)));
+            return subFlow(new FinalityFlow(signedTransaction, Arrays.asList(auctioneerFlow,powerCompanyFlow)));
         }
     }
 

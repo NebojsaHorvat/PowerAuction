@@ -216,6 +216,7 @@ public class Controller {
             LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
             Double powerSuppliedInKW = 11.1;
             Double powerSupplyDurationInMin = 120.0;
+            // TODO nema potrebe da ovde daljem title kad ga vec izgenerisem u CreatePowerPromiseFlow
             String title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             prosumer1Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
@@ -226,6 +227,7 @@ public class Controller {
                             " is the earliest known Italian portrait to focus so closely on the sitter in a half-length " +
                             "portrait.",
                     "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+
             powerSuppliedInKW = 55.0;
             powerSupplyDurationInMin = 60.0;
             title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +

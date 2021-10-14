@@ -2,6 +2,7 @@ package net.corda.samples.auction.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
@@ -16,6 +17,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
+import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 
 /**
@@ -79,17 +82,20 @@ public class CreatePowerPromiseFlow {
             TransactionBuilder transactionBuilder = new TransactionBuilder(notary)
                     .addOutputState(output)
                     .addCommand(new PowerPromiseContract.Commands.CreatePowerPromise(),
-                            Arrays.asList(getOurIdentity().getOwningKey())); // Required Signers
+                            Arrays.asList(output.getOwner().getOwningKey(), output.getPowerCompany().getOwningKey())); // Required Signers
 
             // Verify the transaction
             transactionBuilder.verify(getServiceHub());
 
             // Sign the transaction
-            SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(transactionBuilder);
+            SignedTransaction selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder);
 
+            // Notarise the transaction and record the states in the ledger.
             ArrayList<FlowSession> otherParticipant = new ArrayList<>();
             otherParticipant.add(initiateFlow(powerCompany));
-            // Notarise the transaction and record the states in the ledger.
+
+            SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipant));
+
             return subFlow(new FinalityFlow(signedTransaction, otherParticipant));
         }
     }
@@ -106,6 +112,26 @@ public class CreatePowerPromiseFlow {
         @Override
         @Suspendable
         public SignedTransaction call() throws FlowException {
+
+            class SignTxFlow extends SignTransactionFlow {
+                private SignTxFlow(FlowSession otherPartyFlow) {
+                    super(otherPartyFlow);
+                }
+
+                @Override
+                protected void checkTransaction(SignedTransaction stx) {
+                    requireThat(require -> {
+//                        ContractState output = stx.getTx().getOutputs().get(0).getData();
+//                        require.using("This must be an SplitTransaction.", output instanceof SplitTransactionState);
+//                        SplitTransactionState spState = (SplitTransactionState) output;
+//                        require.using("I won't accept SplitTransactions with a value over 100.", spState.getValue() <= 100);
+                        return null;
+                    });
+                }
+            }
+            final SignTxFlow signTxFlow = new SignTxFlow(counterpartySession);
+            final SecureHash txId = subFlow(signTxFlow).getId();
+
             return subFlow(new ReceiveFinalityFlow(counterpartySession));
         }
     }

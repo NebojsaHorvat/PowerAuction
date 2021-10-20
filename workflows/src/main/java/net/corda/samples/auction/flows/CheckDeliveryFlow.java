@@ -1,6 +1,8 @@
 package net.corda.samples.auction.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
+import kotlin.Pair;
+import net.corda.core.contracts.Amount;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.StateRef;
 import net.corda.core.crypto.SecureHash;
@@ -8,12 +10,13 @@ import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
+import net.corda.finance.workflows.asset.CashUtils;
 import net.corda.samples.auction.contracts.AuctionContract;
 import net.corda.samples.auction.states.PowerPromise;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.math.BigDecimal;
+import java.security.PublicKey;
+import java.util.*;
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
@@ -121,26 +124,49 @@ public class CheckDeliveryFlow {
 
             if (getOurIdentity().getName().toString().equals(inputState.getOwner().nameOrNull().toString())) {
 
-                // Create the output state, mark tge auction as inactive
-                // TODO stavi da ovo delievered bude random true/false
-
+                // TODO podesiti da se negde proveri da li je delivered ili ne i vrati se true ili false
+                Boolean delivered = false;
                 PowerPromise outputState = new PowerPromise(inputState.getLinearId(),inputState.getTitle(),inputState.getDescription(),
-                        inputState.getImageUrl(),inputState.getOwner(),inputState.getSupplier(), inputState.getDeliveryTime(), true, true,
+                        inputState.getImageUrl(),inputState.getOwner(),inputState.getSupplier(), inputState.getDeliveryTime(), true, delivered,
                         inputState.getPowerSuppliedInKW(), inputState.getPowerSupplyDurationInMin(), inputState.getPowerCompany());
 
+                SignedTransaction selfSignedTransaction = null;
+                if(delivered){
+                    TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
+                    transactionBuilder.addInputState(inputStateAndRef)
+                            .addOutputState(outputState)
+                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getPowerCompany().getOwningKey()));
 
-                // Build the transaction.
-                TransactionBuilder transactionBuilder = new TransactionBuilder(notary)
-                        .addInputState(inputStateAndRef)
-                        .addOutputState(outputState)
-                        .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getPowerCompany().getOwningKey()));
+                    //Verify the transaction against the contract
+                    transactionBuilder.verify(getServiceHub());
 
-                //Verify the transaction against the contract
-                transactionBuilder.verify(getServiceHub());
+                    //Sign the transaction.
+                    selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder);
 
-                //Sign the transaction.
-                SignedTransaction selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder);
 
+                }else{
+                    TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
+
+                    // Ako struja nije uspesno isporucena onda se skidaju pare
+                    Amount<Currency> payment =  Amount.fromDecimal( new BigDecimal("10"), Currency.getInstance("USD"));
+                    Pair<TransactionBuilder, List<PublicKey>> txAndKeysPair =
+                            CashUtils.generateSpend(getServiceHub(), transactionBuilder, payment, getOurIdentityAndCert(),
+                                    inputState.getPowerCompany(), Collections.emptySet());
+                    transactionBuilder = txAndKeysPair.getFirst();
+
+                    transactionBuilder.addInputState(inputStateAndRef)
+                            .addOutputState(outputState)
+                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getPowerCompany().getOwningKey()));
+
+                    //Verify the transaction against the contract
+                    transactionBuilder.verify(getServiceHub());
+
+                    // Sign the transaction. The transaction should be sigend with the new keyPair generated for Cash spending
+                    // and the node's key.
+                    List<PublicKey> keysToSign = txAndKeysPair.getSecond();
+                    keysToSign.add(getOurIdentity().getOwningKey());
+                    selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, keysToSign);
+                }
                 ArrayList<FlowSession> otherParticipant = new ArrayList<>();
                 otherParticipant.add(initiateFlow(inputState.getPowerCompany()));
 
@@ -151,7 +177,6 @@ public class CheckDeliveryFlow {
             } else {
                 return null;
             }
-
         }
     }
 

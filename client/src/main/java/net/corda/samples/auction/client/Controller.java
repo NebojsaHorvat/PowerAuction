@@ -226,7 +226,7 @@ public class Controller {
                             "Florence merchant Francesco del Giocondo. It did represent an innovation in art -- the painting" +
                             " is the earliest known Italian portrait to focus so closely on the sitter in a half-length " +
                             "portrait.",
-                    "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin);
 
             powerSuppliedInKW = 55.0;
             powerSupplyDurationInMin = 60.0;
@@ -237,7 +237,7 @@ public class Controller {
                     "Yet another masterpiece by Leonardo da Vinci, painted in an era when religious imagery was still " +
                             "a dominant artistic theme, \"The Last Supper\" depicts the last time Jesus broke bread with " +
                             "his disciples before his crucifixion.",
-                    "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin);
 
             powerSuppliedInKW = 999.0;
             powerSupplyDurationInMin = 60.0;
@@ -248,7 +248,7 @@ public class Controller {
                     "Painted by Vincent van Gogh, this comparatively abstract painting is the signature example of " +
                             "van Gogh's innovative and bold use of thick brushstrokes. The painting's striking blues and " +
                             "yellows and the dreamy, swirling atmosphere have intrigued art lovers for decades.",
-                    "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin);
 
             powerSuppliedInKW = 10000.0;
             powerSupplyDurationInMin = 120.0;
@@ -259,9 +259,24 @@ public class Controller {
                     "First things first -- \"The Scream\" is not a single work of art. According to a British Museum's blog," +
                             " there are two paintings, two pastels and then an unspecified number of prints. Date back to " +
                             "the the year 1893, this masterpiece is a work of Edvard Munch",
-                    "img/power.jpg",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin);
 
-            activeParty = prosumer1Proxy;
+
+//            powerSuppliedInKW = 1.0;
+//            powerSupplyDurationInMin = 120.0;
+//            title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
+//                    DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
+//            prosumer3Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
+//                    title,
+//                    "First things first -- \"The Scream\" is not a single work of art. According to a British Museum's blog," +
+//                            " there are two paintings, two pastels and then an unspecified number of prints. Date back to " +
+//                            "the the year 1893, this masterpiece is a work of Edvard Munch",
+//                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+//
+//
+//            activeParty = prosumer1Proxy;
+
+
         }catch (Exception e){
             return APIResponse.error(e.getMessage());
         }

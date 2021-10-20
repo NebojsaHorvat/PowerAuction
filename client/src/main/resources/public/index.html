@@ -78,24 +78,24 @@
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-6">
-                    <image src="img/auction-demo-banner.png" style="width:100%" />
+                    <image src="img/power_cover.jpg" style="width:100%" />
                 </div>
                 <div class="col-md-4">
                     <div class ="home-btns">
-                        <div class="title">Auction Demo</div>
+                        <div class="title">Power trading prototype</div>
                         <button class="btn btn-primary" ng-click="appCtrl.setupData()">Setup Demo Data</button>
                         <button class="btn btn-secondary" ng-click="appCtrl.skipDataSetup('prosumer1')">Skip</button>
                     </div>
                 </div>
                 <div class="col-md-1"></div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div style="text-align: center; margin-top: 20px">Powered by
-                        <image class="power-by" src="img/corda.png" alt="Corda"/>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <div style="text-align: center; margin-top: 20px">Powered by-->
+<!--                        <image class="power-by" src="img/corda.png" alt="Corda"/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
 
         <!-- Home Screen -->
@@ -281,10 +281,10 @@
                                 </div>
                                 <div style="text-align: right;">
                                     <button ng-click="auctionModalCtrl.cancel()" type="button" class="btn btn-default">Close</button>
-                                    <button ng-if="auctionModalCtrl.auction.state.data.winner && auctionModalCtrl.auction.state.data.winner.toLowerCase().includes(auctionModalCtrl.activeParty)"
+                                    <button ng-if="auctionModalCtrl.auction.state.data.winner && auctionModalCtrl.auction.state.data.winner.toLowerCase().includes(auctionModalCtrl.activeParty.toLowerCase())"
                                             ng-click="auctionModalCtrl.payAndSettle()"
                                             type="button" class="btn btn-primary">Pay & Settle</button>
-                                    <button ng-if="!auctionModalCtrl.auction.state.data.winner && auctionModalCtrl.auction.state.data.auctioneer.toLowerCase().includes(auctionModalCtrl.activeParty)"
+                                    <button ng-if="!auctionModalCtrl.auction.state.data.winner && auctionModalCtrl.auction.state.data.auctioneer.toLowerCase().includes(auctionModalCtrl.activeParty.toLowerCase())"
                                             ng-click="auctionModalCtrl.exit()"
                                             type="button" class="btn btn-primary">Delete</button>
                                 </div>

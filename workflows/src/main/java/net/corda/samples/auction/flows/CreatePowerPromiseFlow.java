@@ -1,6 +1,7 @@
 package net.corda.samples.auction.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
+import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
@@ -17,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-
+import org.slf4j.Logger;
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 
@@ -121,17 +122,18 @@ public class CreatePowerPromiseFlow {
                 @Override
                 protected void checkTransaction(SignedTransaction stx) {
                     requireThat(require -> {
-//                        ContractState output = stx.getTx().getOutputs().get(0).getData();
-//                        require.using("This must be an SplitTransaction.", output instanceof SplitTransactionState);
-//                        SplitTransactionState spState = (SplitTransactionState) output;
-//                        require.using("I won't accept SplitTransactions with a value over 100.", spState.getValue() <= 100);
+                        ContractState output = stx.getTx().getOutputs().get(0).getData();
+                        require.using("This must be an SplitTransaction.", output instanceof PowerPromise);
+                        PowerPromise pwPromise = (PowerPromise) output;
+                        require.using("I won't accept price amounts lower then 1.", pwPromise.getPowerSuppliedInKW() > 1);
+                        getLogger().info("NODE +"+getOurIdentity().getName().toString()+" IS SIGNING POWER_TRANSACTION WITH TITLE: "+pwPromise.getTitle() );
+
                         return null;
                     });
                 }
             }
             final SignTxFlow signTxFlow = new SignTxFlow(counterpartySession);
             final SecureHash txId = subFlow(signTxFlow).getId();
-
             return subFlow(new ReceiveFinalityFlow(counterpartySession));
         }
     }

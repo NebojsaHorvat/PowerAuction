@@ -77,6 +77,7 @@ public class BidFlow {
             List<Party> bidders = new ArrayList<>(input.getBidders());
             bidders.remove(getOurIdentity());
             for(Party bidder: bidders)
+
                 allSessions.add(initiateFlow(bidder));
 
             allSessions.add(initiateFlow(input.getAuctioneer()));

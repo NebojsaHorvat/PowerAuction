@@ -213,7 +213,7 @@ public class Controller {
     @PostMapping("setup")
     public APIResponse<Void> setupDemoData(){
         try {
-            LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
+            LocalDateTime expires = LocalDateTime.now().plusMinutes(2);
             Double powerSuppliedInKW = 11.1;
             Double powerSupplyDurationInMin = 120.0;
             // TODO nema potrebe da ovde daljem title kad ga vec izgenerisem u CreatePowerPromiseFlow

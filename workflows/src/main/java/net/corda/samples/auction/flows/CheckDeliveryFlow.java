@@ -128,14 +128,14 @@ public class CheckDeliveryFlow {
                 Boolean delivered = false;
                 PowerPromise outputState = new PowerPromise(inputState.getLinearId(),inputState.getTitle(),inputState.getDescription(),
                         inputState.getImageUrl(),inputState.getOwner(),inputState.getSupplier(), inputState.getDeliveryTime(), true, delivered,
-                        inputState.getPowerSuppliedInKW(), inputState.getPowerSupplyDurationInMin(), inputState.getPowerCompany());
+                        inputState.getPowerSuppliedInKW(), inputState.getPowerSupplyDurationInMin(), inputState.getGridAuthority());
 
                 SignedTransaction selfSignedTransaction = null;
                 if(delivered){
                     TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
                     transactionBuilder.addInputState(inputStateAndRef)
                             .addOutputState(outputState)
-                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getPowerCompany().getOwningKey()));
+                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getGridAuthority().getOwningKey()));
 
                     //Verify the transaction against the contract
                     transactionBuilder.verify(getServiceHub());
@@ -151,12 +151,12 @@ public class CheckDeliveryFlow {
                     Amount<Currency> payment =  Amount.fromDecimal( new BigDecimal("10"), Currency.getInstance("USD"));
                     Pair<TransactionBuilder, List<PublicKey>> txAndKeysPair =
                             CashUtils.generateSpend(getServiceHub(), transactionBuilder, payment, getOurIdentityAndCert(),
-                                    inputState.getPowerCompany(), Collections.emptySet());
+                                    inputState.getGridAuthority(), Collections.emptySet());
                     transactionBuilder = txAndKeysPair.getFirst();
 
                     transactionBuilder.addInputState(inputStateAndRef)
                             .addOutputState(outputState)
-                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getPowerCompany().getOwningKey()));
+                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getGridAuthority().getOwningKey()));
 
                     //Verify the transaction against the contract
                     transactionBuilder.verify(getServiceHub());
@@ -168,7 +168,7 @@ public class CheckDeliveryFlow {
                     selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, keysToSign);
                 }
                 ArrayList<FlowSession> otherParticipant = new ArrayList<>();
-                otherParticipant.add(initiateFlow(inputState.getPowerCompany()));
+                otherParticipant.add(initiateFlow(inputState.getGridAuthority()));
 
                 SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipant));
                 //Notarize and record the transaction in all participants ledger.

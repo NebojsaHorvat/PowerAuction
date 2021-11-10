@@ -103,7 +103,7 @@ public class AuctionDvPFlow {
             transactionBuilder.addInputState(powerPromiseStateAndRef)
                     .addOutputState(commandAndState.getOwnableState())
                     .addCommand(commandAndState.getCommand(),
-                            Arrays.asList(auctionState.getAuctioneer().getOwningKey(),powerPromiseStateAndRef.getState().getData().getPowerCompany().getOwningKey() ));
+                            Arrays.asList(auctionState.getAuctioneer().getOwningKey(),powerPromiseStateAndRef.getState().getData().getGridAuthority().getOwningKey() ));
 
             // Verify the transaction
             transactionBuilder.verify(getServiceHub());
@@ -116,17 +116,17 @@ public class AuctionDvPFlow {
 
             // Collect counterparty signature.
             FlowSession auctioneerFlow = initiateFlow(auctionState.getAuctioneer());
-            // TODO trebalo bi i powerCompany da potpise
-            FlowSession powerCompanyFlow = initiateFlow(powerPromiseStateAndRef.getState().getData().getPowerCompany());
+            // TODO trebalo bi i gridAuthority da potpise
+            FlowSession gridAuthorityFlow = initiateFlow(powerPromiseStateAndRef.getState().getData().getGridAuthority());
             SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction,
-                    Arrays.asList(auctioneerFlow,powerCompanyFlow)));
+                    Arrays.asList(auctioneerFlow,gridAuthorityFlow)));
             // TODO kada powerCompany ne potpise
 //            SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction,
 //                    Arrays.asList(auctioneerFlow)));
 
             // Notarize the transaction and record tge update in participants ledger.
             // TODO trebalo bi i powerCompany da potpise
-            return subFlow(new FinalityFlow(signedTransaction, Arrays.asList(auctioneerFlow,powerCompanyFlow)));
+            return subFlow(new FinalityFlow(signedTransaction, Arrays.asList(auctioneerFlow,gridAuthorityFlow)));
 //            return subFlow(new FinalityFlow(signedTransaction, Arrays.asList(auctioneerFlow)));
         }
     }

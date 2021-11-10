@@ -10,10 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +27,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     private final String imageUrl;
     private final AbstractParty owner;
     private final Party supplier;
-    private final Party powerCompany;
+    private final Party gridAuthority;
 
 
     private final Instant deliveryTime;
@@ -43,7 +39,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
 
     public PowerPromise(UniqueIdentifier linearId, String title, String description, String imageUrl,
                         AbstractParty owner, Party supplier, Instant deliveryTime, Boolean expired, Boolean delivered,
-                        Double powerSuppliedInKW, Double powerSupplyDurationInMin, Party powerCompany) {
+                        Double powerSuppliedInKW, Double powerSupplyDurationInMin, Party gridAuthority) {
         this.linearId = linearId;
         this.description = description;
         this.imageUrl = imageUrl;
@@ -56,13 +52,13 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
         this.powerSupplyDurationInMin = powerSupplyDurationInMin;
         this.powerProducedInKWh = powerSuppliedInKW*powerSupplyDurationInMin/60;
         this.title = title;
-        this.powerCompany = powerCompany;
+        this.gridAuthority = gridAuthority;
     }
 
     @NotNull
     @Override
     public List<AbstractParty> getParticipants() {
-        return Arrays.asList(owner, powerCompany);
+        return Arrays.asList(owner, gridAuthority);
     }
 
     @NotNull
@@ -85,7 +81,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
         return new CommandAndState(new PowerPromiseContract.Commands.TransferPowerPromise(),
                 new PowerPromise(this.getLinearId(), this.getTitle() , this.getDescription(),
                         this.getImageUrl(), newOwner, this.supplier , this.deliveryTime, this.expired,this.delivered, this.powerSuppliedInKW,
-                        this.powerSupplyDurationInMin, this.powerCompany));
+                        this.powerSupplyDurationInMin, this.gridAuthority));
     }
 
     public String getTitle() {
@@ -128,8 +124,8 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
         return supplier;
     }
 
-    public Party getPowerCompany() {
-        return powerCompany;
+    public Party getGridAuthority() {
+        return gridAuthority;
     }
 
     @NotNull

@@ -28,6 +28,9 @@ public class Controller {
     private CordaRPCOps powerCompanyProxy;
 
     @Autowired
+    private CordaRPCOps gridAuthorityProxy;
+
+    @Autowired
     private CordaRPCOps prosumer1Proxy;
 
     @Autowired
@@ -194,6 +197,8 @@ public class Controller {
     public APIResponse<Long> switchParty(@PathVariable String party){
         if(party.equals("powerCompany")){
             activeParty = powerCompanyProxy;
+        }else if(party.equals("gridAuthority")){
+            activeParty = gridAuthorityProxy;
         }else if(party.equals("prosumer1")){
             activeParty = prosumer1Proxy;
         }else if(party.equals("prosumer2")){

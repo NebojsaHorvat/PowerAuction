@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-import org.slf4j.Logger;
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 
@@ -70,7 +69,7 @@ public class CreatePowerPromiseFlow {
              *  * - For production you always want to use Method 2 as it guarantees the expected notary is returned.
              */
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
-            final Party powerCompany = getServiceHub().getNetworkMapCache().getNodeByLegalName(CordaX500Name.parse("O=PowerCompany,L=Paris,C=FR")).getLegalIdentities().get(0);
+            final Party gridAuthority = getServiceHub().getNetworkMapCache().getNodeByLegalName(CordaX500Name.parse("O=GridAuthority,L=Paris,C=FR")).getLegalIdentities().get(0);
 
 
             //        LocalDateTime expires = LocalDateTime.now().plusMinutes(5);
@@ -79,13 +78,13 @@ public class CreatePowerPromiseFlow {
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             PowerPromise output = new PowerPromise(new UniqueIdentifier(), title, description, imageURL,
                     getOurIdentity(), getOurIdentity(), expires.atZone(ZoneId.systemDefault()).toInstant(), false, false,
-                    powerSuppliedInKW, powerSupplyDurationInMin, powerCompany);
+                    powerSuppliedInKW, powerSupplyDurationInMin, gridAuthority);
 
             // Build the transaction, add the output states and the command to the transaction.
             TransactionBuilder transactionBuilder = new TransactionBuilder(notary)
                     .addOutputState(output)
                     .addCommand(new PowerPromiseContract.Commands.CreatePowerPromise(),
-                            Arrays.asList(output.getOwner().getOwningKey(), output.getPowerCompany().getOwningKey())); // Required Signers
+                            Arrays.asList(output.getOwner().getOwningKey(), output.getGridAuthority().getOwningKey())); // Required Signers
 
             // Verify the transaction
             transactionBuilder.verify(getServiceHub());
@@ -95,7 +94,7 @@ public class CreatePowerPromiseFlow {
 
             // Notarise the transaction and record the states in the ledger.
             ArrayList<FlowSession> otherParticipant = new ArrayList<>();
-            otherParticipant.add(initiateFlow(powerCompany));
+            otherParticipant.add(initiateFlow(gridAuthority));
 
             SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipant));
 

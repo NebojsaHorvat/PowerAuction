@@ -17,6 +17,9 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${powerCompany.host}")
     private String powerCompanyHostAndPort;
 
+    @Value("${gridAuthority.host}")
+    private String gridAuthorityHostAndPort;
+
     @Value("${prosumer1.host}")
     private String prosumer1HostAndPort;
 
@@ -30,6 +33,12 @@ public class AppConfig implements WebMvcConfigurer {
     public CordaRPCOps powerCompanyProxy(){
         CordaRPCClient powerCompanyClient = new CordaRPCClient(NetworkHostAndPort.parse(powerCompanyHostAndPort));
         return powerCompanyClient.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")  // Avoids node shutdown on rpc disconnect
+    public CordaRPCOps gridAuthorityProxy(){
+        CordaRPCClient gridAuthorityClient = new CordaRPCClient(NetworkHostAndPort.parse(gridAuthorityHostAndPort));
+        return gridAuthorityClient.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")

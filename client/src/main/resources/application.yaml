@@ -10,4 +10,7 @@ prosumer2:
 prosumer3:
   host: localhost:10015
 
+gridAuthority:
+  host: localhost:10018
+
 server.port: 8085

@@ -7,6 +7,7 @@ import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
+import net.corda.core.node.StatesToRecord;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.samples.auction.contracts.PowerPromiseContract;
@@ -17,7 +18,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+
+
 import org.slf4j.Logger;
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
@@ -134,7 +136,8 @@ public class CreatePowerPromiseFlow {
             }
             final SignTxFlow signTxFlow = new SignTxFlow(counterpartySession);
             final SecureHash txId = subFlow(signTxFlow).getId();
-            return subFlow(new ReceiveFinalityFlow(counterpartySession));
+//            return subFlow(new ReceiveFinalityFlow(counterpartySession));
+            return subFlow(new ReceiveTransactionFlow(counterpartySession, true, StatesToRecord.ALL_VISIBLE) );
         }
     }
 }

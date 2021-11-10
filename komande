@@ -3,3 +3,7 @@ run vaultQuery contractStateType: net.corda.samples.auction.states.PowerPromise
 run vaultQuery contractStateType: net.corda.samples.auction.states.AuctionState
 
 run gracefulShutdown
+
+Sta jos uraditi:
+- Dodati jos participanata iz rada. Razdvojiti powerCompany (moze da kupi nesto sto nije bidovano i da isporuci nesto na kraju) i GridAuthority (potpisuje sve i prati sta se desava u mrezi). I dodati consumere koji nisu produceri.
+- napraviti racun na koji se placa i  to je limit.

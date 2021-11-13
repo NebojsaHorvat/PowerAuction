@@ -9,8 +9,10 @@ import net.corda.samples.auction.contracts.PowerPromiseContract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.List;
 
 /**
@@ -28,6 +30,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     private final AbstractParty owner;
     private final Party supplier;
     private final Party gridAuthority;
+    private final Amount<Currency> lockedFunds;
 
 
     private final Instant deliveryTime;
@@ -39,7 +42,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
 
     public PowerPromise(UniqueIdentifier linearId, String title, String description, String imageUrl,
                         AbstractParty owner, Party supplier, Instant deliveryTime, Boolean expired, Boolean delivered,
-                        Double powerSuppliedInKW, Double powerSupplyDurationInMin, Party gridAuthority) {
+                        Double powerSuppliedInKW, Double powerSupplyDurationInMin, Party gridAuthority, Amount<Currency> lockedFunds) {
         this.linearId = linearId;
         this.description = description;
         this.imageUrl = imageUrl;
@@ -53,6 +56,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
         this.powerProducedInKWh = powerSuppliedInKW*powerSupplyDurationInMin/60;
         this.title = title;
         this.gridAuthority = gridAuthority;
+        this.lockedFunds = lockedFunds;
     }
 
     @NotNull
@@ -81,7 +85,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
         return new CommandAndState(new PowerPromiseContract.Commands.TransferPowerPromise(),
                 new PowerPromise(this.getLinearId(), this.getTitle() , this.getDescription(),
                         this.getImageUrl(), newOwner, this.supplier , this.deliveryTime, this.expired,this.delivered, this.powerSuppliedInKW,
-                        this.powerSupplyDurationInMin, this.gridAuthority));
+                        this.powerSupplyDurationInMin, this.gridAuthority,this.lockedFunds));
     }
 
     public String getTitle() {
@@ -126,6 +130,10 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
 
     public Party getGridAuthority() {
         return gridAuthority;
+    }
+
+    public Amount<Currency> getLockedFunds() {
+        return lockedFunds;
     }
 
     @NotNull

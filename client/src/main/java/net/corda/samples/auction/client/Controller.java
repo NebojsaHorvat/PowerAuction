@@ -173,6 +173,7 @@ public class Controller {
         }
     }
 
+
     @GetMapping("getCashBalance")
     public APIResponse<Long> getCashBalance(){
         try {
@@ -218,6 +219,30 @@ public class Controller {
     @PostMapping("setup")
     public APIResponse<Void> setupDemoData(){
         try {
+            // Issuing cache to all participants
+            Double amountOfCacheIssuedToAll = 30.0;
+
+            prosumer1Proxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
+                    Amount.parseCurrency(amountOfCacheIssuedToAll+ " USD"),
+                    OpaqueBytes.of("PartyA".getBytes()),
+                    activeParty.partiesFromName("prosumer1", false).iterator().next(),
+                    false, activeParty.notaryIdentities().get(0))
+                            .getReturnValue().get();
+            prosumer2Proxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
+                    Amount.parseCurrency(amountOfCacheIssuedToAll+ " USD"),
+                    OpaqueBytes.of("PartyA".getBytes()),
+                    activeParty.partiesFromName("prosumer2", false).iterator().next(),
+                    false, activeParty.notaryIdentities().get(0))
+                    .getReturnValue().get();
+            prosumer3Proxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
+                    Amount.parseCurrency(amountOfCacheIssuedToAll+ " USD"),
+                    OpaqueBytes.of("PartyA".getBytes()),
+                    activeParty.partiesFromName("prosumer3", false).iterator().next(),
+                    false, activeParty.notaryIdentities().get(0))
+                    .getReturnValue().get();
+
+
+            Double lockedFunds = 10.0;
             LocalDateTime expires = LocalDateTime.now().plusMinutes(2);
             Double powerSuppliedInKW = 11.1;
             Double powerSupplyDurationInMin = 120.0;
@@ -231,7 +256,7 @@ public class Controller {
                             "Florence merchant Francesco del Giocondo. It did represent an innovation in art -- the painting" +
                             " is the earliest known Italian portrait to focus so closely on the sitter in a half-length " +
                             "portrait.",
-                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
             powerSuppliedInKW = 55.0;
             powerSupplyDurationInMin = 60.0;
@@ -242,7 +267,7 @@ public class Controller {
                     "Yet another masterpiece by Leonardo da Vinci, painted in an era when religious imagery was still " +
                             "a dominant artistic theme, \"The Last Supper\" depicts the last time Jesus broke bread with " +
                             "his disciples before his crucifixion.",
-                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
             powerSuppliedInKW = 999.0;
             powerSupplyDurationInMin = 60.0;
@@ -253,7 +278,7 @@ public class Controller {
                     "Painted by Vincent van Gogh, this comparatively abstract painting is the signature example of " +
                             "van Gogh's innovative and bold use of thick brushstrokes. The painting's striking blues and " +
                             "yellows and the dreamy, swirling atmosphere have intrigued art lovers for decades.",
-                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
             powerSuppliedInKW = 10000.0;
             powerSupplyDurationInMin = 120.0;
@@ -264,7 +289,7 @@ public class Controller {
                     "First things first -- \"The Scream\" is not a single work of art. According to a British Museum's blog," +
                             " there are two paintings, two pastels and then an unspecified number of prints. Date back to " +
                             "the the year 1893, this masterpiece is a work of Edvard Munch",
-                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin);
+                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
 
 //            powerSuppliedInKW = 1.0;

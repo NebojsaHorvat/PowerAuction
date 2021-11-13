@@ -126,7 +126,7 @@ public class CheckDeliveryFlow {
             if (getOurIdentity().getName().toString().equals(inputState.getGridAuthority().nameOrNull().toString())) {
 
                 // TODO podesiti da se negde proveri da li je delivered ili ne i vrati se true ili false
-                Boolean delivered = false;
+                Boolean delivered = true;
                 PowerPromise outputState = new PowerPromise(inputState.getLinearId(),inputState.getTitle(),inputState.getDescription(),
                         inputState.getImageUrl(),inputState.getOwner(),inputState.getSupplier(), inputState.getDeliveryTime(), true, delivered,
                         inputState.getPowerSuppliedInKW(), inputState.getPowerSupplyDurationInMin(), inputState.getGridAuthority(), inputState.getLockedFunds());
@@ -134,15 +134,27 @@ public class CheckDeliveryFlow {
                 SignedTransaction selfSignedTransaction = null;
                 if(delivered){
                     TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
+
+                    // Ako struja nije uspesno isporucena onda se pare salju powerCompaniju i uzme se malo sebi za odrzavanje
+                    Amount<Currency> payment =  Amount.fromDecimal( new BigDecimal(inputState.getLockedFunds().toDecimal().doubleValue()*0.9), Currency.getInstance("USD"));
+
+                    Pair<TransactionBuilder, List<PublicKey>> txAndKeysPair =
+                            CashUtils.generateSpend(getServiceHub(), transactionBuilder, payment, getOurIdentityAndCert(),
+                                    inputState.getOwner(), Collections.emptySet());
+                    transactionBuilder = txAndKeysPair.getFirst();
+
                     transactionBuilder.addInputState(inputStateAndRef)
                             .addOutputState(outputState)
-                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getGridAuthority().getOwningKey()));
+                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getOwner().getOwningKey()));
 
                     //Verify the transaction against the contract
                     transactionBuilder.verify(getServiceHub());
 
-                    //Sign the transaction.
-                    selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder);
+                    // Sign the transaction. The transaction should be sigend with the new keyPair generated for Cash spending
+                    // and the node's key.
+                    List<PublicKey> keysToSign = txAndKeysPair.getSecond();
+                    keysToSign.add(getOurIdentity().getOwningKey());
+                    selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, keysToSign);
 
                     ArrayList<FlowSession> otherParticipant = new ArrayList<>();
                     otherParticipant.add(initiateFlow(inputState.getOwner()));

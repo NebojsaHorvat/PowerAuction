@@ -2,6 +2,8 @@ run vaultQuery contractStateType: net.corda.samples.auction.states.PowerPromise
 
 run vaultQuery contractStateType: net.corda.samples.auction.states.AuctionState
 
+run vaultQuery contractStateType: net.corda.finance.contracts.asset.Cash$State
+
 run gracefulShutdown
 
 Sta jos uraditi:

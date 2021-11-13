@@ -7,6 +7,7 @@ import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.StateRef;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
+import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
@@ -122,7 +123,7 @@ public class CheckDeliveryFlow {
             // Check used to restrict the flow execution to be only done by the auctioneer.
             // TODO promeniti da ovo moze da radi samo onaj ko odrzava mrezu
 
-            if (getOurIdentity().getName().toString().equals(inputState.getOwner().nameOrNull().toString())) {
+            if (getOurIdentity().getName().toString().equals(inputState.getGridAuthority().nameOrNull().toString())) {
 
                 // TODO podesiti da se negde proveri da li je delivered ili ne i vrati se true ili false
                 Boolean delivered = false;
@@ -143,20 +144,30 @@ public class CheckDeliveryFlow {
                     //Sign the transaction.
                     selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder);
 
+                    ArrayList<FlowSession> otherParticipant = new ArrayList<>();
+                    otherParticipant.add(initiateFlow(inputState.getOwner()));
+
+                    SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipant));
+                    //Notarize and record the transaction in all participants ledger.
+                    return subFlow(new FinalityFlow(signedTransaction, otherParticipant));
 
                 }else{
+                    final Party powerCompany = getServiceHub().getNetworkMapCache()
+                            .getNodeByLegalName(CordaX500Name.parse("O=PowerCompany,L=Paris,C=FR")).getLegalIdentities().get(0);
+
                     TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
 
-                    // Ako struja nije uspesno isporucena onda se skidaju pare
-                    Amount<Currency> payment =  Amount.fromDecimal( new BigDecimal("10"), Currency.getInstance("USD"));
+                    // Ako struja nije uspesno isporucena onda se pare salju powerCompaniju i uzme se malo sebi za odrzavanje
+                    Amount<Currency> payment =  Amount.fromDecimal( new BigDecimal(inputState.getLockedFunds().toDecimal().doubleValue()*0.9), Currency.getInstance("USD"));
+
                     Pair<TransactionBuilder, List<PublicKey>> txAndKeysPair =
                             CashUtils.generateSpend(getServiceHub(), transactionBuilder, payment, getOurIdentityAndCert(),
-                                    inputState.getGridAuthority(), Collections.emptySet());
+                                    powerCompany, Collections.emptySet());
                     transactionBuilder = txAndKeysPair.getFirst();
 
                     transactionBuilder.addInputState(inputStateAndRef)
                             .addOutputState(outputState)
-                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getGridAuthority().getOwningKey()));
+                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), powerCompany.getOwningKey(), inputState.getOwner().getOwningKey()));
 
                     //Verify the transaction against the contract
                     transactionBuilder.verify(getServiceHub());
@@ -166,13 +177,16 @@ public class CheckDeliveryFlow {
                     List<PublicKey> keysToSign = txAndKeysPair.getSecond();
                     keysToSign.add(getOurIdentity().getOwningKey());
                     selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, keysToSign);
-                }
-                ArrayList<FlowSession> otherParticipant = new ArrayList<>();
-                otherParticipant.add(initiateFlow(inputState.getGridAuthority()));
 
-                SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipant));
-                //Notarize and record the transaction in all participants ledger.
-                return subFlow(new FinalityFlow(signedTransaction, otherParticipant));
+                    ArrayList<FlowSession> otherParticipant = new ArrayList<>();
+                    otherParticipant.add(initiateFlow(inputState.getOwner()));
+                    otherParticipant.add(initiateFlow(powerCompany ));
+
+                    SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipant));
+                    //Notarize and record the transaction in all participants ledger.
+                    return subFlow(new FinalityFlow(signedTransaction, otherParticipant));
+                }
+
 
             } else {
                 return null;

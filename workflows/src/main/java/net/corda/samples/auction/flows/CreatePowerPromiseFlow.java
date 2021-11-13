@@ -141,6 +141,7 @@ public class CreatePowerPromiseFlow {
                 protected void checkTransaction(SignedTransaction stx) {
                     requireThat(require -> {
                         ContractState output = stx.getTx().getOutputs().get(0).getData();
+                        // TODO ono sto je oputpu nije powerPromise nego verovatno kombinacija powerpromisa i kes transfera, proveri kako to da rascivijas
 //                        require.using("This must be an PowerPromise.", output instanceof PowerPromise);
 //                        PowerPromise pwPromise = (PowerPromise) output;
 //                        require.using("I won't accept price amounts lower then 1.", pwPromise.getPowerSuppliedInKW() > 1);

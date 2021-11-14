@@ -7,9 +7,7 @@ run vaultQuery contractStateType: net.corda.finance.contracts.asset.Cash$State
 run gracefulShutdown
 
 Sta jos uraditi:
-- izmenio formu, sad izmeni kontrolere za pavaljenje power promisa
-- Namestiti da radi mehanizam pravljena powerPromisa sa UI-a
 - napraviti da postoji i korisnik koji je samo consumer i moze samo da kupi struju
 - srediti controller klasu
-- videti da li zabratini osnovnu ceku aukcije na osnovu toga koliko jesa je dato unapred
+- videti da li zabratini osnovnu cenu aukcije na osnovu toga koliko jesa je dato unapred
 - proci kroz svaki TODO

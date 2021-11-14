@@ -12,7 +12,7 @@ app.controller('AppController', function($http, toastr, $uibModal) {
 
     demoApp.landingScreen = true;
     demoApp.homeScreen = false;
-    demoApp.activeParty = "prosumer1";
+    demoApp.activeParty = "prosumer";
     demoApp.assetMap = {};
     demoApp.balance = 0;
     demoApp.showSpinner = false;
@@ -212,7 +212,7 @@ app.controller('CashModalCtrl', function ($http, $uibModalInstance, $uibModal, d
     const cashModalModel = this;
 
     cashModalModel.form = {};
-    cashModalModel.form.party = "prosumer1";
+    cashModalModel.form.party = "prosumer";
     cashModalModel.issueCash = () => {
         if(cashModalModel.form.amount == undefined){
            toastr.error("Please enter amount to be issued");

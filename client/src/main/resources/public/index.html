@@ -53,9 +53,9 @@
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                     <li><a href="#" ng-show="appCtrl.activeParty != 'powerCompany'" ng-click="appCtrl.switchParty('powerCompany')">Power company</a></li>
                     <li><a href="#" ng-show="appCtrl.activeParty != 'gridAuthority'" ng-click="appCtrl.switchParty('gridAuthority')">Grid Authority</a></li>
-                    <li><a href="#" ng-show="appCtrl.activeParty != 'prosumer1'" ng-click="appCtrl.switchParty('prosumer1')">Prosumer 1</a></li>
-                    <li><a href="#" ng-show="appCtrl.activeParty != 'prosumer2'" ng-click="appCtrl.switchParty('prosumer2')">Prosumer 2</a></li>
-                    <li><a href="#" ng-show="appCtrl.activeParty != 'prosumer3'" ng-click="appCtrl.switchParty('prosumer3')">Prosumer 3</a></li>
+                    <li><a href="#" ng-show="appCtrl.activeParty != 'prosumer'" ng-click="appCtrl.switchParty('prosumer')">Prosumer</a></li>
+                    <li><a href="#" ng-show="appCtrl.activeParty != 'customer'" ng-click="appCtrl.switchParty('customer')">Customer</a></li>
+                    <li><a href="#" ng-show="appCtrl.activeParty != 'producer'" ng-click="appCtrl.switchParty('producer')">Producer</a></li>
                 </ul>
             </div>
         </div>
@@ -85,7 +85,7 @@
                     <div class ="home-btns">
                         <div class="title">Power trading prototype</div>
                         <button class="btn btn-primary" ng-click="appCtrl.setupData()">Setup Demo Data</button>
-                        <button class="btn btn-secondary" ng-click="appCtrl.skipDataSetup('prosumer1')">Skip</button>
+                        <button class="btn btn-secondary" ng-click="appCtrl.skipDataSetup('prosumer')">Skip</button>
                     </div>
                 </div>
                 <div class="col-md-1"></div>
@@ -240,9 +240,9 @@
                 <select class="form-control" id="partySelector" ng-model="cashModalCtrl.form.party">
                     <option value="powerCompany">Power Company</option>
                     <option value="gridAuthority">Grid Authority</option>
-                    <option value="prosumer1">Prosumer 1</option>
-                    <option value="prosumer2">Prosumer 2</option>
-                    <option value="prosumer3">Prosumer 3</option>
+                    <option value="prosumer">Prosumer</option>
+                    <option value="customer">Customer</option>
+                    <option value="producer">Producer</option>
                 </select>
             </div>
         </div>

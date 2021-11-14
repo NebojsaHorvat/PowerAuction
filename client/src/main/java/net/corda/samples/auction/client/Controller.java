@@ -31,16 +31,16 @@ public class Controller {
     private CordaRPCOps gridAuthorityProxy;
 
     @Autowired
-    private CordaRPCOps prosumer1Proxy;
+    private CordaRPCOps prosumerProxy;
 
     @Autowired
-    private CordaRPCOps prosumer2Proxy;
+    private CordaRPCOps customerProxy;
 
     @Autowired
-    private CordaRPCOps prosumer3Proxy;
+    private CordaRPCOps producerProxy;
 
     @Autowired
-    @Qualifier("prosumer1Proxy")
+    @Qualifier("prosumerProxy")
     private CordaRPCOps activeParty;
 
     @GetMapping("list")
@@ -206,12 +206,12 @@ public class Controller {
             activeParty = powerCompanyProxy;
         }else if(party.equals("gridAuthority")){
             activeParty = gridAuthorityProxy;
-        }else if(party.equals("prosumer1")){
-            activeParty = prosumer1Proxy;
-        }else if(party.equals("prosumer2")){
-            activeParty = prosumer2Proxy;
-        }else if(party.equals("prosumer3")){
-            activeParty = prosumer3Proxy;
+        }else if(party.equals("prosumer")){
+            activeParty = prosumerProxy;
+        }else if(party.equals("customer")){
+            activeParty = customerProxy;
+        }else if(party.equals("producer")){
+            activeParty = producerProxy;
         }else{
             return APIResponse.error("Unrecognised Party");
         }
@@ -228,22 +228,22 @@ public class Controller {
             // Issuing cache to all participants
             Double amountOfCacheIssuedToAll = 30.0;
 
-            prosumer1Proxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
+            prosumerProxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
                     Amount.parseCurrency(amountOfCacheIssuedToAll+ " USD"),
                     OpaqueBytes.of("PartyA".getBytes()),
-                    activeParty.partiesFromName("prosumer1", false).iterator().next(),
+                    activeParty.partiesFromName("prosumer", false).iterator().next(),
                     false, activeParty.notaryIdentities().get(0))
                             .getReturnValue().get();
-            prosumer2Proxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
+            customerProxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
                     Amount.parseCurrency(amountOfCacheIssuedToAll+ " USD"),
                     OpaqueBytes.of("PartyA".getBytes()),
-                    activeParty.partiesFromName("prosumer2", false).iterator().next(),
+                    activeParty.partiesFromName("customer", false).iterator().next(),
                     false, activeParty.notaryIdentities().get(0))
                     .getReturnValue().get();
-            prosumer3Proxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
+            producerProxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
                     Amount.parseCurrency(amountOfCacheIssuedToAll+ " USD"),
                     OpaqueBytes.of("PartyA".getBytes()),
-                    activeParty.partiesFromName("prosumer3", false).iterator().next(),
+                    activeParty.partiesFromName("producer", false).iterator().next(),
                     false, activeParty.notaryIdentities().get(0))
                     .getReturnValue().get();
 
@@ -255,7 +255,7 @@ public class Controller {
             // TODO nema potrebe da ovde daljem title kad ga vec izgenerisem u CreatePowerPromiseFlow
             String title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            prosumer1Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
+            prosumerProxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",
                     "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
@@ -264,25 +264,26 @@ public class Controller {
             powerSupplyDurationInMin = 60.0;
             title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            prosumer1Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
+            prosumerProxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",
                     "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
-            powerSuppliedInKW = 999.0;
-            powerSupplyDurationInMin = 60.0;
-            title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            prosumer2Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
-                    title,
-                    "",
-                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
+            // Customer ne moze da ima powerPromise ciji je on vlasnik
+//            powerSuppliedInKW = 999.0;
+//            powerSupplyDurationInMin = 60.0;
+//            title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
+//                    DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
+//            customerProxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
+//                    title,
+//                    "",
+//                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
             powerSuppliedInKW = 10000.0;
             powerSupplyDurationInMin = 120.0;
             title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
-            prosumer3Proxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
+            producerProxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",
                     "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);

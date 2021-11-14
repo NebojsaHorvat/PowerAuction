@@ -1,13 +1,13 @@
 powerCompany:
   host: localhost:10006
 
-prosumer1:
+prosumer:
   host: localhost:10009
 
-prosumer2:
+customer:
   host: localhost:10012
 
-prosumer3:
+producer:
   host: localhost:10015
 
 gridAuthority:

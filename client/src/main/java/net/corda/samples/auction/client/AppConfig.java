@@ -20,14 +20,14 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${gridAuthority.host}")
     private String gridAuthorityHostAndPort;
 
-    @Value("${prosumer1.host}")
-    private String prosumer1HostAndPort;
+    @Value("${prosumer.host}")
+    private String prosumerHostAndPort;
 
-    @Value("${prosumer2.host}")
-    private String prosumer2HostAndPort;
+    @Value("${customer.host}")
+    private String customerHostAndPort;
 
-    @Value("${prosumer3.host}")
-    private String prosumer3HostAndPort;
+    @Value("${producer.host}")
+    private String producerHostAndPort;
 
     @Bean(destroyMethod = "")  // Avoids node shutdown on rpc disconnect
     public CordaRPCOps powerCompanyProxy(){
@@ -42,21 +42,21 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps prosumer1Proxy(){
-        CordaRPCClient prosumer1Client = new CordaRPCClient(NetworkHostAndPort.parse(prosumer1HostAndPort));
-        return prosumer1Client.start("user1", "test").getProxy();
+    public CordaRPCOps prosumerProxy(){
+        CordaRPCClient prosumerClient = new CordaRPCClient(NetworkHostAndPort.parse(prosumerHostAndPort));
+        return prosumerClient.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps prosumer2Proxy(){
-        CordaRPCClient prosumer2Client = new CordaRPCClient(NetworkHostAndPort.parse(prosumer2HostAndPort));
-        return prosumer2Client.start("user1", "test").getProxy();
+    public CordaRPCOps customerProxy(){
+        CordaRPCClient customerClient = new CordaRPCClient(NetworkHostAndPort.parse(customerHostAndPort));
+        return customerClient.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps prosumer3Proxy(){
-        CordaRPCClient prosumer3Client = new CordaRPCClient(NetworkHostAndPort.parse(prosumer3HostAndPort));
-        return prosumer3Client.start("user1", "test").getProxy();
+    public CordaRPCOps producerProxy(){
+        CordaRPCClient producerClient = new CordaRPCClient(NetworkHostAndPort.parse(producerHostAndPort));
+        return producerClient.start("user1", "test").getProxy();
     }
 
     /**

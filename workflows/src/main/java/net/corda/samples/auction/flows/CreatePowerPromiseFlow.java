@@ -53,7 +53,6 @@ public class CreatePowerPromiseFlow {
          * @param description of the asset to be issued in ledger
          * @param imageURL    is a url of an image of the asset
          */
-        // TODO izbaci title posto su nepotrebni i onda moras menjati i kontroler i front
         public CreatePowerPromiseFlowInitiator(String title, String description, String imageURL, LocalDateTime expires,
                                Double powerSuppliedInKW, Double powerSupplyDurationInMin, Double lockedFundsDouble) {
             this.title = title;

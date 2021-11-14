@@ -116,16 +116,12 @@ public class AuctionDvPFlow {
 
             // Collect counterparty signature.
             FlowSession auctioneerFlow = initiateFlow(auctionState.getAuctioneer());
-            // TODO trebalo bi i gridAuthority da potpise
+            // Trebalo bi i gridAuthority da potpise
             FlowSession gridAuthorityFlow = initiateFlow(powerPromiseStateAndRef.getState().getData().getGridAuthority());
             SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction,
                     Arrays.asList(auctioneerFlow,gridAuthorityFlow)));
-            // TODO kada powerCompany ne potpise
-//            SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction,
-//                    Arrays.asList(auctioneerFlow)));
 
             // Notarize the transaction and record tge update in participants ledger.
-            // TODO trebalo bi i powerCompany da potpise
             return subFlow(new FinalityFlow(signedTransaction, Arrays.asList(auctioneerFlow,gridAuthorityFlow)));
 //            return subFlow(new FinalityFlow(signedTransaction, Arrays.asList(auctioneerFlow)));
         }

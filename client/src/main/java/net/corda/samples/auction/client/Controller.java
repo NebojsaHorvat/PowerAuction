@@ -260,7 +260,6 @@ public class Controller {
             LocalDateTime expires = LocalDateTime.now().plusMinutes(2);
             Double powerSuppliedInKW = 11.1;
             Double powerSupplyDurationInMin = 120.0;
-            // TODO nema potrebe da ovde daljem title kad ga vec izgenerisem u CreatePowerPromiseFlow
             String title = powerSuppliedInKW*powerSupplyDurationInMin/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             prosumerProxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,

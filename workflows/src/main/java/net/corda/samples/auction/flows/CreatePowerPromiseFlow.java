@@ -17,6 +17,7 @@ import net.corda.samples.auction.contracts.PowerPromiseContract;
 import net.corda.samples.auction.states.PowerPromise;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -77,7 +78,10 @@ public class CreatePowerPromiseFlow {
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
             final Party gridAuthority = getServiceHub().getNetworkMapCache().getNodeByLegalName(CordaX500Name.parse("O=GridAuthority,L=Paris,C=FR")).getLegalIdentities().get(0);
 
-
+            if (getOurIdentity().getName().toString().toLowerCase().contains("customer") ){
+                getLogger().warn("MY WARNING: Customer can not create Power Promise");
+                throw new FlowException("Customer can not create Power Promise");
+            }
             // Pare se stavljaju u depozit cim se napravi powerPromise
             TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
 

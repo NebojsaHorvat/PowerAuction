@@ -42,6 +42,11 @@ public class BidFlow {
             // Query the vault to fetch a list of all AuctionState states, and filter the results based on the auctionId
             // to fetch the desired AuctionState states from the vault. This filtered states would be used as input to the
             // transaction.
+
+            if (getOurIdentity().getName().toString().toLowerCase().contains("producer") ){
+                throw new FlowException("Producer can not place bid in order to buy Power Promise!");
+            }
+
             List<StateAndRef<AuctionState>> auntionStateAndRefs = getServiceHub().getVaultService()
                     .queryBy(AuctionState.class).getStates();
 

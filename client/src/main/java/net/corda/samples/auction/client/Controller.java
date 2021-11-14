@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -66,6 +67,9 @@ public class Controller {
     @PostMapping("asset/create")
     public APIResponse<Void> createPowerPromise(@RequestBody Forms.PowerForm powerForm){
         try{
+            if(activeParty.nodeInfo().getLegalIdentities().get(0).getName().toString().toLowerCase().contains("customer")){
+                return APIResponse.error("Customers can not create Power Promise!");
+            }
             LocalDateTime expires = LocalDateTime.parse(powerForm.getDeliveryTime(),
                     DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss a"));
             String title = powerForm.getPowerSuppliedInKW()*powerForm.getPowerSupplyDurationInMin()/60 + "KW/h on " +
@@ -121,6 +125,10 @@ public class Controller {
     @PostMapping("placeBid")
     public APIResponse<Void> placeBid(@RequestBody Forms.BidForm bidForm){
         try{
+            if(activeParty.nodeInfo().getLegalIdentities().get(0).getName().toString().toLowerCase().contains("producer")){
+                return APIResponse.error("Producer can not place bid in order to buy Power Promise!");
+            }
+
             activeParty.startFlowDynamic(BidFlow.BidInitiator.class,
                     Amount.parseCurrency(bidForm.getAmount() + " USD"),
                     UUID.fromString(bidForm.getAuctionId()))

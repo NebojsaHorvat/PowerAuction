@@ -182,16 +182,18 @@ app.controller('CreateAssetModalCtrl', function ($http, $uibModalInstance, $uibM
     createAssetModel.form = {};
 
     createAssetModel.create = () => {
-        if(createAssetModel.form.imageUrl == undefined || createAssetModel.form.title == undefined ||
-        createAssetModel.form.description == undefined || createAssetModel.form.imageUrl == '' ||
-        createAssetModel.form.title == '' || createAssetModel.form.description == '' ){
+        createAssetModel.form.deliveryTime = $("#datetimepickerPower > input").val();
+
+        if(createAssetModel.form.powerSuppliedInKW == undefined || createAssetModel.form.powerSupplyDurationInMin == undefined ||
+        createAssetModel.form.deliveryTime == undefined || createAssetModel.form.deliveryTime == "" ||
+        createAssetModel.form.powerSuppliedInKW == '' || createAssetModel.form.powerSupplyDurationInMin == '' ){
            toastr.error("All fields are mandatory!");
         }else{
            demoApp.showSpinner = true;
            $http.post(apiBaseURL + 'asset/create', createAssetModel.form)
            .then((response) => {
               if(response.data && response.data.status){
-                  toastr.success('Asset Create Successfully');
+                  toastr.success('Power promise Create Successfully');
                   demoApp.fetchAssets();
                   $uibModalInstance.dismiss();
               }else{

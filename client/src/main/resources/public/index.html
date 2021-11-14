@@ -162,36 +162,64 @@
         </div>
     </div>
 
-    <!-- Create Asset Modal -->
+    <!-- Create Power promise Modal -->
     <script type="text/ng-template" id="createAssetModal.html">
         <div class="modal-header">
-            <h3 class="modal-title">Create New Asset</h3>
+            <h3 class="modal-title">Create New Power Promise</h3>
         </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <image ng-if="createAssetModalCtrl.form.imageUrl" src="{{createAssetModalCtrl.form.imageUrl}}" alt="Asset Image" width="100%"></image>
-                </div>
-                <div class="col-md-6">
-                    <div class='input-group'>
-                        <input type='text' class="form-control" placeholder="Image URL"
-                               ng-model="createAssetModalCtrl.form.imageUrl"/>
-                </span>
-                    </div>
-                    <div class='input-group'>
-                        <input type='text' class="form-control" placeholder="Asset Title"
-                               ng-model="createAssetModalCtrl.form.title"/>
-                    </div>
-                    <div class='input-group'>
-                        <textarea class="form-control" rows="5" ng-model="createAssetModalCtrl.form.description" placeholder="Asset Description"/>
+        <div>
+            <div class="modal-body">
+                <div class="row">
+    <!--                <div class="col-md-6">-->
+    <!--                    <image ng-if="createAssetModalCtrl.form.imageUrl" src="{{createAssetModalCtrl.form.imageUrl}}" alt="Asset Image" width="100%"></image>-->
+    <!--                </div>-->
+                    <div class="col-md-6">
+                        <div class='input-group'>
+                            <input type='text' class="form-control" placeholder="Power Supplied In KW"
+                                   ng-model="createAssetModalCtrl.form.powerSuppliedInKW"/>
+                    </span>
+                        </div>
+                        <div class='input-group'>
+                            <input type='text' class="form-control" placeholder="Power Supply Duration In Min"
+                                   ng-model="createAssetModalCtrl.form.powerSupplyDurationInMin"/>
+                        </div>
+                        <div class='input-group date' id='datetimepickerPower'>
+                            <input type='text' class="form-control" placeholder="Delivery Time"
+                                   ng-model="createAssetModalCtrl.form.deliveryTime"/>
+                            <span class="input-group-addon">
+                                        <i class="fas fa-calendar"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button ng-click="createAssetModalCtrl.cancel()" type="button" class="btn btn-default">Close</button>
+                <button ng-click="createAssetModalCtrl.create()" type="button" class="btn btn-primary">Create</button>
+            </div>
+            <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    if (window.jQuery().datetimepicker) {
+                        $('#datetimepickerPower').datetimepicker({
+                            format: 'DD-MM-YYYY hh:mm:ss A',
+
+                            icons: {
+                                time: 'fa fa-clock',
+                                date: 'fa fa-calendar',
+                                up: 'fa fa-chevron-up',
+                                down: 'fa fa-chevron-down',
+                                previous: 'fa fa-chevron-left',
+                                next: 'fa fa-chevron-right',
+                                today: 'fa fa-check',
+                                clear: 'fa fa-trash',
+                                close: 'fa fa-times'
+                            }
+                        });
+                    }
+                });
+            </script>
         </div>
-        <div class="modal-footer">
-            <button ng-click="createAssetModalCtrl.cancel()" type="button" class="btn btn-default">Close</button>
-            <button ng-click="createAssetModalCtrl.create()" type="button" class="btn btn-primary">Create</button>
-        </div>
+
     </script>
 
     <!-- Issue Cash Modal -->
@@ -354,7 +382,7 @@
                                     }
                                 });
                             }
-                        });
+                            });
                         </script>
                     </div>
                 </div>

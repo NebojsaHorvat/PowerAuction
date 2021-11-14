@@ -95,33 +95,33 @@ public class Forms {
         }
     }
 
-    public static class AssetForm {
-        private String imageUrl;
-        private String title;
-        private String description;
+    public static class PowerForm {
+        private String deliveryTime;
+        private Double powerSuppliedInKW;
+        private Double powerSupplyDurationInMin;
 
-        public String getImageUrl() {
-            return imageUrl;
+        public String getDeliveryTime() {
+            return deliveryTime;
         }
 
-        public void setImageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
+        public void setDeliveryTime(String deliveryTime) {
+            this.deliveryTime = deliveryTime;
         }
 
-        public String getTitle() {
-            return title;
+        public Double getPowerSuppliedInKW() {
+            return powerSuppliedInKW;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setPowerSuppliedInKW(Double powerSuppliedInKW) {
+            this.powerSuppliedInKW = powerSuppliedInKW;
         }
 
-        public String getDescription() {
-            return description;
+        public Double getPowerSupplyDurationInMin() {
+            return powerSupplyDurationInMin;
         }
 
-        public void setDescription(String description) {
-            this.description = description;
+        public void setPowerSupplyDurationInMin(Double powerSupplyDurationInMin) {
+            this.powerSupplyDurationInMin = powerSupplyDurationInMin;
         }
     }
 

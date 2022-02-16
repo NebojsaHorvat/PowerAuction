@@ -14,7 +14,7 @@ processes = list(process_filter)
 
 ################# Create auction based on powerPromise
 
-response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
+response = requests.post("http://localhost:8085/api/auction/switch-party/prosumer")
 
 headers={
     'Content-type':'application/json', 
@@ -25,20 +25,20 @@ for proc in processes:
     proc.pid,proc.cpu_percent()
 
 # Put valid asset id
-data='{"assetId": "deda40f2-c914-4aba-b26a-fe38794296d5","basePrice": "1","deadline": "17-02-2022 01:59:07 PM"}'
+data='{"assetId": "0036a472-898a-4383-82fc-e0d2726be23c","basePrice": "110","deadline": "17-02-2022 01:59:07 PM"}'
 
 # Iterate each time
-file_name = 'exp1.json'
+file_name = 'exp1_8.json'
 
 #Task
 start = time.time()
 # Change 1/10/100/1000
-for x in range(1):
+for x in range(1000):
     response = requests.post("http://localhost:8085/api/auction/create",
     data=data,
     headers=headers
     )
-    print(response)
+    # print(response)
 end = time.time()
 
 

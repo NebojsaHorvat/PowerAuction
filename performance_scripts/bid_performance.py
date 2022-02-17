@@ -29,30 +29,30 @@ for proc in processes:
     proc.pid,proc.cpu_percent()
 
 # Iterate each time
-file_name = 'exp1_12.json'
+file_name = 'exp1_9.json'
 
 # Change so it is always higher then last bided value 
-amount = 1000
+amount = 50
 
 #Task
 start = time.time()
 # Put valid auctionId
-data='{"amount": "%d", "auctionId": "0fe2f121-2470-4d97-aa50-bacf39d2e3a3"}'%amount
+data='{"amount": "%d", "auctionId": "38e8cd39-d08e-4b08-b1ed-a0440f9eeb63"}'%amount
 # Change 1/10/100/1000
-for x in range(1000):
+for x in range(100):
     response = requests.post("http://localhost:8085/api/auction/placeBid",
     data=data,
     headers=headers
     )
     # print(response)
     amount +=1
-    data='{"amount": "%d", "auctionId": "0fe2f121-2470-4d97-aa50-bacf39d2e3a3"}'%amount
-    if powerC ==True:
-        response = requests.post("http://localhost:8085/api/auction/switch-party/customer")
-        powerC = False
-    else :
-        response = requests.post("http://localhost:8085/api/auction/switch-party/powerCompany")
-        powerc = True
+    data='{"amount": "%d", "auctionId": "38e8cd39-d08e-4b08-b1ed-a0440f9eeb63"}'%amount
+    # if powerC ==True:
+    #     response = requests.post("http://localhost:8085/api/auction/switch-party/customer")
+    #     powerC = False
+    # else :
+    #     response = requests.post("http://localhost:8085/api/auction/switch-party/powerCompany")
+    #     powerc = True
 
 end = time.time()
 

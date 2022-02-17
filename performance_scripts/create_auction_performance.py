@@ -25,15 +25,15 @@ for proc in processes:
     proc.pid,proc.cpu_percent()
 
 # Put valid asset id
-data='{"assetId": "0036a472-898a-4383-82fc-e0d2726be23c","basePrice": "110","deadline": "17-02-2022 01:59:07 PM"}'
+data='{"assetId": "1bcd0395-36b5-4156-b602-7bdcacd0f8fc","basePrice": "100","deadline": "18-02-2022 01:59:07 PM"}'
 
 # Iterate each time
-file_name = 'exp1_8.json'
+file_name = 'exp1_6.json'
 
 #Task
 start = time.time()
 # Change 1/10/100/1000
-for x in range(1000):
+for x in range(100):
     response = requests.post("http://localhost:8085/api/auction/create",
     data=data,
     headers=headers

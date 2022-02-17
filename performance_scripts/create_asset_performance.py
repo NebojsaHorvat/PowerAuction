@@ -26,13 +26,13 @@ headers={
 for proc in processes:
     proc.pid,proc.cpu_percent()
 
-data='{"powerSuppliedInKW":"1000.0","deliveryTime":"17-02-2022 04:52:10 PM", "powerSupplyDurationInMin":"60.0"}' 
+data='{"powerSuppliedInKW":"100.0","deliveryTime":"18-02-2022 04:52:10 PM", "powerSupplyDurationInMin":"60.0"}' 
 # Change 1/10/100/1000
-file_name = 'exp1_4.json'
+file_name = 'exp2_3.json'
 # Task
 start = time.time()
 # Change 1/10/100/1000
-for x in range(1000):
+for x in range(100):
     response = requests.post("http://localhost:8085/api/auction/asset/create",
     data=data,
     headers=headers

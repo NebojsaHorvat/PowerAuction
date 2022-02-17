@@ -29,7 +29,7 @@ for proc in processes:
     proc.pid,proc.cpu_percent()
 
 # Iterate each time
-file_name = 'exp2_9.json'
+file_name = 'exp3_9.json'
 
 # Change so it is always higher then last bided value 
 amount = 50
@@ -37,7 +37,7 @@ amount = 50
 #Task
 start = time.time()
 # Put valid auctionId
-data='{"amount": "%d", "auctionId": "ae782018-f1a6-4c48-8153-485fc7513977"}'%amount
+data='{"amount": "%d", "auctionId": "9738cc87-cf8e-4431-add0-a6545663e2e5"}'%amount
 # Change 1/10/100/1000
 for x in range(100):
     response = requests.post("http://localhost:8085/api/auction/placeBid",
@@ -46,7 +46,7 @@ for x in range(100):
     )
     # print(response)
     amount +=1
-    data='{"amount": "%d", "auctionId": "ae782018-f1a6-4c48-8153-485fc7513977"}'%amount
+    data='{"amount": "%d", "auctionId": "9738cc87-cf8e-4431-add0-a6545663e2e5"}'%amount
     # if powerC ==True:
     #     response = requests.post("http://localhost:8085/api/auction/switch-party/customer")
     #     powerC = False

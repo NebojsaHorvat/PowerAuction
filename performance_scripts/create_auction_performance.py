@@ -25,10 +25,10 @@ for proc in processes:
     proc.pid,proc.cpu_percent()
 
 # Put valid asset id
-data='{"assetId": "361be0a2-11dd-4d7e-ab1b-8b17dbd69652","basePrice": "100","deadline": "18-02-2022 01:59:07 PM"}'
+data='{"assetId": "d7febb47-08a7-47e0-a33f-dd235e12fa29","basePrice": "100","deadline": "18-02-2022 01:59:07 PM"}'
 
 # Iterate each time
-file_name = 'exp2_6.json'
+file_name = 'exp3_6.json'
 
 #Task
 start = time.time()

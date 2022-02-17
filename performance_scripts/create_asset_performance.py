@@ -28,7 +28,7 @@ for proc in processes:
 
 data='{"powerSuppliedInKW":"100.0","deliveryTime":"18-02-2022 04:52:10 PM", "powerSupplyDurationInMin":"60.0"}' 
 # Change 1/10/100/1000
-file_name = 'exp2_3.json'
+file_name = 'exp3_3.json'
 # Task
 start = time.time()
 # Change 1/10/100/1000

@@ -168,3 +168,93 @@ task installQuasar(type: Copy) {
         rename 'quasar-core(.*).jar', 'quasar.jar'
     }
 }
+
+task prepareDockerNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
+    // set docker image for each node
+    dockerImage = "corda/corda-zulu-java1.8-4.8"
+
+    nodeDefaults {
+        projectCordapp {
+            deploy = false
+        }
+        cordapp("$corda_release_group:corda-finance-contracts:$corda_release_version")
+        cordapp("$corda_release_group:corda-finance-workflows:$corda_release_version")
+        cordapp project(':contracts')
+        cordapp project(':workflows')
+        runSchemaMigration = true
+    }
+
+    node {
+        name "O=Notary,L=London,C=GB"
+        notary = [validating : false]
+        p2pPort 10002
+        rpcSettings {
+            address("localhost:10003")
+            adminAddress("localhost:10043")
+        }
+        projectCordapp {
+            deploy = false
+        }
+        cordapps.clear()
+        sshdPort 2222
+    }
+
+    node {
+        name "O=PowerCompany,L=Paris,C=FR"
+        p2pPort 10005
+        rpcSettings {
+            address("localhost:10006")
+            adminAddress("localhost:10046")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        extraConfig = ['h2Settings.address' : 'localhost:20041']
+        sshdPort 2224
+    }
+    node {
+        name "O=Prosumer,L=New York,C=US"
+        p2pPort 10008
+        rpcSettings {
+            address("localhost:10009")
+            adminAddress("localhost:10049")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        extraConfig = ['h2Settings.address' : 'localhost:20042']
+        sshdPort 2225
+    }
+    node {
+        name "O=Customer,L=Sydney,C=AU"
+        p2pPort 10011
+        rpcSettings {
+            address("localhost:10012")
+            adminAddress("localhost:10052")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        extraConfig = ['h2Settings.address' : 'localhost:20043']
+        sshdPort 2226
+    }
+    node {
+        name "O=Producer,L=Paris,C=FR"
+        p2pPort 10014
+        rpcSettings {
+            address("localhost:10015")
+            adminAddress("localhost:10055")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        extraConfig = ['h2Settings.address' : 'localhost:20044']
+        sshdPort 2227
+    }
+    node {
+        name "O=GridAuthority,L=Paris,C=FR"
+        p2pPort 10017
+        rpcSettings {
+            address("localhost:10018")
+            adminAddress("localhost:10058")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        extraConfig = ['h2Settings.address' : 'localhost:20047']
+        sshdPort 2228
+    }
+
+    // This property needs to be outside the node {...} elements
+    dockerImage = "corda/corda-zulu-java1.8-4.8"
+}

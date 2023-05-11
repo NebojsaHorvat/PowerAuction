@@ -32,3 +32,8 @@ task runAuctionClient(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'net.corda.samples.auction.client.Starter'
 }
+
+task buildAuctionClient(type: JavaExec, dependsOn: build) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.corda.samples.auction.client.Starter'
+}

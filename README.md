@@ -31,3 +31,16 @@ The client can be run by executing the below command from the project root:
 
 Please make sure that the nodes are already running before starting the client.
 The client can be accessed at http://localhost:8085/
+
+
+### Dockerising the client:
+We have created Dockerfile which is used for puting client spring server into docker container. To build the image first build the client app:
+`./gradlew buildAuctionClient`
+Create docker image:
+`docker build --build-arg JAR_FILE=build/libs/*.jar -t ftn/corda-energy-proxy .`
+Run dockerised client:
+`docker run -p --network="host"  ftn/corda-energy-proxy`
+Push docker image to repository:
+`docker login -u nhtacc`
+`docker push nhtacc/corda-energy-proxy`
+

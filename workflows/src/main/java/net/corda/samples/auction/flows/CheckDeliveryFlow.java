@@ -7,8 +7,10 @@ import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.StateRef;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
+import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
+import net.corda.core.identity.PartyAndCertificate;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.finance.workflows.asset.CashUtils;
@@ -66,19 +68,60 @@ public class CheckDeliveryFlow {
 
                 SignedTransaction selfSignedTransaction = null;
                 if(delivered){
+                    boolean isSpeculator = outputState.getOwner().nameOrNull().toString().toLowerCase().contains("speculator");
+                    Amount<Currency> amountToSpend;
+                    PartyAndCertificate amountSender;
+                    AbstractParty amountReceiver;
+                    List<PublicKey> signersList;
+                    ArrayList<FlowSession> otherParticipants = new ArrayList<>();
+
+                    if (isSpeculator) {
+                        getLogger().info("SPECULATOR INFO: Speculator detected.");
+                        // TODO Adjust the value of the fee acording to a chosen policy. Currently the same as in "else" branch.
+                        amountToSpend = Amount.fromDecimal(new BigDecimal(
+                                inputState.getLockedFunds().toDecimal().doubleValue()*0.9),
+                                Currency.getInstance("USD"));
+
+                        CordaX500Name legalName = inputState.getOwner().nameOrNull();
+                        getLogger().info("SPECULATOR INFO: Speculator legal name: " + legalName.toString());
+                        amountSender = getServiceHub()
+                                .getNetworkMapCache()
+                                .getNodeByLegalName(legalName)
+                                .getLegalIdentitiesAndCerts().get(0);
+
+                        amountReceiver = inputState.getGridAuthority();
+
+                        // TODO Determine who should sign the transaction. Should i sign the transaction which takes my money?
+                        signersList = Arrays.asList(
+                                getOurIdentity().getOwningKey(),
+                                inputState.getOwner().getOwningKey(),
+                                inputState.getGridAuthority().getOwningKey());
+                        otherParticipants.add(initiateFlow(inputState.getOwner()));
+                        otherParticipants.add(initiateFlow(inputState.getGridAuthority()));
+                    }
+                    else {
+                        // Ako struja nije uspesno isporucena onda se pare salju powerCompaniju i uzme se malo sebi za odrzavanje
+                        amountToSpend = Amount.fromDecimal( new BigDecimal(
+                                inputState.getLockedFunds().toDecimal().doubleValue()*0.9),
+                                Currency.getInstance("USD"));
+                        amountSender = getOurIdentityAndCert();
+                        amountReceiver = inputState.getOwner();
+                        signersList = Arrays.asList(
+                                getOurIdentity().getOwningKey(),
+                                inputState.getOwner().getOwningKey());
+                        otherParticipants.add(initiateFlow(inputState.getOwner()));
+                    }
+
                     TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
 
-                    // Ako struja nije uspesno isporucena onda se pare salju powerCompaniju i uzme se malo sebi za odrzavanje
-                    Amount<Currency> payment =  Amount.fromDecimal( new BigDecimal(inputState.getLockedFunds().toDecimal().doubleValue()*0.9), Currency.getInstance("USD"));
-
                     Pair<TransactionBuilder, List<PublicKey>> txAndKeysPair =
-                            CashUtils.generateSpend(getServiceHub(), transactionBuilder, payment, getOurIdentityAndCert(),
-                                    inputState.getOwner(), Collections.emptySet());
+                            CashUtils.generateSpend(getServiceHub(), transactionBuilder, amountToSpend, amountSender,
+                                    amountReceiver, Collections.emptySet());
                     transactionBuilder = txAndKeysPair.getFirst();
 
                     transactionBuilder.addInputState(inputStateAndRef)
                             .addOutputState(outputState)
-                            .addCommand(new AuctionContract.Commands.EndAuction(), Arrays.asList(getOurIdentity().getOwningKey(), inputState.getOwner().getOwningKey()));
+                            .addCommand(new AuctionContract.Commands.EndAuction(), signersList);
 
                     //Verify the transaction against the contract
                     transactionBuilder.verify(getServiceHub());
@@ -89,12 +132,10 @@ public class CheckDeliveryFlow {
                     keysToSign.add(getOurIdentity().getOwningKey());
                     selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, keysToSign);
 
-                    ArrayList<FlowSession> otherParticipant = new ArrayList<>();
-                    otherParticipant.add(initiateFlow(inputState.getOwner()));
 
-                    SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipant));
+                    SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipants));
                     //Notarize and record the transaction in all participants ledger.
-                    return subFlow(new FinalityFlow(signedTransaction, otherParticipant));
+                    return subFlow(new FinalityFlow(signedTransaction, otherParticipants));
 
                 }else{
                     final Party powerCompany = getServiceHub().getNetworkMapCache()

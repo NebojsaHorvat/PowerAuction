@@ -78,7 +78,9 @@ public class Controller {
             activeParty.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",
-                    "img/power.png",expires,powerForm.getPowerSuppliedInKW(),powerForm.getPowerSupplyDurationInMin(),10.0);
+                    "img/power.png",
+                    "",
+                    expires,powerForm.getPowerSuppliedInKW(),powerForm.getPowerSupplyDurationInMin(),10.0);
 
             return APIResponse.success();
         }catch(Exception e){
@@ -265,7 +267,9 @@ public class Controller {
             prosumerProxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",
-                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
+                    "img/power.png",
+                    "",
+                    expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
             powerSuppliedInKW = 55.0;
             powerSupplyDurationInMin = 60.0;
@@ -274,7 +278,9 @@ public class Controller {
             prosumerProxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",
-                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
+                    "img/power.png",
+                    "",
+                    expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
             // Customer ne moze da ima powerPromise ciji je on vlasnik
 //            powerSuppliedInKW = 999.0;
@@ -284,7 +290,9 @@ public class Controller {
 //            customerProxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
 //                    title,
 //                    "",
-//                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
+//                    "img/power.png",
+//                    "",
+//                    expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
             powerSuppliedInKW = 10000.0;
             powerSupplyDurationInMin = 120.0;
@@ -293,7 +301,9 @@ public class Controller {
             producerProxy.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",
-                    "img/power.png",expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
+                    "img/power.png",
+                    "",
+                    expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
         }catch (Exception e){
             return APIResponse.error(e.getMessage());

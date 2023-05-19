@@ -43,12 +43,12 @@ We have created Dockerfile which is used for puting client spring server into do
 
 Create docker image:
 ```
-docker build --build-arg JAR_FILE=build/libs/*.jar -t ftn/corda-energy-proxy .
+docker build --build-arg JAR_FILE=build/libs/*.jar -t nhtacc/corda-energy-proxy .
 ```
 
 Run dockerised client:
 ```
-docker run -p --network="host"  ftn/corda-energy-proxy
+docker run -p --network="host"  nhtacc/corda-energy-proxy
 ```
 Push docker image to repository:
 ```

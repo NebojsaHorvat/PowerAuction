@@ -1,0 +1,16 @@
+powerCompany:
+  host: localhost:10006
+
+prosumer:
+  host: localhost:10009
+
+customer:
+  host: localhost:10012
+
+producer:
+  host: localhost:10015
+
+gridAuthority:
+  host: localhost:10018
+
+server.port: 8085

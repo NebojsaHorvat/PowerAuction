@@ -17,7 +17,6 @@ import net.corda.samples.auction.contracts.PowerPromiseContract;
 import net.corda.samples.auction.states.PowerPromise;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -41,6 +40,7 @@ public class CreatePowerPromiseFlow {
         private final String title;
         private final String description;
         private final String imageURL;
+        private final String productionManner;
         private final LocalDateTime expires;
         private final Double powerSuppliedInKW;
         private final Double powerSupplyDurationInMin;
@@ -53,11 +53,13 @@ public class CreatePowerPromiseFlow {
          * @param description of the asset to be issued in ledger
          * @param imageURL    is a url of an image of the asset
          */
-        public CreatePowerPromiseFlowInitiator(String title, String description, String imageURL, LocalDateTime expires,
-                               Double powerSuppliedInKW, Double powerSupplyDurationInMin, Double lockedFundsDouble) {
+        public CreatePowerPromiseFlowInitiator(String title, String description, String imageURL,
+                                               String productionManner, LocalDateTime expires, Double powerSuppliedInKW,
+                                               Double powerSupplyDurationInMin, Double lockedFundsDouble) {
             this.title = title;
             this.description = description;
             this.imageURL = imageURL;
+            this.productionManner = productionManner;
             this.expires = expires;
             this.powerSupplyDurationInMin = powerSupplyDurationInMin;
             this.powerSuppliedInKW = powerSuppliedInKW;
@@ -95,7 +97,7 @@ public class CreatePowerPromiseFlow {
             String title = powerSuppliedInKW * powerSupplyDurationInMin / 60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             Amount<Currency> lockedFunds =  Amount.fromDecimal( new BigDecimal(lockedFundsDouble), Currency.getInstance("USD"));
-            PowerPromise output = new PowerPromise(new UniqueIdentifier(), title, description, imageURL,
+            PowerPromise output = new PowerPromise(new UniqueIdentifier(), title, description, imageURL, productionManner,
                     getOurIdentity(), getOurIdentity(), expires.atZone(ZoneId.systemDefault()).toInstant(), false, false,
                     powerSuppliedInKW, powerSupplyDurationInMin, gridAuthority, lockedFunds );
 

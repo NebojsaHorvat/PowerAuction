@@ -9,7 +9,6 @@ import net.corda.samples.auction.contracts.PowerPromiseContract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Currency;
@@ -27,6 +26,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     private final String title;
     private final String description;
     private final String imageUrl;
+    private final String productionManner;
     private final AbstractParty owner;
     private final Party supplier;
     private final Party gridAuthority;
@@ -40,12 +40,13 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     private final Double powerSupplyDurationInMin;
     private final Double powerProducedInKWh;
 
-    public PowerPromise(UniqueIdentifier linearId, String title, String description, String imageUrl,
+    public PowerPromise(UniqueIdentifier linearId, String title, String description, String imageUrl, String productionManner,
                         AbstractParty owner, Party supplier, Instant deliveryTime, Boolean expired, Boolean delivered,
                         Double powerSuppliedInKW, Double powerSupplyDurationInMin, Party gridAuthority, Amount<Currency> lockedFunds) {
         this.linearId = linearId;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.productionManner = productionManner;
         this.owner = owner;
         this.supplier = supplier;
         this.deliveryTime = deliveryTime;
@@ -84,7 +85,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     public CommandAndState withNewOwner(@NotNull AbstractParty newOwner) {
         return new CommandAndState(new PowerPromiseContract.Commands.TransferPowerPromise(),
                 new PowerPromise(this.getLinearId(), this.getTitle() , this.getDescription(),
-                        this.getImageUrl(), newOwner, this.supplier , this.deliveryTime, this.expired,this.delivered, this.powerSuppliedInKW,
+                        this.getImageUrl(), this.productionManner, newOwner, this.supplier , this.deliveryTime, this.expired,this.delivered, this.powerSuppliedInKW,
                         this.powerSupplyDurationInMin, this.gridAuthority,this.lockedFunds));
     }
 
@@ -99,6 +100,7 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     public String getImageUrl() {
         return imageUrl;
     }
+    public String getProductionManner() { return productionManner; }
 
     public Instant getDeliveryTime() {
         return deliveryTime;

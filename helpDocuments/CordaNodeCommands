@@ -1,0 +1,71 @@
+Kopiranje falova kroz SCP:
+scp -r  ./* nebojsa@omega:~/energies/project/exp1
+
+Pobrisati sve docker stvari:
+docker volume prune
+docker container prune
+
+Obrisati staru ssh konekciju:
+ssh-keygen -f "/home/nebojscd a/.ssh/known_hosts" -R "[localhost]:2222"
+
+Ostvari ssh konekciju sa cvorom:
+ssh -p 2222 localhost -l user1
+
+Returns all parties currently visible on the network with their advertised services and an observable of future updates to the network:
+run networkMapFeed
+
+Node information:
+run nodeInfo
+
+Ugasi node:
+run gracefulShutdown
+
+Vidi sve registrovane flow-ove:
+run registeredFlows
+
+Dohvati states iz DREAM-a
+run vaultQuery contractStateType: net.corda.samples.auction.states.PowerPromise
+run vaultQuery contractStateType: net.corda.samples.auction.states.BidState
+run vaultQuery contractStateType: net.corda.samples.auction.states.AuctionState
+run vaultQuery contractStateType: net.corda.finance.contracts.asset.Cash$State
+
+
+flow start CreatePowerPromiseFlow title: nesto, description: opis, imageURL: putanja, expires: 2023-08-04T10:11:30, powerSuppliedInKW: 11.11, powerSupplyDurationInMin: 30, lockedFundsDouble: 10.0
+
+flow start CashIssueAndPaymentFlow amount: 10.0 USD,
+                              val issueRef: OpaqueBytes,????
+                              val recipient: Party,
+                              val anonymous: Boolean,
+                              val notary: Party
+
+
+
+
+Testiranje bootCamp-a:
+
+run vaultQuery contractStateType: bootcamp.TokenState
+start TokenIssueFlowInitiator owner: PartyB, amount: 1000
+
+
+Corda sample commands:
+
+flow start ExampleFlow$Initiator iouValue: 50, otherParty: "O=PartyB,L=New York,C=US"
+run vaultQuery contractStateType: net.corda.samples.example.states.IOUState
+
+
+Client requests from cluster server:
+curl --noproxy '*' --request POST http://localhost:8085/api/auction/switch-party/customer
+
+curl --noproxy '*' --request GET http://localhost:8085/api/auction/getCashBalance
+
+curl --noproxy '*' --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"party":"customer","amount":"100"}' \
+  http://localhost:8085/api/auction/issueCash
+  
+curl --noproxy '*' --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --request POST \
+  --data '{"powerSuppliedInKW":"111.0","deliveryTime":"17-08-2023 04:52:10 PM", "powerSupplyDurationInMin":"60.0"}' \
+  http://localhost:8085/api/auction/asset/create
+

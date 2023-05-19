@@ -1,0 +1,12 @@
+1. ./gradlew prepareDockerNodes
+2. Izmenim dokcer compose file tako da koristi lokalne putanje     network_mode: "host"
+3. Izmenim docker compose file tako da koristi host network i nema port mapinga
+4. Odradim obican deploy: ./gradlew clean deployNodes
+5. Prekopiram node foldere (notary, partyA ...) u folder sa docker compose-om 
+6. Mozda ce morati da se napravi poseban persistence folder i u njega da se kopiraju dva persistence fajla za bazu
+7. Prekopiram VMx folder na klaster
+8. Podesim prava pristupa percistance i ostalim fajlovima: sudo chmod -R a+w VM2
+9. Pokrenem aplikaciju na klasteru
+10. Proverim da li sve radi kako traba tako sto:
+    - ssh-keygen -f "/home/nebojsa/.ssh/known_hosts" -R "[localhost]:3333"
+    - ssh -p 3333 localhost -l user1

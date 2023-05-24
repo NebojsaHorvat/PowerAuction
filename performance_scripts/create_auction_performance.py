@@ -25,7 +25,7 @@ for proc in processes:
     proc.pid,proc.cpu_percent()
 
 # Put valid asset id
-data='{"assetId": "1bcd0395-36b5-4156-b602-7bdcacd0f8fc","basePrice": "100","deadline": "18-02-2022 01:59:07 PM"}'
+data='{"assetId": "1bcd0395-36b5-4156-b602-7bdcacd0f8fc","basePrice": "100","deadline": "18-02-2022 01:59:07 PM"}' 
 
 # Iterate each time
 file_name = 'exp1_6.json'

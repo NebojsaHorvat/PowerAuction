@@ -1,5 +1,23 @@
+Kill springBoot docker container if it stays alive after shutdown:
+docker exec -it 4ceb1a5cdff0 sh
+kill 1
+
+Prikaz procesa po PID-u:
+ps -Flww -p THE_PID
+
+Gasenje procesa po PID-u:
+kill -9 THE_PID
+
 Kopiranje falova kroz SCP:
 scp -r  ./* nebojsa@omega:~/energies/project/exp1
+csp performance_scripts nebojsa@alfa:~/energies/project/exp0
+
+Podesiti python okruzenje za skripte:
+cd performance_scripts
+sudo apt install python3.10-venv
+python3 -m venv .
+source ./bin/activate
+pip install -r requirements.txt 
 
 Pobrisati sve docker stvari:
 docker volume prune
@@ -66,6 +84,6 @@ curl --noproxy '*' --header "Content-Type: application/json" \
 curl --noproxy '*' --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --request POST \
-  --data '{"powerSuppliedInKW":"111.0","deliveryTime":"17-08-2023 04:52:10 PM", "powerSupplyDurationInMin":"60.0"}' \
+  --data '{"powerSuppliedInKW":"101.0","deliveryTime":"17-08-2023 04:52:10 PM", "powerSupplyDurationInMin":"60.0"}' \
   http://localhost:8085/api/auction/asset/create
 

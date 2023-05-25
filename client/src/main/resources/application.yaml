@@ -13,4 +13,7 @@ producer:
 gridAuthority:
   host: localhost:10018
 
+speculator:
+  host: localhost:10021
+
 server.port: 8085

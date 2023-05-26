@@ -9,12 +9,14 @@ import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
+import net.corda.core.node.NodeInfo;
 import net.corda.core.node.StatesToRecord;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.finance.workflows.asset.CashUtils;
 import net.corda.samples.auction.contracts.PowerPromiseContract;
 import net.corda.samples.auction.states.PowerPromise;
+import org.w3c.dom.Node;
 
 import java.math.BigDecimal;
 import java.security.PublicKey;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
@@ -41,6 +44,7 @@ public class CreatePowerPromiseFlow {
         private final String description;
         private final String imageURL;
         private final String productionManner;
+        private final boolean isFromRenewableSource;
         private final LocalDateTime expires;
         private final Double powerSuppliedInKW;
         private final Double powerSupplyDurationInMin;
@@ -54,12 +58,14 @@ public class CreatePowerPromiseFlow {
          * @param imageURL    is a url of an image of the asset
          */
         public CreatePowerPromiseFlowInitiator(String title, String description, String imageURL,
-                                               String productionManner, LocalDateTime expires, Double powerSuppliedInKW,
+                                               String productionManner, boolean isFromRenewableSource,
+                                               LocalDateTime expires, Double powerSuppliedInKW,
                                                Double powerSupplyDurationInMin, Double lockedFundsDouble) {
             this.title = title;
             this.description = description;
             this.imageURL = imageURL;
             this.productionManner = productionManner;
+            this.isFromRenewableSource = isFromRenewableSource;
             this.expires = expires;
             this.powerSupplyDurationInMin = powerSupplyDurationInMin;
             this.powerSuppliedInKW = powerSuppliedInKW;
@@ -98,7 +104,8 @@ public class CreatePowerPromiseFlow {
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             Amount<Currency> lockedFunds =  Amount.fromDecimal( new BigDecimal(lockedFundsDouble), Currency.getInstance("USD"));
             PowerPromise output = new PowerPromise(new UniqueIdentifier(), title, description, imageURL, productionManner,
-                    getOurIdentity(), getOurIdentity(), expires.atZone(ZoneId.systemDefault()).toInstant(), false, false,
+                    isFromRenewableSource, false, getOurIdentity(), getOurIdentity(),
+                    expires.atZone(ZoneId.systemDefault()).toInstant(), false, false,
                     powerSuppliedInKW, powerSupplyDurationInMin, gridAuthority, lockedFunds );
 
             // Build the transaction, add the output states and the command to the transaction.
@@ -109,6 +116,16 @@ public class CreatePowerPromiseFlow {
             // Verify the transaction
             transactionBuilder.verify(getServiceHub());
 
+            List<NodeInfo> verificationNodeInfos = getServiceHub().getNetworkMapCache().getAllNodes().stream()
+                    .filter(nodeInfo -> nodeInfo.getLegalIdentities().get(0).getName().toString().toLowerCase().contains("verification"))
+                    .collect(Collectors.toList());
+
+            List<Party> verificationNodes = verificationNodeInfos.stream()
+                    .map(nodeInfo -> nodeInfo.getLegalIdentities().get(0))
+                    .collect(Collectors.toList());
+
+            // TODO: ask for signature from all of the verification nodes extracted above
+
             // Sign the transaction
             List<PublicKey> keysToSign = txAndKeysPair.getSecond();
             keysToSign.add(getOurIdentity().getOwningKey());
@@ -117,6 +134,10 @@ public class CreatePowerPromiseFlow {
             // Notarise the transaction and record the states in the ledger.
             ArrayList<FlowSession> otherParticipant = new ArrayList<>();
             otherParticipant.add(initiateFlow(gridAuthority));
+
+            for(Party verificationNode : verificationNodes) {
+                otherParticipant.add(initiateFlow(verificationNode));
+            }
 
             SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipant));
 
@@ -127,7 +148,7 @@ public class CreatePowerPromiseFlow {
     @InitiatedBy(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class)
     public static class CreatePowerPromiseFlowResponder extends FlowLogic<SignedTransaction> {
 
-        private FlowSession counterpartySession;
+        private final FlowSession counterpartySession;
 
         public CreatePowerPromiseFlowResponder (FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
@@ -144,18 +165,26 @@ public class CreatePowerPromiseFlow {
 
                 @Override
                 protected void checkTransaction(SignedTransaction stx) {
-                    requireThat(require -> {
-                        ContractState output = stx.getTx().getOutputs().get(0).getData();
-                        // TODO ono sto je oputpu nije powerPromise nego verovatno kombinacija powerpromisa i kes transfera, proveri kako to da rascivijas
+                    if (getOurIdentity().getName().toString().toLowerCase().contains("verification")) {
+                        requireThat(require -> {
+
+                            PowerPromise output = (PowerPromise) stx.getTx().getOutputs().get(0).getData();
+                            String productionManner = output.getProductionManner().toLowerCase();
+                            // TODO ono sto je oputpu nije powerPromise nego verovatno kombinacija powerpromisa i kes transfera, proveri kako to da rascivijas
 //                        require.using("This must be an PowerPromise.", output instanceof PowerPromise);
 //                        PowerPromise pwPromise = (PowerPromise) output;
 //                        require.using("I won't accept price amounts lower then 1.", pwPromise.getPowerSuppliedInKW() > 1);
 //                        getLogger().info("NODE +"+getOurIdentity().getName().toString()+" IS SIGNING POWER_TRANSACTION WITH TITLE: "+pwPromise.getTitle() );
-
-                        return null;
-                    });
+                            require.using("Failed to verify power promise",
+                                    !(productionManner.contains("wind") || productionManner.contains("solar")) ||
+                                            !output.getIsFromRenewableSource());
+                            return null;
+                        });
+                    }
                 }
             }
+
+
             final SignTxFlow signTxFlow = new SignTxFlow(counterpartySession);
             final SecureHash txId = subFlow(signTxFlow).getId();
 //            return subFlow(new ReceiveFinalityFlow(counterpartySession));

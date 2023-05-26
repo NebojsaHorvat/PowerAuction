@@ -74,12 +74,15 @@ public class Controller {
                     DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss a"));
             String title = powerForm.getPowerSuppliedInKW()*powerForm.getPowerSupplyDurationInMin()/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
+            double isRenewableChances = Math.random();
+            String productionManner = isRenewableChances < 0.5 ? "hydro" : "thermal";
             // TODO locked funds su uvek 10
             activeParty.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",
                     "img/power.png",
-                    "",
+                    productionManner,
+                    true,
                     expires,powerForm.getPowerSuppliedInKW(),powerForm.getPowerSupplyDurationInMin(),10.0);
 
             return APIResponse.success();
@@ -268,7 +271,8 @@ public class Controller {
                     title,
                     "",
                     "img/power.png",
-                    "",
+                    "wind",
+                    true,
                     expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
             powerSuppliedInKW = 55.0;
@@ -279,7 +283,8 @@ public class Controller {
                     title,
                     "",
                     "img/power.png",
-                    "",
+                    "nuclear",
+                    true,
                     expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
             // Customer ne moze da ima powerPromise ciji je on vlasnik
@@ -302,7 +307,8 @@ public class Controller {
                     title,
                     "",
                     "img/power.png",
-                    "",
+                    "solar",
+                    true,
                     expires,powerSuppliedInKW,powerSupplyDurationInMin,lockedFunds);
 
         }catch (Exception e){

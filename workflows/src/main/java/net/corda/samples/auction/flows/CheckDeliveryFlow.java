@@ -58,13 +58,13 @@ public class CheckDeliveryFlow {
             Party notary = inputStateAndRef.getState().getNotary();
             PowerPromise inputState = inputStateAndRef.getState().getData();
 
-            // Check used to restrict the flow execution to be only done by the auctioneer.
             String ourIdentityName = getOurIdentity().getName().toString();
             boolean isSpeculatorAndOwner = ourIdentityName.toLowerCase().contains("speculator") &&
                     inputState.getOwner().nameOrNull().toString().equals(ourIdentityName);
             boolean isGridAuthority = ourIdentityName.equals(inputState.getGridAuthority().nameOrNull().toString());
             getLogger().info("DELIVERY FLOW INFO: Our identity: " + getOurIdentity());
 
+            // Check used to restrict the flow execution to be only done by the grid authority, or the speculator.
             if (isSpeculatorAndOwner || isGridAuthority) {
                 getLogger().info("DELIVERY FLOW INFO: Grid authority or speculator entered its section");
 
@@ -86,77 +86,24 @@ public class CheckDeliveryFlow {
 
                     if (isSpeculatorAndOwner) {
                         getLogger().info("SPECULATOR INFO: Speculator detected.");
+
                         // TODO Adjust the value of the fee acording to a chosen policy. Currently the same as in "else" branch.
-//                        amountToSpend = Amount.fromDecimal(new BigDecimal(
-//                                inputState.getLockedFunds().toDecimal().doubleValue()*0.9),
-//                                Currency.getInstance("USD"));
-//
-//                        CordaX500Name legalName = inputState.getOwner().nameOrNull();
-//                        getLogger().info("SPECULATOR INFO: Speculator legal name: " + legalName.toString());
-//                        amountSender = getServiceHub()
-//                                .getNetworkMapCache()
-//                                .getNodeByLegalName(CordaX500Name.parse("O=Speculator,L=Paris,C=FR"))
-//                                .getLegalIdentitiesAndCerts().get(0);
-//
-//                        getLogger().info("SPECULATOR INFO: Amount sender legal name 1: " + amountSender.getName().toString());
-//                        amountSender = getServiceHub()
-//                                .getNetworkMapCache()
-//                                .getNodeByLegalName(legalName)
-//                                .getLegalIdentitiesAndCerts().get(0);
-//
-//                        getLogger().info("SPECULATOR INFO: Amount sender legal name 2: " + amountSender.getName().toString());
-//                        getLogger().info("SPECULATOR INFO: Amount sender: " + amountSender);
-//
-//                        amountReceiver = inputState.getGridAuthority();
-//
-//                        // TODO Determine who should sign the transaction. Should i sign the transaction which takes my money?
-//                        signersList = Arrays.asList(
-//                                getOurIdentity().getOwningKey(),
-//                                inputState.getGridAuthority().getOwningKey());
-//                        otherParticipants.add(initiateFlow(inputState.getOwner()));
-//                        otherParticipants.add(initiateFlow(inputState.getGridAuthority()));
-                        getLogger().info("SPECULATOR INFO: Added participants");
-
-
+                        // TODO Decide whether the fee should be equal to the full locked amount, rather than 90%
                         amountToSpend = Amount.fromDecimal(new BigDecimal(
                                 inputState.getLockedFunds().toDecimal().doubleValue()*0.9),
                                 Currency.getInstance("USD"));
                         getLogger().info("SPECULATOR INFO: Created amount to spend");
+
                         amountReceiver = inputState.getGridAuthority();
+
+                        // TODO Determine who should sign the transaction. Should i sign the transaction which takes my money?
                         signersList = Arrays.asList(
                                 getOurIdentity().getOwningKey(),
                                 inputState.getGridAuthority().getOwningKey());
                         getLogger().info("SPECULATOR INFO: Created signers list");
-                        //otherParticipants.add(initiateFlow(inputState.getOwner()));
+
                         otherParticipants.add(initiateFlow(inputState.getGridAuthority()));
-                        TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
-
-                        Pair<TransactionBuilder, List<PublicKey>> txAndKeysPair =
-                                CashUtils.generateSpend(getServiceHub(), transactionBuilder, amountToSpend, amountSender,
-                                        amountReceiver, Collections.emptySet());
-                        getLogger().info("SPECULATOR INFO: Created cash spend");
-                        transactionBuilder = txAndKeysPair.getFirst();
-
-                        transactionBuilder.addInputState(inputStateAndRef)
-                                .addOutputState(outputState)
-                                .addCommand(new AuctionContract.Commands.EndAuction(), signersList);
-
-                        getLogger().info("SPECULATOR INFO: Added input, output, and command");
-
-                        //Verify the transaction against the contract
-                        transactionBuilder.verify(getServiceHub());
-
-                        // Sign the transaction. The transaction should be sigend with the new keyPair generated for Cash spending
-                        // and the node's key.
-                        List<PublicKey> keysToSign = txAndKeysPair.getSecond();
-                        keysToSign.add(getOurIdentity().getOwningKey());
-                        selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, keysToSign);
-                        getLogger().info("SPECULATOR INFO: Self signed the transaction");
-
-                        SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipants));
-                        getLogger().info("SPECULATOR INFO: Initiated collect signatures sub flow");
-                        //Notarize and record the transaction in all participants ledger.
-                        return subFlow(new FinalityFlow(signedTransaction, otherParticipants));
+                        getLogger().info("SPECULATOR INFO: Added other participants");
 
                     }
                     else {
@@ -170,31 +117,37 @@ public class CheckDeliveryFlow {
                                 getOurIdentity().getOwningKey(),
                                 inputState.getOwner().getOwningKey());
                         otherParticipants.add(initiateFlow(inputState.getOwner()));
-                        TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
-
-                        Pair<TransactionBuilder, List<PublicKey>> txAndKeysPair =
-                                CashUtils.generateSpend(getServiceHub(), transactionBuilder, amountToSpend, amountSender,
-                                        amountReceiver, Collections.emptySet());
-                        transactionBuilder = txAndKeysPair.getFirst();
-
-                        transactionBuilder.addInputState(inputStateAndRef)
-                                .addOutputState(outputState)
-                                .addCommand(new AuctionContract.Commands.EndAuction(), signersList);
-
-                        //Verify the transaction against the contract
-                        transactionBuilder.verify(getServiceHub());
-
-                        // Sign the transaction. The transaction should be sigend with the new keyPair generated for Cash spending
-                        // and the node's key.
-                        List<PublicKey> keysToSign = txAndKeysPair.getSecond();
-                        keysToSign.add(getOurIdentity().getOwningKey());
-                        selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, keysToSign);
-
-                        SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipants));
-                        //Notarize and record the transaction in all participants ledger.
-                        return subFlow(new FinalityFlow(signedTransaction, otherParticipants));
-
                     }
+
+                    TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
+
+                    Pair<TransactionBuilder, List<PublicKey>> txAndKeysPair =
+                            CashUtils.generateSpend(getServiceHub(), transactionBuilder, amountToSpend, amountSender,
+                                    amountReceiver, Collections.emptySet());
+                    getLogger().info("DELIVERY FLOW INFO: Created cash spend");
+                    transactionBuilder = txAndKeysPair.getFirst();
+
+                    transactionBuilder.addInputState(inputStateAndRef)
+                            .addOutputState(outputState)
+                            .addCommand(new AuctionContract.Commands.EndAuction(), signersList);
+                    getLogger().info("DELIVERY FLOW INFO: Added input, output, and command");
+
+                    //Verify the transaction against the contract
+                    transactionBuilder.verify(getServiceHub());
+
+                    // Sign the transaction. The transaction should be sigend with the new keyPair generated for Cash spending
+                    // and the node's key.
+                    List<PublicKey> keysToSign = txAndKeysPair.getSecond();
+                    keysToSign.add(getOurIdentity().getOwningKey());
+                    selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, keysToSign);
+                    getLogger().info("DELIVERY FLOW INFO: Self signed the transaction");
+
+                    SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipants));
+                    getLogger().info("DELIVERY FLOW INFO: Initiated collect signatures sub flow");
+
+                    //Notarize and record the transaction in all participants ledger.
+                    return subFlow(new FinalityFlow(signedTransaction, otherParticipants));
+
                 } else {
                     final Party powerCompany = getServiceHub().getNetworkMapCache()
                             .getNodeByLegalName(CordaX500Name.parse("O=PowerCompany,L=Paris,C=FR")).getLegalIdentities().get(0);

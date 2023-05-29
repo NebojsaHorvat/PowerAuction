@@ -81,6 +81,16 @@ public class CreatePowerPromiseFlow {
                 getLogger().warn("MY WARNING: Customer can not create Power Promise");
                 throw new FlowException("Customer can not create Power Promise");
             }
+
+            /**
+             * TODO ## Uncomment this section when delivery flow is fixed and there is no more a need for speculator
+             * TODO ## to create power promises
+             */
+            /*if (getOurIdentity().getName().toString().toLowerCase().contains("speculator") ){
+                getLogger().warn("MY WARNING: Speculator can not create Power Promise");
+                throw new FlowException("Speculator can not create Power Promise");
+            }*/
+
             // Pare se stavljaju u depozit cim se napravi powerPromise
             TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
 

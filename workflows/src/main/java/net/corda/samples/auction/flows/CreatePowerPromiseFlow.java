@@ -11,6 +11,7 @@ import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.core.node.NodeInfo;
 import net.corda.core.node.StatesToRecord;
+import net.corda.core.transactions.CoreTransaction;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.finance.workflows.asset.CashUtils;
@@ -108,13 +109,6 @@ public class CreatePowerPromiseFlow {
                     expires.atZone(ZoneId.systemDefault()).toInstant(), false, false,
                     powerSuppliedInKW, powerSupplyDurationInMin, gridAuthority, lockedFunds );
 
-            // Build the transaction, add the output states and the command to the transaction.
-            transactionBuilder.addOutputState(output)
-                    .addCommand(new PowerPromiseContract.Commands.CreatePowerPromise(),
-                            Arrays.asList(output.getOwner().getOwningKey(), output.getGridAuthority().getOwningKey())); // Required Signers
-
-            // Verify the transaction
-            transactionBuilder.verify(getServiceHub());
 
             List<NodeInfo> verificationNodeInfos = getServiceHub().getNetworkMapCache().getAllNodes().stream()
                     .filter(nodeInfo -> nodeInfo.getLegalIdentities().get(0).getName().toString().toLowerCase().contains("verification"))
@@ -124,24 +118,35 @@ public class CreatePowerPromiseFlow {
                     .map(nodeInfo -> nodeInfo.getLegalIdentities().get(0))
                     .collect(Collectors.toList());
 
-            // TODO: ask for signature from all of the verification nodes extracted above
+            List<PublicKey> signersList = new ArrayList<>();
+            signersList.add(output.getOwner().getOwningKey());
+            signersList.add(output.getGridAuthority().getOwningKey());
+
+            ArrayList<FlowSession> otherParticipants = new ArrayList<>();
+
+            for(Party verificationNode : verificationNodes) {
+                otherParticipants.add(initiateFlow(verificationNode));
+                signersList.add(verificationNode.getOwningKey());
+            }
+
+            // Build the transaction, add the output states and the command to the transaction.
+            transactionBuilder.addOutputState(output)
+                    .addCommand(new PowerPromiseContract.Commands.CreatePowerPromise(), signersList); // Required Signers
+
+            // Verify the transaction
+            transactionBuilder.verify(getServiceHub());
+
 
             // Sign the transaction
             List<PublicKey> keysToSign = txAndKeysPair.getSecond();
             keysToSign.add(getOurIdentity().getOwningKey());
             SignedTransaction selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder,keysToSign);
 
-            // Notarise the transaction and record the states in the ledger.
-            ArrayList<FlowSession> otherParticipant = new ArrayList<>();
-            otherParticipant.add(initiateFlow(gridAuthority));
 
-            for(Party verificationNode : verificationNodes) {
-                otherParticipant.add(initiateFlow(verificationNode));
-            }
+            otherParticipants.add(initiateFlow(gridAuthority));
+            SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipants));
 
-            SignedTransaction signedTransaction = subFlow(new CollectSignaturesFlow(selfSignedTransaction, otherParticipant));
-
-            return subFlow(new FinalityFlow(signedTransaction, otherParticipant));
+            return subFlow(new FinalityFlow(signedTransaction, otherParticipants));
         }
     }
 
@@ -166,18 +171,31 @@ public class CreatePowerPromiseFlow {
                 @Override
                 protected void checkTransaction(SignedTransaction stx) {
                     if (getOurIdentity().getName().toString().toLowerCase().contains("verification")) {
+                        getLogger().info("VERIFICATION INFO: Verification agency entered responder flow");
                         requireThat(require -> {
-
-                            PowerPromise output = (PowerPromise) stx.getTx().getOutputs().get(0).getData();
+                            getLogger().info("VERIFICATION INFO: data before casting: " + stx.getCoreTransaction().getOutputs());
+                            CoreTransaction coreTransaction = stx.getCoreTransaction();
+                            int outputsSize = coreTransaction.getOutputs().size();
+                            PowerPromise output = (PowerPromise) stx.getCoreTransaction().getOutputs().get(outputsSize-1).getData();
+                            getLogger().info("VERIFICATION INFO: data after casting: " + output);
                             String productionManner = output.getProductionManner().toLowerCase();
+                            getLogger().info("VERIFICATION INFO: Production manner is: " + productionManner);
+                            if (output.getIsFromRenewableSource()) {
+                                getLogger().info("VERIFICATION INFO: Producer of Power Promise claims that it is from renewable source");
+                            } else {
+                                getLogger().info("VERIFICATION INFO: Producer of Power Promise claims that it is not from renewable source");
+                            }
+
+
                             // TODO ono sto je oputpu nije powerPromise nego verovatno kombinacija powerpromisa i kes transfera, proveri kako to da rascivijas
 //                        require.using("This must be an PowerPromise.", output instanceof PowerPromise);
 //                        PowerPromise pwPromise = (PowerPromise) output;
 //                        require.using("I won't accept price amounts lower then 1.", pwPromise.getPowerSuppliedInKW() > 1);
 //                        getLogger().info("NODE +"+getOurIdentity().getName().toString()+" IS SIGNING POWER_TRANSACTION WITH TITLE: "+pwPromise.getTitle() );
                             require.using("Failed to verify power promise",
-                                    !(productionManner.contains("wind") || productionManner.contains("solar")) ||
+                                    (productionManner.contains("wind") || productionManner.contains("solar")) ||
                                             !output.getIsFromRenewableSource());
+                            getLogger().info("VERIFICATION INFO: Verification agency approved the production manner");
                             return null;
                         });
                     }

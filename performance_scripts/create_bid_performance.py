@@ -7,20 +7,21 @@ import sys
 
 # Get the command-line arguments
 if len(sys.argv) != 5:
-    print("Usage: create_auction_performance.py [file_name_memory_sum] [file_name_memory_process] [number_of_tests] [valid_asset_id]")
+    print("Usage: create_bid_performance.py [file_name_memory_sum] [file_name_memory_process] [number_of_tests] [valid_auction_id]")
     sys.exit(1)
 
 file_name_memory = sys.argv[1]
 file_name_process = sys.argv[2]
 number_of_tests= int(sys.argv[3])
-asset_id = sys.argv[4]
+auction_id = sys.argv[4]
 
 # Find all java processes. While doing this test I made sure that all java processess which are not Corda are shutdown
 process_filter = filter(lambda p: p.name() == "java", psutil.process_iter())
 processes = list(process_filter)
 
-# Make sure that prosumer is acitive party on server
-response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
+# Make sure that customer is acitive party on server
+response = requests.post("http://localhost:8085/api/auction/switch-party/customer")
+powerC = False
 
 
 ################# Create powerPromise
@@ -37,18 +38,22 @@ proxies = {
 for proc in processes:
     proc.pid,proc.cpu_percent()
 
-# Put valid asset id
-data=f'{{"assetId": "{asset_id}","basePrice": "1","deadline": "18-09-2023 01:59:07 PM"}}'
-
+# Put valid auction id
+amount = 22
+data=f'{{"amount": "{amount}", "auctionId": "{auction_id}"}}'
 
 # Task
 start = time.time()
 for x in range(number_of_tests):
-    response = requests.post("http://localhost:8085/api/auction/create",
+    response = requests.post("http://localhost:8085/api/auction/placeBid",
     data=data,
     headers=headers,
     proxies=proxies
     )
+    amount+=1
+    data=f'{{"amount": "{amount}", "auctionId": "{auction_id}"}}' 
+    # print (data)
+    # print(response)
 end = time.time()
 
 # Metrics

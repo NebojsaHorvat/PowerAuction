@@ -10,7 +10,7 @@ kill -9 THE_PID
 
 Kopiranje falova kroz SCP:
 scp -r  ./* nebojsa@omega:~/energies/project/exp1
-csp performance_scripts nebojsa@alfa:~/energies/project/exp0
+scp performance_scripts nebojsa@alfa:~/energies/project/exp0
 
 Podesiti python okruzenje za skripte:
 cd performance_scripts
@@ -65,7 +65,7 @@ run vaultQuery contractStateType: bootcamp.TokenState
 start TokenIssueFlowInitiator owner: PartyB, amount: 1000
 
 
-Corda sample commands:
+Corda sample commands:S
 
 flow start ExampleFlow$Initiator iouValue: 50, otherParty: "O=PartyB,L=New York,C=US"
 run vaultQuery contractStateType: net.corda.samples.example.states.IOUState
@@ -78,8 +78,10 @@ curl --noproxy '*' --request GET http://localhost:8085/api/auction/getCashBalanc
 
 curl --noproxy '*' --header "Content-Type: application/json" \
   --request POST \
-  --data '{"party":"customer","amount":"100"}' \
+  --data '{"party":"producer","amount":"10000"}' \
   http://localhost:8085/api/auction/issueCash
+
+curl --noproxy '*' --header "Content-Type: application/json" --request POST --data '{"party":"producer","amount":"10000"}' http://localhost:8085/api/auction/issueCash
   
 curl --noproxy '*' --header "Content-Type: application/json" \
   --header "Accept: application/json" \

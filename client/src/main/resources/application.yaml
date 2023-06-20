@@ -1,16 +1,32 @@
 powerCompany:
-  host: 192.168.88.252:10006
+  host: localhost:10006
 
 prosumer:
-  host: 192.168.88.251:10009
+  host: localhost:10009
 
 customer:
-  host: 192.168.88.249:10012
+  host: localhost:10012
 
 producer:
-  host: 192.168.88.249:10015
+  host: localhost:10015
 
 gridAuthority:
-  host: 192.168.88.250:10018
+  host: localhost:10018
 
 server.port: 8085
+# powerCompany:
+#   host: 192.168.88.252:10006
+
+# prosumer:
+#   host: 192.168.88.251:10009
+
+# customer:
+#   host: 192.168.88.249:10012
+
+# producer:
+#   host: 192.168.88.249:10015
+
+# gridAuthority:
+#   host: 192.168.88.250:10018
+
+# server.port: 8085

@@ -1,4 +1,5 @@
 #!/bin/bash
+# ./run-nodes-on-remote-servers.sh [experiment_name]
 
 experiment_name=$1
 
@@ -12,9 +13,18 @@ run_nodes_on_remote_machine() {
     do
         echo "SSH connection to remote host: " $remote_host
         ssh "$remote_user@$remote_host" << EOF
-        cd "\$HOME/energies/project/${experiment_name}"
-        ./runnodes
+        cd "\$HOME/energies/project/${experiment_name}/performance_scripts_remote/"
+        if [ -d "lib" ]; then
+            echo "Venv and python3 requirements exist"
+        else
+            echo "Creating venv in folder and installing python3 requirements."
+            python3 -m venv .
+            source ./bin/activate
+            pip install -r requirements.txt 
+        fi
 
+        cd ..
+        ./runnodes
 EOF
     done
 }

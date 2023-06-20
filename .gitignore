@@ -18,3 +18,4 @@ auto-exp-*/
 performance_scripts/lib
 performance_scripts/lib64
 performance_scripts/share
+build_local/

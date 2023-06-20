@@ -1,7 +1,11 @@
 #!/bin/bash
+# ./prepare-build-for-server [experiment_name]
 
-# build new
+
+# build
 ./gradlew clean deployNodes
+
+## TODO delete previous exp folder with same name
 
 experiment_name=$1
 mkdir $experiment_name
@@ -22,13 +26,14 @@ copy_node_data_localy() {
         node_config=$node"_node.conf"
         cp -r build/nodes/$node/  ./$experiment_name/$node_name
         cp build/nodes/$node_config  ./$experiment_name/$node_name
+        cp -r ./performance_scripts_remote/ ./$experiment_name/$node_name
     done
 }
 
 
 scp_node_data_to_remote_machine() {
     local remote_hosts=("$@")    
-
+    # TODO remove exp folder if it exits
     remote_user="nebojsa"
     remote_folder="/home/nebojsa/energies/project/${experiment_name}"
     for remote_host in "${remote_hosts[@]}"
@@ -60,8 +65,8 @@ gama_nodes=("GridAuthority")
 copy_node_data_localy "${gama_nodes[@]}" "gama"
 
 #copy localy created folders to remote hosts
-# remote_hosts=("omega" "alfa" "beta" "gama")
-remote_hosts=("alfa")
+remote_hosts=("omega" "alfa" "beta" "gama")
+# remote_hosts=("alfa")
 scp_node_data_to_remote_machine "${remote_hosts[@]}"
 
 

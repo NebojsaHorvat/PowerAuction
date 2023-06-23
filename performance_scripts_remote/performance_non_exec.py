@@ -47,8 +47,8 @@ for proc in processes:
     process_infos.append(proc_info)
     # print(proc_info)
 
-print (f"Memory rss: {memory_sum_rss}\nMemory vms: {memory_sum_vms}")
-output_time_memory= f"Memory rss: {memory_sum_rss}\nMemory vms: {memory_sum_vms}"
+print (f'{{"EXP file name": "{file_name_process}", "Memory rss": {memory_sum_rss}, "Memory vms": {memory_sum_vms} }}')
+output_time_memory= f'{{"EXP file name": "{file_name_process}", "Memory rss": {memory_sum_rss}, "Memory vms": {memory_sum_vms} }}'
 with open(f"./data/{file_name_memory}", "w") as file:
         file.write(output_time_memory)
 

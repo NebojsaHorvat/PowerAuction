@@ -14,15 +14,6 @@ file_name_memory = sys.argv[1]
 file_name_process = sys.argv[2]
 number_of_tests= int(sys.argv[3])
 
-# Find all java processes. While doing this test I made sure that all java processess which are not Corda are shutdown
-process_filter = filter(lambda p: p.name() == "java", psutil.process_iter())
-processes = list(process_filter)
-
-# Make sure that prosumer is acitive party on server
-response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
-
-
-################# Create powerPromise
 headers={
     'Content-type':'application/json', 
     'Accept':'application/json'
@@ -32,6 +23,22 @@ proxies = {
     "http": "",
     "https": "",
 }
+
+# Find all java processes. While doing this test I made sure that all java processess which are not Corda are shutdown
+process_filter = filter(lambda p: p.name() == "java", psutil.process_iter())
+processes = list(process_filter)
+
+# Make sure that prosumer is acitive party on server
+response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
+# Make sure that producer has enough cash to crate power promises
+data='{"party":"producer","amount":"10000"}'
+response = requests.post("http://localhost:8085/api/auction/issueCash",
+    data=data,
+    headers=headers,
+    proxies=proxies
+    )
+
+################# Create powerPromise
 
 for proc in processes:
     proc.pid,proc.cpu_percent()

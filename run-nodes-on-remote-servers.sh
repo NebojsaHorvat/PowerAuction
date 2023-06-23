@@ -12,7 +12,7 @@ run_nodes_on_remote_machine() {
     for remote_host in "${remote_hosts[@]}"
     do
         echo "SSH connection to remote host: " $remote_host
-        ssh "$remote_user@$remote_host" << EOF
+        ssh -tt "$remote_user@$remote_host" << EOT
         cd "\$HOME/energies/project/${experiment_name}/performance_scripts_remote/"
         if [ -d "lib" ]; then
             echo "Venv and python3 requirements exist"
@@ -24,8 +24,10 @@ run_nodes_on_remote_machine() {
         fi
 
         cd ..
-        ./runnodes
-EOF
+        ./runnodes 
+exit
+EOT
+    echo "DOOONE Running nodes on ${remote_host}"
     done
 }
 

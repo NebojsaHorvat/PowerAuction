@@ -72,7 +72,7 @@ run vaultQuery contractStateType: net.corda.samples.example.states.IOUState
 
 
 Client requests from cluster server:
-curl --noproxy '*' --request POST http://localhost:8085/api/auction/switch-party/customer
+curl --noproxy '*' --request POST http://localhost:8085/api/auction/switch-party/producer
 
 curl --noproxy '*' --request GET http://localhost:8085/api/auction/getCashBalance
 

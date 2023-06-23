@@ -15,7 +15,7 @@ run_non_exec_scripts_on_remote_machine() {
         ssh "$remote_user@$remote_host" << EOF
             cd "\$HOME/energies/project/${experiment_name}/performance_scripts_remote/"
             source bin/activate
-            python3 performance_non_exec.py ${file_name_memory_sum} ${file_name_memory_process}
+            python3 performance_non_exec.py "${file_name_memory_sum}_${remote_host}" "${file_name_memory_process}_${remote_host}"
 EOF
     done
 }
@@ -31,7 +31,7 @@ run_create_PP_scripts_on_remote_machine() {
     ssh "$remote_user@$remote_host" << EOF
         cd "\$HOME/energies/project/${experiment_name}/performance_scripts_remote/"
         source bin/activate
-        python3 create_power_promise_performance.py ${file_name_memory_sum} ${file_name_memory_process} ${number_of_operations}
+        python3 create_power_promise_performance.py "${file_name_memory_sum}_${remote_host}" "${file_name_memory_process}_${remote_host}" ${number_of_operations}
 EOF
 }
 
@@ -47,7 +47,7 @@ run_create_auction_scripts_on_remote_machine() {
     ssh "$remote_user@$remote_host" << EOF
         cd "\$HOME/energies/project/${experimentexp_name}/performance_scripts_remote/"
         source bin/activate
-        python3 create_auction_performance.py ${file_name_memory_sum} ${file_name_memory_process} ${number_of_operations} ${PP_id}
+        python3 create_auction_performance.py "${file_name_memory_sum}_${remote_host}" "${file_name_memory_process}_${remote_host}" ${number_of_operations} ${PP_id}
 EOF
 }
 
@@ -63,12 +63,12 @@ run_create_bid_scripts_on_remote_machine() {
     ssh "$remote_user@$remote_host" << EOF
         cd "\$HOME/energies/project/${experiment_name}/performance_scripts_remote/"
         source bin/activate
-        python3 create_bid_performance.py ${file_name_memory_sum} ${file_name_memory_process} ${number_of_operations} ${auction_id}
+        python3 create_bid_performance.py "${file_name_memory_sum}_${remote_host}" "${file_name_memory_process}_${remote_host}" ${number_of_operations} ${auction_id}
 EOF
 }
 
 # test_numbers=(1 10 100 200)
-test_numbers=(1 2)
+test_numbers=(1)
 
 file_name_memory_base="memory_${experiment_name}_try${repetition_number}_transactions"
 file_name_process_base="process_${experiment_name}_try${repetition_number}_transactions"
@@ -79,6 +79,6 @@ do
     file_name_memory="${file_name_memory_base}_cretePP_${number_of_tests}"
     file_name_process="${file_name_process_base}_cretePP_${number_of_tests}"
     run_create_PP_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
-    run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}"
+    # run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}"
 done
 

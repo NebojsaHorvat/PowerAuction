@@ -27,7 +27,7 @@ run_nodes_on_remote_machine() {
         ./runnodes 
 exit
 EOT
-    echo "DOOONE Running nodes on ${remote_host}"
+    
     done
 }
 
@@ -38,8 +38,9 @@ run_spring_server_on_remote_machine() {
 
 
 #copy localy created folders to remote hosts
-# remote_hosts=("omega" "alfa" "beta" "gama")
-remote_hosts=( "alfa" )
+remote_hosts=("omega" "alfa" "beta" "gama")
+# remote_hosts=( "alfa" )
 run_nodes_on_remote_machine "${remote_hosts[@]}"
-
+echo "Sleep for 1 minute and wait for nodes to startup on remote machines"
+sleep 1m
 run_spring_server_on_remote_machine "omega"

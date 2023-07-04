@@ -67,11 +67,24 @@ run_create_bid_scripts_on_remote_machine() {
 EOF
 }
 
+run_issue_cache_to_producer_producer() {
+    local remote_host="omega"   
+    remote_user="nebojsa"
+
+    echo "SSH connection to remote host: " $remote_host
+    ssh "$remote_user@$remote_host" << EOF
+    curl --noproxy '*' --header "Content-Type: application/json" --request POST --data '{"party":"producer","amount":"10000"}' http://localhost:8085/api/auction/issueCash
+EOF
+}
+
 # test_numbers=(1 10 100 200)
 test_numbers=(1)
 
 file_name_memory_base="memory_${experiment_name}_try${repetition_number}_transactions"
 file_name_process_base="process_${experiment_name}_try${repetition_number}_transactions"
+
+# In order to crete prower promises we need to have sufficent amount of cash
+run_issue_cache_to_producer_producer
 
 # Run create PP tests
 for number_of_tests in "${test_numbers[@]}"

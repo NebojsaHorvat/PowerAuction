@@ -1,3 +1,6 @@
+Kill all java processes:
+killall -9 java
+
 Kill springBoot docker container if it stays alive after shutdown:
 docker exec -it 4ceb1a5cdff0 sh
 kill 1

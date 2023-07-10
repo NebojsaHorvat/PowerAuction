@@ -134,4 +134,6 @@ public class AuctionState implements SchedulableState {
     public Boolean getActive() {
         return active;
     }
+
+    
 }

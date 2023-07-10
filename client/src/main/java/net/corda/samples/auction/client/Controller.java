@@ -4,9 +4,12 @@ import net.corda.core.contracts.Amount;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.TransactionVerificationException;
 import net.corda.core.messaging.CordaRPCOps;
+import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.utilities.OpaqueBytes;
 import net.corda.finance.contracts.asset.Cash;
 import net.corda.finance.flows.CashIssueAndPaymentFlow;
+import net.corda.samples.auction.client.DTO.AuctionDTO;
+import net.corda.samples.auction.client.DTO.PowerPromiseDTO;
 import net.corda.samples.auction.flows.*;
 import net.corda.samples.auction.states.PowerPromise;
 import net.corda.samples.auction.states.AuctionState;
@@ -16,13 +19,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auction/")
+@CrossOrigin(origins="http://localhost:3000")
 public class Controller {
 
     @Autowired
@@ -45,22 +51,56 @@ public class Controller {
     private CordaRPCOps activeParty;
 
     @GetMapping("list")
-    public APIResponse<List<StateAndRef<AuctionState>>> getAuctionList() {
+    public APIResponse<List<AuctionDTO>> getAuctionList() {
         try{
             List<StateAndRef<AuctionState>> auctionList = activeParty.vaultQuery(AuctionState.class).getStates();
-            return APIResponse.success(auctionList);
+
+            // auctionList.stream().map(a -> new AuctionDTO(a.getState().getData())).forEach(a -> System.out.println(a));
+            List<AuctionState> auctions = auctionList.stream().map(a -> a.getState().getData()).collect(Collectors.toList());
+
+            //proci kroz sve aukcije dobaviti power promise i pretvoriti sve u DTO
+            List<AuctionDTO> auctionDTOs = new ArrayList<>();
+            for(AuctionState a : auctions){
+                System.out.println(a.getAuctionItem().getPointer().getId().toString());
+                PowerPromise p = getAssetById(a.getAuctionItem().getPointer().getId().toString());
+                // System.out.println("title " + p.getTitle());
+                if(p != null){
+                    auctionDTOs.add(new AuctionDTO(a, p));
+                }
+                
+            }
+
+            return APIResponse.success(auctionDTOs);
         }catch(Exception e){
             return APIResponse.error(e.getMessage());
         }
     }
 
     @GetMapping("asset/list")
-    public APIResponse<List<StateAndRef<PowerPromise>>> getAssetList(){
+    public APIResponse<List<PowerPromiseDTO>> getAssetList(){
         try{
+    
             List<StateAndRef<PowerPromise>> assetList = activeParty.vaultQuery(PowerPromise.class).getStates();
-            return APIResponse.success(assetList);
+            List<PowerPromiseDTO> assets = assetList.stream().map(a -> new PowerPromiseDTO(a.getState().getData())).collect(Collectors.toList());
+            return APIResponse.success(assets);
         }catch(Exception e){
             return APIResponse.error(e.getMessage());
+        }
+    }
+
+
+    
+    public PowerPromise getAssetById(String assetId){
+        try{
+            List<StateAndRef<PowerPromise>> assetList = activeParty.vaultQuery(PowerPromise.class).getStates();
+            List<StateAndRef<PowerPromise>> assets = assetList.stream().filter(a -> a.getState().getData().getLinearId().getId().toString().equals(assetId)).collect(Collectors.toList());
+
+            PowerPromise p = assets.get(0).getState().getData();
+            System.out.println(p);
+            return p;
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 

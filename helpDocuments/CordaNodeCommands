@@ -46,8 +46,8 @@ run registeredFlows
 
 Dohvati states iz DREAM-a
 run vaultQuery contractStateType: net.corda.samples.auction.states.PowerPromise
-run vaultQuery contractStateType: net.corda.samples.auction.states.BidState
 run vaultQuery contractStateType: net.corda.samples.auction.states.AuctionState
+run vaultQuery contractStateType: net.corda.samples.auction.states.BidState
 run vaultQuery contractStateType: net.corda.finance.contracts.asset.Cash$State
 
 
@@ -78,6 +78,8 @@ Client requests from cluster server:
 curl --noproxy '*' --request POST http://localhost:8085/api/auction/switch-party/producer
 
 curl --noproxy '*' --request GET http://localhost:8085/api/auction/getCashBalance
+
+curl --noproxy '*' --request GET http://localhost:8085/api/auction/asset/list
 
 curl --noproxy '*' --header "Content-Type: application/json" \
   --request POST \

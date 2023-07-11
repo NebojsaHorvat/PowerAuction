@@ -28,7 +28,7 @@ proxies = {
 process_filter = filter(lambda p: p.name() == "java", psutil.process_iter())
 processes = list(process_filter)
 
-# Make sure that prosumer is acitive party on server
+# Make sure that prosumer is active party on server
 response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
 # Make sure that producer has enough cash to crate power promises
 data='{"party":"producer","amount":"10000"}'

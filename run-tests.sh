@@ -1,5 +1,5 @@
 #!/bin/bash
-# ./run-tests.sh [experiment_name] [experiment try number]
+# ./run-tests.sh [experiment_name] [experiment tries number]
 
 experiment_name=$1
 repetition_number=$2
@@ -78,20 +78,37 @@ EOF
 }
 
 # test_numbers=(1 10 100 200)
-test_numbers=(1)
 
-file_name_memory_base="memory_${experiment_name}_try${repetition_number}_transactions"
-file_name_process_base="process_${experiment_name}_try${repetition_number}_transactions"
+
 
 # In order to crete prower promises we need to have sufficent amount of cash
-run_issue_cache_to_producer_producer
-
-# Run create PP tests
-for number_of_tests in "${test_numbers[@]}"
-do
-    file_name_memory="${file_name_memory_base}_cretePP_${number_of_tests}"
-    file_name_process="${file_name_process_base}_cretePP_${number_of_tests}"
-    run_create_PP_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
-    # run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}"
+test_numbers=(1 10 100)
+# Create list which will conteaind all 
+tries=()
+for (( i = 1; i <= repetition_number; i++ )); do
+    # Add the incremented number to the array
+    tries+=("$i")
 done
+
+for number_of_try in "${tries[@]}"
+do   
+    file_name_memory_base="memory_${experiment_name}_try${number_of_try}_transactions"
+    file_name_process_base="process_${experiment_name}_try${number_of_try}_transactions"
+
+    run_issue_cache_to_producer_producer
+    # Run create PP tests
+    for number_of_tests in "${test_numbers[@]}"
+    do
+        file_name_memory="${file_name_memory_base}_cretePP_${number_of_tests}"
+        file_name_process="${file_name_process_base}_cretePP_${number_of_tests}"
+        run_create_PP_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
+        run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}"
+    done
+    
+    # Restart network before next bach of tests
+    ./stop-nodes-on-remote-servers.sh "auto-exp-0"
+    ./run-nodes-on-remote-servers.sh auto-exp-0
+done
+
+
 

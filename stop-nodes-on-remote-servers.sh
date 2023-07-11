@@ -55,5 +55,5 @@ scp_node_persitance_files_to_remote_machine() {
 remote_hosts=("omega" "alfa" "beta" "gama")
 stop_nodes_on_remote_machine "${remote_hosts[@]}"
 stop_spring_server_on_remote_machine "omega"
-# Deleti nodes databases
+# Deleti databases of all nodes
 scp_node_persitance_files_to_remote_machine "${remote_hosts[@]}"

@@ -88,35 +88,35 @@ done
 
 #################################### Crete power promise tests
 
-# In order to crete prower promises we need to have sufficent amount of cash
-test_numbers=(1 10 100)
+# # In order to crete prower promises we need to have sufficent amount of cash
+# test_numbers=(1 10 100)
 
-for number_of_try in "${tries[@]}"
-do   
-    file_name_memory_base="memory_${experiment_name}_try${number_of_try}_transactions"
-    file_name_process_base="process_${experiment_name}_try${number_of_try}_transactions"
-    save_folder="createPP/"  
+# for number_of_try in "${tries[@]}"
+# do   
+#     file_name_memory_base="memory_${experiment_name}_try${number_of_try}_transactions"
+#     file_name_process_base="process_${experiment_name}_try${number_of_try}_transactions"
+#     save_folder="createPP/"  
 
-    run_issue_cache_to_producer_producer
-    sleep 10s
-    # Run create PP tests
-    for number_of_tests in "${test_numbers[@]}"
-    do
-        file_name_memory="${file_name_memory_base}_cretePP_${number_of_tests}"
-        file_name_process="${file_name_process_base}_cretePP_${number_of_tests}"
-        run_create_PP_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
-        run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${save_folder}"
-    done
+#     run_issue_cache_to_producer_producer
+#     sleep 10s
+#     # Run create PP tests
+#     for number_of_tests in "${test_numbers[@]}"
+#     do
+#         file_name_memory="${file_name_memory_base}_cretePP_${number_of_tests}"
+#         file_name_process="${file_name_process_base}_cretePP_${number_of_tests}"
+#         run_create_PP_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
+#         run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${save_folder}"
+#     done
     
-    # Restart network before next bach of tests
-    ./stop-nodes-on-remote-servers.sh "auto-exp-0"
-    ./run-nodes-on-remote-servers.sh auto-exp-0
-done
+#     # Restart network before next bach of tests
+#     ./stop-nodes-on-remote-servers.sh "auto-exp-0"
+#     ./run-nodes-on-remote-servers.sh auto-exp-0
+# done
 
 #################################### Crete auction tests
 
 
-# test_numbers=(1 10)
+# test_numbers=(1 10 100)
 
 # for number_of_try in "${tries[@]}"
 # do   
@@ -136,32 +136,32 @@ done
 #     done
     
 #     # Restart network before next bach of tests
-#     # ./stop-nodes-on-remote-servers.sh "auto-exp-0"
-#     # ./run-nodes-on-remote-servers.sh auto-exp-0
+#     ./stop-nodes-on-remote-servers.sh "auto-exp-0"
+#     ./run-nodes-on-remote-servers.sh auto-exp-0
 # done
 
 #################################### Crete Bid tests
 
-# test_numbers=(1 10 100)
+test_numbers=(1 10 100)
 
-# for number_of_try in "${tries[@]}"
-# do   
-#     file_name_memory_base="memory_${experiment_name}_try${number_of_try}_transactions"
-#     file_name_process_base="process_${experiment_name}_try${number_of_try}_transactions"
-#     save_folder="createBid/"
-#     run_issue_cache_to_producer_producer
-#     sleep 10s
-#     # Run create Auction tests
-#     for number_of_tests in "${test_numbers[@]}"
-#     do
-#         echo "RUNIGN TESTS"
-#         file_name_memory="${file_name_memory_base}_creteBid_${number_of_tests}"
-#         file_name_process="${file_name_process_base}_creteBid_${number_of_tests}"
-#         run_create_bid_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
-#         run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${save_folder}"
-#     done
+for number_of_try in "${tries[@]}"
+do   
+    file_name_memory_base="memory_${experiment_name}_try${number_of_try}_transactions"
+    file_name_process_base="process_${experiment_name}_try${number_of_try}_transactions"
+    save_folder="createBid/"
+    run_issue_cache_to_producer_producer
+    sleep 10s
+    # Run create Auction tests
+    for number_of_tests in "${test_numbers[@]}"
+    do
+        echo "RUNIGN TESTS"
+        file_name_memory="${file_name_memory_base}_creteBid_${number_of_tests}"
+        file_name_process="${file_name_process_base}_creteBid_${number_of_tests}"
+        run_create_bid_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
+        run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${save_folder}"
+    done
     
-#     # Restart network before next bach of tests
-#     # ./stop-nodes-on-remote-servers.sh "auto-exp-0"
-#     # ./run-nodes-on-remote-servers.sh auto-exp-0
-# done
+    # Restart network before next bach of tests
+    ./stop-nodes-on-remote-servers.sh "auto-exp-0"
+    ./run-nodes-on-remote-servers.sh auto-exp-0
+done

@@ -30,8 +30,9 @@ proxies = {
 }
 
 # Make sure that customer is active party on server
-response = requests.post("http://localhost:8085/api/auction/switch-party/customer")
-
+response = requests.post("http://localhost:8085/api/auction/switch-party/producer",
+    headers=headers,
+    proxies=proxies)
 
 # Check if there is created Auction and if yes, use it
 response = requests.get("http://localhost:8085/api/auction/list",
@@ -47,7 +48,9 @@ if data_list :
 else:
     # We first need to create PowerPromise which will be used for auction creation
     # Make sure that prosumer is active party on server
-    response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
+    response = requests.post("http://localhost:8085/api/auction/switch-party/producer,",
+    headers=headers,
+    proxies=proxies)
     # Make sure that producer has enough cash to crate power promises
     data='{"party":"producer","amount":"10000"}'
     response = requests.post("http://localhost:8085/api/auction/issueCash",
@@ -63,9 +66,11 @@ else:
         headers=headers,
         proxies=proxies
         )
-    time.sleep(20)
+    time.sleep(10)
     # In order to create auction we need to have Power promise
-    response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
+    response = requests.post("http://localhost:8085/api/auction/switch-party/producer",
+    headers=headers,
+    proxies=proxies)
     data='{"powerSuppliedInKW":"101.0","deliveryTime":"17-08-2023 04:52:10 PM", "powerSupplyDurationInMin":"60.0"}'
     response = requests.post("http://localhost:8085/api/auction/asset/create",
         data=data,
@@ -121,8 +126,22 @@ else:
 
 
 
-################# Create powerPromise
+################# Create Bids
 
+
+# Make sure that producer has enough cash to crate power promises
+data='{"party":"customer","amount":"10000"}'
+response = requests.post("http://localhost:8085/api/auction/issueCash",
+    data=data,
+    headers=headers,
+    proxies=proxies
+    )
+data='{"party":"customer","amount":"10000"}'
+response = requests.post("http://localhost:8085/api/auction/issueCash",
+    data=data,
+    headers=headers,
+    proxies=proxies
+    )
 
 for proc in processes:
     proc.pid,proc.cpu_percent()
@@ -130,6 +149,12 @@ for proc in processes:
 # Put valid auction id
 amount = 22
 data=f'{{"amount": "{amount}", "auctionId": "{auction_id}"}}'
+print("Data sent for bid: ",data)
+
+# Make sure that customer is active party on server, for customer will create bids
+response = requests.post("http://localhost:8085/api/auction/switch-party/customer",
+    headers=headers,
+    proxies=proxies)
 
 # Task
 start = time.time()

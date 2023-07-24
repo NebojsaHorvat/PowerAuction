@@ -1,3 +1,6 @@
+Copy data from remote host to local machine:
+scp -r nebojsa@omega:/home/nebojsa/energies/project/auto-exp-0/performance_scripts_remote/data_backup .
+
 Kill all java processes:
 killall -9 java
 
@@ -77,6 +80,9 @@ run vaultQuery contractStateType: net.corda.samples.example.states.IOUState
 Client requests from cluster server:
 curl --noproxy '*' --request POST http://localhost:8085/api/auction/switch-party/producer
 
+curl --noproxy '*' --request POST http://localhost:8085/api/auction/switch-party/customer
+
+
 curl --noproxy '*' --request GET http://localhost:8085/api/auction/getCashBalance
 
 curl --noproxy '*' --request GET http://localhost:8085/api/auction/asset/list
@@ -94,3 +100,10 @@ curl --noproxy '*' --header "Content-Type: application/json" \
   --data '{"powerSuppliedInKW":"101.0","deliveryTime":"17-08-2023 04:52:10 PM", "powerSupplyDurationInMin":"60.0"}' \
   http://localhost:8085/api/auction/asset/create
 
+
+Place bid:
+curl --noproxy '*' --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --request POST \
+  --data '{"amount": "22", "auctionId": "6db39bf1-9a8c-4e4b-b4bd-01b50cd3f388"}' \
+  http://localhost:8085/api/auction/placeBid

@@ -143,6 +143,7 @@ done
 #################################### Crete Bid tests
 
 test_numbers=(1 10 100)
+# test_numbers=(1)
 
 for number_of_try in "${tries[@]}"
 do   

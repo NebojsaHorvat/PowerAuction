@@ -30,7 +30,9 @@ proxies = {
     "https": "",
 }
 # Make sure that prosumer is acitive party on server
-response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
+response = requests.post("http://localhost:8085/api/auction/switch-party/producer",
+    headers=headers,
+    proxies=proxies)
 
 
 # Check if there is created power Promise and if yes use it
@@ -46,7 +48,9 @@ if data_list :
     print(asset_id)
 else:
     # Make sure that prosumer is acitive party on server
-    response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
+    response = requests.post("http://localhost:8085/api/auction/switch-party/producer",
+    headers=headers,
+    proxies=proxies)
     # Make sure that producer has enough cash to crate power promises
     data='{"party":"producer","amount":"10000"}'
     response = requests.post("http://localhost:8085/api/auction/issueCash",
@@ -54,9 +58,11 @@ else:
         headers=headers,
         proxies=proxies
         )
-    time.sleep(40)
+    time.sleep(20)
     # In order to create auction we need to have Power promise
-    response = requests.post("http://localhost:8085/api/auction/switch-party/producer")
+    response = requests.post("http://localhost:8085/api/auction/switch-party/producer",
+    headers=headers,
+    proxies=proxies)
     data='{"powerSuppliedInKW":"101.0","deliveryTime":"17-08-2023 04:52:10 PM", "powerSupplyDurationInMin":"60.0"}'
     response = requests.post("http://localhost:8085/api/auction/asset/create",
         data=data,
@@ -72,7 +78,7 @@ else:
 
     print("Create pp response:\n",response.text)
 
-    time.sleep(50)
+    time.sleep(25)
 
     response = requests.get("http://localhost:8085/api/auction/asset/list",
         headers=headers,
@@ -99,6 +105,12 @@ for proc in processes:
 # Put valid asset id
 data=f'{{"assetId": "{asset_id}","basePrice": "1","deadline": "18-09-2023 01:59:07 PM"}}'
 
+# Do this in order to get nodes going. For some reason it takes nodes much more time to create first auction
+response = requests.post("http://localhost:8085/api/auction/create",
+    data=data,
+    headers=headers,
+    proxies=proxies
+    )
 
 # Task
 start = time.time()

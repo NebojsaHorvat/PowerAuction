@@ -101,6 +101,15 @@ curl --noproxy '*' --header "Content-Type: application/json" \
   http://localhost:8085/api/auction/asset/create
 
 
+Create Auction:
+curl --noproxy '*' --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --request POST \
+  --data '{"assetId": "cc6937e4-4ebd-44b0-b206-bfa6fad6f299","basePrice": "2","deadline": "18-09-2023 01:59:07 PM"}' \
+  http://localhost:8085/api/auction/create
+
+
+
 Place bid:
 curl --noproxy '*' --header "Content-Type: application/json" \
   --header "Accept: application/json" \

@@ -55,13 +55,13 @@ scp_node_data_to_remote_machine() {
 omega_nodes=("Notary" "PowerCompany")
 copy_node_data_localy "${omega_nodes[@]}" "omega"
 
-alfa_nodes=("Prosumer")
+alfa_nodes=("Prosumer" "Producer1")
 copy_node_data_localy "${alfa_nodes[@]}" "alfa"
 
 beta_nodes=("Customer" "Producer")
 copy_node_data_localy "${beta_nodes[@]}" "beta"
 
-gama_nodes=("GridAuthority")
+gama_nodes=("GridAuthority" "Customer1")
 copy_node_data_localy "${gama_nodes[@]}" "gama"
 
 #copy localy created folders to remote hosts

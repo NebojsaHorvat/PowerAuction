@@ -33,13 +33,12 @@ EOT
 
 run_spring_server_on_remote_machine() {
     local remote_host=("$1")
-    ssh $remote_host  "docker run  --network="host"  nhtacc/corda-energy-proxy" &
+    ssh $remote_host  "docker run  --network="host"  nhtacc/corda-energy-proxy:auto-exp-1" &
 }
 
 
 #copy localy created folders to remote hosts
 remote_hosts=("omega" "alfa" "beta" "gama")
-# remote_hosts=( "alfa" )
 run_nodes_on_remote_machine "${remote_hosts[@]}"
 echo "Sleep for 30 seconds and wait for nodes to startup on remote machines"
 sleep 30s

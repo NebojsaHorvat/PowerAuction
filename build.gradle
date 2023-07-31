@@ -265,7 +265,7 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         sshdPort 2228
     }
 
-    ///////////////////////// New nodes
+    /////////////////////////  New nodes auto-exp-1
 
     // alfa
     node {
@@ -290,6 +290,34 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         }
         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
         // extraConfig = ['h2Settings.address' : 'localhost:20054']
+    }
+
+    /////////////////////////  New nodes auto-exp-2
+
+    // omega
+    node {
+        name "O=Producer2,L=Paris,C=FR"
+        p2pPort 10026
+        p2pAddress "192.168.88.252:10026"
+        rpcSettings {
+            address("0.0.0.0:10027")
+            adminAddress("0.0.0.0:10067")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        // extraConfig = ['h2Settings.address' : 'localhost:20057']
+    }
+
+    // beta
+    node {
+        name "O=Customer2,L=Sydney,C=AU"
+        p2pPort 10029
+        p2pAddress "192.168.88.249:10029"
+        rpcSettings {
+            address("localhost:10030")
+            adminAddress("localhost:10070")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        // extraConfig = ['h2Settings.address' : 'localhost:20060']
     }
 }
 

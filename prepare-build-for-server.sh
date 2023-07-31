@@ -3,7 +3,7 @@
 
 
 # build
-./gradlew clean deployNodes
+# ./gradlew clean deployNodes
 
 ## TODO delete previous exp folder with same name
 
@@ -52,13 +52,13 @@ scp_node_data_to_remote_machine() {
 
 
 
-omega_nodes=("Notary" "PowerCompany")
+omega_nodes=("Notary" "PowerCompany" "Producer2")
 copy_node_data_localy "${omega_nodes[@]}" "omega"
 
 alfa_nodes=("Prosumer" "Producer1")
 copy_node_data_localy "${alfa_nodes[@]}" "alfa"
 
-beta_nodes=("Customer" "Producer")
+beta_nodes=("Customer" "Producer" "Customer2")
 copy_node_data_localy "${beta_nodes[@]}" "beta"
 
 gama_nodes=("GridAuthority" "Customer1")

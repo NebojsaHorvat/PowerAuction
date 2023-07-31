@@ -47,6 +47,12 @@ public class Controller {
     private CordaRPCOps customer1Proxy;
 
     @Autowired
+    private CordaRPCOps producer2Proxy;
+
+    @Autowired
+    private CordaRPCOps customer2Proxy;
+
+    @Autowired
     @Qualifier("prosumerProxy")
     private CordaRPCOps activeParty;
 
@@ -240,6 +246,10 @@ public class Controller {
             activeParty = producer1Proxy;
         } else if (party.equals("customer1")) {
             activeParty = customer1Proxy;
+        } else if (party.equals("producer2")) {
+            activeParty = producer2Proxy;
+        } else if (party.equals("customer2")) {
+            activeParty = customer2Proxy;
         } else {
             return APIResponse.error("Unrecognised Party");
         }

@@ -33,7 +33,7 @@ EOT
 
 run_spring_server_on_remote_machine() {
     local remote_host=("$1")
-    ssh $remote_host  "docker run  --network="host"  nhtacc/corda-energy-proxy:auto-exp-2" &
+    ssh $remote_host  "docker run  --network="host"  nhtacc/corda-energy-proxy:auto-exp-3" &
 }
 
 

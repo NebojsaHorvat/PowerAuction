@@ -88,7 +88,7 @@ done
 
 #################################### Crete power promise tests
 
-# # In order to crete prower promises we need to have sufficent amount of cash
+# In order to crete prower promises we need to have sufficent amount of cash
 test_numbers=(1 10 100)
 
 for number_of_try in "${tries[@]}"
@@ -143,8 +143,8 @@ done
 
 #################################### Crete Bid tests
 
-# test_numbers=(1 10 100)
-test_numbers=(1)
+test_numbers=(1 10 100)
+# test_numbers=(1)
 
 for number_of_try in "${tries[@]}"
 do   

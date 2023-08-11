@@ -29,8 +29,15 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${producer.host}")
     private String producerHostAndPort;
 
+
+    @Value("${verificationAgency.host}")
+    private String verificationAgencyHostAndPort;
+
     @Value("${speculator.host}")
     private String speculatorHostAndPort;
+
+    @Value("${energyStorageProvider.host}")
+    private String energyStorageProviderHostAndPort;
 
     @Bean(destroyMethod = "")  // Avoids node shutdown on rpc disconnect
     public CordaRPCOps powerCompanyProxy(){
@@ -63,9 +70,21 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean(destroyMethod = "")
+    public CordaRPCOps verificationAgencyProxy(){
+        CordaRPCClient verificationAgencyClient = new CordaRPCClient(NetworkHostAndPort.parse(verificationAgencyHostAndPort));
+        return verificationAgencyClient.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
     public CordaRPCOps speculatorProxy(){
         CordaRPCClient speculatorClient = new CordaRPCClient(NetworkHostAndPort.parse(speculatorHostAndPort));
         return speculatorClient.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps energyStorageProviderProxy(){
+        CordaRPCClient energyStorageProviderClient = new CordaRPCClient(NetworkHostAndPort.parse(energyStorageProviderHostAndPort));
+        return energyStorageProviderClient.start("user1", "test").getProxy();
     }
 
     /**

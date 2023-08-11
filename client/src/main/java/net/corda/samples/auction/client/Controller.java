@@ -41,7 +41,13 @@ public class Controller {
     private CordaRPCOps producerProxy;
 
     @Autowired
+    private CordaRPCOps verificationAgencyProxy;
+
+    @Autowired
     private CordaRPCOps speculatorProxy;
+
+    @Autowired
+    private CordaRPCOps energyStorageProviderProxy;
 
     @Autowired
     @Qualifier("prosumerProxy")
@@ -229,8 +235,12 @@ public class Controller {
             activeParty = customerProxy;
         }else if(party.equals("producer")){
             activeParty = producerProxy;
+        }else if(party.equals("verificationAgency")) {
+            activeParty = verificationAgencyProxy;
         }else if(party.equals("speculator")) {
             activeParty = speculatorProxy;
+        }else if(party.equals("energyStorageProvider")) {
+            activeParty = energyStorageProviderProxy;
         }else{
             return APIResponse.error("Unrecognised Party");
         }

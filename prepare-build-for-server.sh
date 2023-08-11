@@ -3,17 +3,17 @@
 
 
 # build
-./gradlew clean deployNodes
+# ./gradlew clean deployNodes
 
 ## TODO delete previous exp folder with same name
 
 experiment_name=$1
-mkdir $experiment_name
+# mkdir $experiment_name
 
-mkdir ./$experiment_name/omega
-mkdir ./$experiment_name/alfa
-mkdir ./$experiment_name/beta
-mkdir ./$experiment_name/gama
+# mkdir ./$experiment_name/omega
+# mkdir ./$experiment_name/alfa
+# mkdir ./$experiment_name/beta
+# mkdir ./$experiment_name/gama
 
 copy_node_data_localy() {
     local nodes=("${@:1:$#-1}")   # Create a local array variable and assign the function arguments to it
@@ -52,21 +52,21 @@ scp_node_data_to_remote_machine() {
 
 
 
-omega_nodes=("Notary" "PowerCompany")
-copy_node_data_localy "${omega_nodes[@]}" "omega"
+# omega_nodes=("Notary" "PowerCompany")
+# copy_node_data_localy "${omega_nodes[@]}" "omega"
 
-alfa_nodes=("Prosumer")
-copy_node_data_localy "${alfa_nodes[@]}" "alfa"
+# alfa_nodes=("Prosumer" "VerificationAgency")
+# copy_node_data_localy "${alfa_nodes[@]}" "alfa"
 
-beta_nodes=("Customer" "Producer")
-copy_node_data_localy "${beta_nodes[@]}" "beta"
+# beta_nodes=("Customer" "Producer" "Speculator")
+# copy_node_data_localy "${beta_nodes[@]}" "beta"
 
-gama_nodes=("GridAuthority")
-copy_node_data_localy "${gama_nodes[@]}" "gama"
+# gama_nodes=("GridAuthority" "EnergyStorageProvider")
+# copy_node_data_localy "${gama_nodes[@]}" "gama"
 
 #copy localy created folders to remote hosts
-remote_hosts=("omega" "alfa" "beta" "gama")
-# remote_hosts=("alfa")
+# remote_hosts=("omega" "alfa" "beta" "gama")
+remote_hosts=("beta")
 scp_node_data_to_remote_machine "${remote_hosts[@]}"
 
 

@@ -60,8 +60,10 @@ public class CheckDeliveryFlow {
 
                 // TODO podesiti da se negde proveri da li je delivered ili ne i vrati se true ili false
                 Boolean delivered = true;
-                PowerPromise outputState = new PowerPromise(inputState.getLinearId(),inputState.getTitle(), inputState.getDescription(),
-                        inputState.getImageUrl(), inputState.getProductionManner(), inputState.getOwner(),inputState.getSupplier(), inputState.getDeliveryTime(), true, delivered,
+                PowerPromise outputState = new PowerPromise(inputState.getLinearId(),inputState.getTitle(),
+                        inputState.getDescription(), inputState.getImageUrl(), inputState.getProductionManner(),
+                        inputState.getIsFromRenewableSource(), inputState.getRenewableSourceApproved(),
+                        inputState.getOwner(), inputState.getSupplier(), inputState.getDeliveryTime(), true, delivered,
                         inputState.getPowerSuppliedInKW(), inputState.getPowerSupplyDurationInMin(), inputState.getGridAuthority(), inputState.getLockedFunds());
 
                 SignedTransaction selfSignedTransaction = null;

@@ -27,6 +27,8 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     private final String description;
     private final String imageUrl;
     private final String productionManner;
+    private final boolean isFromRenewableSource;
+    private final boolean renewableSourceApproved;
     private final AbstractParty owner;
     private final Party supplier;
     private final Party gridAuthority;
@@ -41,12 +43,15 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     private final Double powerProducedInKWh;
 
     public PowerPromise(UniqueIdentifier linearId, String title, String description, String imageUrl, String productionManner,
-                        AbstractParty owner, Party supplier, Instant deliveryTime, Boolean expired, Boolean delivered,
-                        Double powerSuppliedInKW, Double powerSupplyDurationInMin, Party gridAuthority, Amount<Currency> lockedFunds) {
+                        boolean isFromRenewableSource, boolean renewableSourceApproved, AbstractParty owner, Party supplier,
+                        Instant deliveryTime, Boolean expired, Boolean delivered, Double powerSuppliedInKW,
+                        Double powerSupplyDurationInMin, Party gridAuthority, Amount<Currency> lockedFunds) {
         this.linearId = linearId;
         this.description = description;
         this.imageUrl = imageUrl;
         this.productionManner = productionManner;
+        this.isFromRenewableSource = isFromRenewableSource;
+        this.renewableSourceApproved = renewableSourceApproved;
         this.owner = owner;
         this.supplier = supplier;
         this.deliveryTime = deliveryTime;
@@ -85,8 +90,10 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
     public CommandAndState withNewOwner(@NotNull AbstractParty newOwner) {
         return new CommandAndState(new PowerPromiseContract.Commands.TransferPowerPromise(),
                 new PowerPromise(this.getLinearId(), this.getTitle() , this.getDescription(),
-                        this.getImageUrl(), this.productionManner, newOwner, this.supplier , this.deliveryTime, this.expired,this.delivered, this.powerSuppliedInKW,
-                        this.powerSupplyDurationInMin, this.gridAuthority,this.lockedFunds));
+                        this.getImageUrl(), this.productionManner, this.renewableSourceApproved,
+                        this.isFromRenewableSource, newOwner, this.supplier , this.deliveryTime,
+                        this.expired, this.delivered, this.powerSuppliedInKW, this.powerSupplyDurationInMin,
+                        this.gridAuthority, this.lockedFunds));
     }
 
     public String getTitle() {
@@ -101,6 +108,10 @@ public class PowerPromise implements OwnableState, LinearState, SchedulableState
         return imageUrl;
     }
     public String getProductionManner() { return productionManner; }
+
+    public boolean getIsFromRenewableSource() { return isFromRenewableSource; }
+
+    public boolean getRenewableSourceApproved() { return renewableSourceApproved; }
 
     public Instant getDeliveryTime() {
         return deliveryTime;

@@ -41,7 +41,7 @@ run_spring_server_on_remote_machine() {
 remote_hosts=("omega" "alfa" "beta" "gama")
 run_nodes_on_remote_machine "${remote_hosts[@]}"
 echo "Sleep for 30 seconds and wait for nodes to startup on remote machines"
-sleep 30s
+sleep 100s
 run_spring_server_on_remote_machine "omega"
 echo "Sleep for 40 seconds and wait for proxy to startup on remote machines"
-sleep 40s
+sleep 50s

@@ -55,6 +55,38 @@ customer6:
 customer7:
   host: 192.168.88.250:10060
 
+#### auto-exp-5
+
+producer3:
+  host: 192.168.88.252:10063
+
+producer4:
+  host: 192.168.88.252:10066
+
+producer5:
+  host: 192.168.88.252:10069
+
+prosumer6:
+  host: 192.168.88.251:10072
+
+prosumer7:
+  host: 192.168.88.251:10075
+
+prosumer8:
+  host: 192.168.88.251:10078
+
+customer8:
+  host: 192.168.88.249:10081
+
+customer9:
+  host: 192.168.88.249:10084
+
+customer10:
+  host: 192.168.88.250:10087
+
+customer11:
+  host: 192.168.88.250:10090
+
 server.port: 8085
 
 #######################################

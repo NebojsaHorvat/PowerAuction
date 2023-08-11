@@ -83,6 +83,36 @@ public class Controller {
     private CordaRPCOps customer7Proxy;
 
     @Autowired
+    private CordaRPCOps producer3Proxy;
+
+    @Autowired
+    private CordaRPCOps producer4Proxy;
+
+    @Autowired
+    private CordaRPCOps producer5Proxy;
+
+    @Autowired
+    private CordaRPCOps prosumer6Proxy;
+
+    @Autowired
+    private CordaRPCOps prosumer7Proxy;
+
+    @Autowired
+    private CordaRPCOps prosumer8Proxy;
+
+    @Autowired
+    private CordaRPCOps customer8Proxy;
+
+    @Autowired
+    private CordaRPCOps customer9Proxy;
+
+    @Autowired
+    private CordaRPCOps customer10Proxy;
+
+    @Autowired
+    private CordaRPCOps customer11Proxy;
+
+    @Autowired
     @Qualifier("prosumerProxy")
     private CordaRPCOps activeParty;
 
@@ -300,6 +330,26 @@ public class Controller {
             activeParty = customer6Proxy;
         } else if (party.equals("customer7")) {
             activeParty = customer7Proxy;
+        } else if (party.equals("producer3")) {
+            activeParty = producer3Proxy;
+        } else if (party.equals("producer4")) {
+            activeParty = producer4Proxy;
+        } else if (party.equals("producer5")) {
+            activeParty = producer5Proxy;
+        } else if (party.equals("prosumer6")) {
+            activeParty = prosumer6Proxy;
+        } else if (party.equals("prosumer7")) {
+            activeParty = prosumer7Proxy;
+        } else if (party.equals("prosumer8")) {
+            activeParty = prosumer8Proxy;
+        } else if (party.equals("customer8")) {
+            activeParty = customer8Proxy;
+        } else if (party.equals("customer9")) {
+            activeParty = customer9Proxy;
+        } else if (party.equals("customer10")) {
+            activeParty = customer10Proxy;
+        } else if (party.equals("customer11")) {
+            activeParty = customer11Proxy;
         } else {
             return APIResponse.error("Unrecognised Party");
         }

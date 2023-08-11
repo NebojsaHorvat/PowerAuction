@@ -13,7 +13,6 @@ producer:
 gridAuthority:
   host: localhost:10018
 
-server.port: 8085
 # powerCompany:
 #   host: 192.168.88.252:10006
 
@@ -30,3 +29,7 @@ server.port: 8085
 #   host: 192.168.88.250:10018
 
 # server.port: 8085
+speculator:
+  host: localhost:10021
+
+server.port: 8085

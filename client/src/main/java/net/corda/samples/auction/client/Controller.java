@@ -41,6 +41,9 @@ public class Controller {
     private CordaRPCOps producerProxy;
 
     @Autowired
+    private CordaRPCOps speculatorProxy;
+
+    @Autowired
     @Qualifier("prosumerProxy")
     private CordaRPCOps activeParty;
 
@@ -226,6 +229,8 @@ public class Controller {
             activeParty = customerProxy;
         }else if(party.equals("producer")){
             activeParty = producerProxy;
+        }else if(party.equals("speculator")) {
+            activeParty = speculatorProxy;
         }else{
             return APIResponse.error("Unrecognised Party");
         }
@@ -260,7 +265,12 @@ public class Controller {
                     activeParty.partiesFromName("producer", false).iterator().next(),
                     false, activeParty.notaryIdentities().get(0))
                     .getReturnValue().get();
-
+            producerProxy.startFlowDynamic(CashIssueAndPaymentFlow.class,
+                    Amount.parseCurrency(amountOfCacheIssuedToAll+ " USD"),
+                    OpaqueBytes.of("PartyA".getBytes()),
+                    activeParty.partiesFromName("producer", false).iterator().next(),
+                    false, activeParty.notaryIdentities().get(0))
+            .getReturnValue().get();
 
             Double lockedFunds = 10.0;
             LocalDateTime expires = LocalDateTime.now().plusMinutes(2);

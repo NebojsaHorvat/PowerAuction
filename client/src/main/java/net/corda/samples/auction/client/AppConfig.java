@@ -29,6 +29,9 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${producer.host}")
     private String producerHostAndPort;
 
+    @Value("${speculator.host}")
+    private String speculatorHostAndPort;
+
     @Bean(destroyMethod = "")  // Avoids node shutdown on rpc disconnect
     public CordaRPCOps powerCompanyProxy(){
         CordaRPCClient powerCompanyClient = new CordaRPCClient(NetworkHostAndPort.parse(powerCompanyHostAndPort));
@@ -57,6 +60,12 @@ public class AppConfig implements WebMvcConfigurer {
     public CordaRPCOps producerProxy(){
         CordaRPCClient producerClient = new CordaRPCClient(NetworkHostAndPort.parse(producerHostAndPort));
         return producerClient.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps speculatorProxy(){
+        CordaRPCClient speculatorClient = new CordaRPCClient(NetworkHostAndPort.parse(speculatorHostAndPort));
+        return speculatorClient.start("user1", "test").getProxy();
     }
 
     /**

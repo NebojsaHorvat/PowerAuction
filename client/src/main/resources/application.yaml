@@ -40,6 +40,21 @@ prosumer4:
 prosumer5:
   host: 192.168.88.250:10045
 
+customer3:
+  host: 192.168.88.252:10048
+
+customer4:
+  host: 192.168.88.251:10051
+
+customer5:
+  host: 192.168.88.251:10054
+
+customer6:
+  host: 192.168.88.249:10057
+
+customer7:
+  host: 192.168.88.250:10060
+
 verificationAgency:
   host: 192.168.88.251:10093
 

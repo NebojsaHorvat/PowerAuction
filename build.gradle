@@ -388,6 +388,74 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         // extraConfig = ['h2Settings.address' : 'localhost:20060']
     }
 
+    /////////////////////////  New nodes auto-exp-e-4
+
+    // omega
+    node {
+        name "O=Customer3,L=Sydney,C=AU"
+        p2pPort 10047
+        p2pAddress "192.168.88.252:10047"
+        rpcSettings {
+            address("0.0.0.0:10048")
+            adminAddress("0.0.0.0:10088")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        // extraConfig = ['h2Settings.address' : 'localhost:20060']
+    }
+
+    // alfa
+    node {
+        name "O=Customer4,L=Sydney,C=AU"
+        p2pPort 10050
+        p2pAddress "192.168.88.251:10050"
+        rpcSettings {
+            address("0.0.0.0:10051")
+            adminAddress("0.0.0.0:10091")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        // extraConfig = ['h2Settings.address' : 'localhost:20060']
+    }
+
+    // alfa
+    node {
+        name "O=Customer5,L=Sydney,C=AU"
+        p2pPort 10053
+        p2pAddress "192.168.88.251:10053"
+        rpcSettings {
+            address("0.0.0.0:10054")
+            adminAddress("0.0.0.0:10094")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        // extraConfig = ['h2Settings.address' : 'localhost:20060']
+    }
+
+
+    // beta
+    node {
+        name "O=Customer6,L=Sydney,C=AU"
+        p2pPort 10056
+        p2pAddress "192.168.88.249:10056"
+        rpcSettings {
+            address("0.0.0.0:10057")
+            adminAddress("0.0.0.0:10097")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        // extraConfig = ['h2Settings.address' : 'localhost:20060']
+    }
+
+    // gama
+    node {
+        name "O=Customer7,L=Sydney,C=AU"
+        p2pPort 10059
+        p2pAddress "192.168.88.250:10059"
+        rpcSettings {
+            address("0.0.0.0:10060")
+            adminAddress("0.0.0.0:10100")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        // extraConfig = ['h2Settings.address' : 'localhost:20060']
+    }
+
     ///////////////////////// Extended performance nodes
 
     // alfa

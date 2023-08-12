@@ -68,6 +68,21 @@ public class Controller {
     private CordaRPCOps prosumer5Proxy;
 
     @Autowired
+    private CordaRPCOps customer3Proxy;
+
+    @Autowired
+    private CordaRPCOps customer4Proxy;
+
+    @Autowired
+    private CordaRPCOps customer5Proxy;
+
+    @Autowired
+    private CordaRPCOps customer6Proxy;
+
+    @Autowired
+    private CordaRPCOps customer7Proxy;
+
+    @Autowired
     private CordaRPCOps verificationAgencyProxy;
 
     @Autowired
@@ -280,6 +295,16 @@ public class Controller {
             activeParty = prosumer4Proxy;
         }else if (party.equals("prosumer5")) {
             activeParty = prosumer5Proxy;
+        }else if (party.equals("customer3")) {
+            activeParty = customer3Proxy;
+        }else if (party.equals("customer4")) {
+            activeParty = customer4Proxy;
+        }else if (party.equals("customer5")) {
+            activeParty = customer5Proxy;
+        }else if (party.equals("customer6")) {
+            activeParty = customer6Proxy;
+        }else if (party.equals("customer7")) {
+            activeParty = customer7Proxy;
         }else if(party.equals("verificationAgency")) {
             activeParty = verificationAgencyProxy;
         }else if(party.equals("speculator")) {

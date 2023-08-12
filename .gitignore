@@ -13,7 +13,6 @@
 corda-nodeinfo/corda-nodeinfo.iml
 *~*
 venv/
-data/
 auto-exp-*/
 performance_scripts/lib
 performance_scripts/lib64

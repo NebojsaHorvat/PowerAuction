@@ -84,7 +84,7 @@ for (( i = 1; i <= repetition_number; i++ )); do
     tries+=("$i")
 done
 
-./run-nodes-on-remote-servers.sh "auto-exp-0"
+./run-nodes-on-remote-servers.sh "${experiment_name}"
 
 #################################### Crete power promise tests
 
@@ -109,8 +109,8 @@ done
 #     done
     
 #     # Restart network before next bach of tests
-#     ./stop-nodes-on-remote-servers.sh "auto-exp-0"
-#     ./run-nodes-on-remote-servers.sh auto-exp-0
+#     ./stop-nodes-on-remote-servers.sh "${experiment_name}"
+#     ./run-nodes-on-remote-servers.sh "${experiment_name}"
 # done
 
 #################################### Crete auction tests
@@ -137,8 +137,8 @@ do
     done
     
     # Restart network before next bach of tests
-    ./stop-nodes-on-remote-servers.sh "auto-exp-0"
-    ./run-nodes-on-remote-servers.sh auto-exp-0
+    ./stop-nodes-on-remote-servers.sh "${experiment_name}"
+    ./run-nodes-on-remote-servers.sh "${experiment_name}"
 done
 
 #################################### Crete Bid tests
@@ -164,6 +164,8 @@ done
 #     done
     
 #     # Restart network before next bach of tests
-#     ./stop-nodes-on-remote-servers.sh "auto-exp-0"
-#     ./run-nodes-on-remote-servers.sh auto-exp-0
+#     ./stop-nodes-on-remote-servers.sh "${experiment_name}"
+#     ./run-nodes-on-remote-servers.sh "${experiment_name}"
 # done
+
+./stop-nodes-on-remote-servers.sh "${experiment_name}"

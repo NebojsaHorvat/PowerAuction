@@ -29,6 +29,11 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${producer.host}")
     private String producerHostAndPort;
 
+    @Value("${producer1.host}")
+    private String producer1HostAndPort;
+
+    @Value("${customer1.host}")
+    private String customer1HostAndPort;
 
     @Value("${verificationAgency.host}")
     private String verificationAgencyHostAndPort;
@@ -39,34 +44,46 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${energyStorageProvider.host}")
     private String energyStorageProviderHostAndPort;
 
-    @Bean(destroyMethod = "")  // Avoids node shutdown on rpc disconnect
-    public CordaRPCOps powerCompanyProxy(){
+    @Bean(destroyMethod = "") // Avoids node shutdown on rpc disconnect
+    public CordaRPCOps powerCompanyProxy() {
         CordaRPCClient powerCompanyClient = new CordaRPCClient(NetworkHostAndPort.parse(powerCompanyHostAndPort));
         return powerCompanyClient.start("user1", "test").getProxy();
     }
 
-    @Bean(destroyMethod = "")  // Avoids node shutdown on rpc disconnect
-    public CordaRPCOps gridAuthorityProxy(){
+    @Bean(destroyMethod = "") // Avoids node shutdown on rpc disconnect
+    public CordaRPCOps gridAuthorityProxy() {
         CordaRPCClient gridAuthorityClient = new CordaRPCClient(NetworkHostAndPort.parse(gridAuthorityHostAndPort));
         return gridAuthorityClient.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps prosumerProxy(){
+    public CordaRPCOps prosumerProxy() {
         CordaRPCClient prosumerClient = new CordaRPCClient(NetworkHostAndPort.parse(prosumerHostAndPort));
         return prosumerClient.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps customerProxy(){
+    public CordaRPCOps customerProxy() {
         CordaRPCClient customerClient = new CordaRPCClient(NetworkHostAndPort.parse(customerHostAndPort));
         return customerClient.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps producerProxy(){
+    public CordaRPCOps producerProxy() {
         CordaRPCClient producerClient = new CordaRPCClient(NetworkHostAndPort.parse(producerHostAndPort));
         return producerClient.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps producer1Proxy() {
+        CordaRPCClient producer1Client = new CordaRPCClient(NetworkHostAndPort.parse(producer1HostAndPort));
+        return producer1Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps customer1Proxy() {
+        CordaRPCClient customer1Client = new CordaRPCClient(NetworkHostAndPort.parse(customer1HostAndPort));
+        return customer1Client.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")
@@ -76,13 +93,13 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps speculatorProxy(){
+    public CordaRPCOps speculatorProxy() {
         CordaRPCClient speculatorClient = new CordaRPCClient(NetworkHostAndPort.parse(speculatorHostAndPort));
         return speculatorClient.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")
-    public CordaRPCOps energyStorageProviderProxy(){
+    public CordaRPCOps energyStorageProviderProxy() {
         CordaRPCClient energyStorageProviderClient = new CordaRPCClient(NetworkHostAndPort.parse(energyStorageProviderHostAndPort));
         return energyStorageProviderClient.start("user1", "test").getProxy();
     }
@@ -91,8 +108,8 @@ public class AppConfig implements WebMvcConfigurer {
      * Corda Jackson Support, to convert corda objects to json
      */
     @Bean
-    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
-        ObjectMapper mapper =  JacksonSupport.createDefaultMapper(powerCompanyProxy());
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        ObjectMapper mapper = JacksonSupport.createDefaultMapper(powerCompanyProxy());
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(mapper);
         return converter;

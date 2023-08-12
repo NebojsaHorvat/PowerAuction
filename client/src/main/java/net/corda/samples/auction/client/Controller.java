@@ -41,6 +41,12 @@ public class Controller {
     private CordaRPCOps producerProxy;
 
     @Autowired
+    private CordaRPCOps producer1Proxy;
+
+    @Autowired
+    private CordaRPCOps customer1Proxy;
+
+    @Autowired
     private CordaRPCOps verificationAgencyProxy;
 
     @Autowired
@@ -235,6 +241,10 @@ public class Controller {
             activeParty = customerProxy;
         }else if(party.equals("producer")){
             activeParty = producerProxy;
+        }else if (party.equals("producer1")) {
+            activeParty = producer1Proxy;
+        }else if (party.equals("customer1")) {
+            activeParty = customer1Proxy;
         }else if(party.equals("verificationAgency")) {
             activeParty = verificationAgencyProxy;
         }else if(party.equals("speculator")) {

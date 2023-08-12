@@ -1,18 +1,3 @@
-# powerCompany:
-#   host: localhost:10006
-
-# prosumer:
-#   host: localhost:10009
-
-# customer:
-#   host: localhost:10012
-
-# producer:
-#   host: localhost:10015
-
-# gridAuthority:
-#   host: localhost:10018
-
 powerCompany:
   host: 192.168.88.252:10006
 
@@ -28,6 +13,12 @@ producer:
 gridAuthority:
   host: 192.168.88.250:10018
 
+producer1:
+  host: 192.168.88.251:10021
+
+customer1:
+  host: 192.168.88.250:10024
+
 verificationAgency:
   host: 192.168.88.251:10093
 
@@ -38,3 +29,20 @@ energyStorageProvider:
   host: 192.168.88.250:10099
 
 server.port: 8085
+
+#######################################
+
+# powerCompany:
+#   host: localhost:10006
+
+# prosumer:
+#   host: localhost:10009
+
+# customer:
+#   host: localhost:10012
+
+# producer:
+#   host: localhost:10015
+
+# gridAuthority:
+#   host: localhost:10018

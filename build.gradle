@@ -177,6 +177,8 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         cordapp project(':workflows')
 	runSchemaMigration = true
     }
+
+    // omega
     node {
         name "O=Notary,L=London,C=GB"
         notary = [validating : false]   
@@ -193,6 +195,7 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         sshdPort 2222
     }
 
+    // omega
     node {
         name "O=PowerCompany,L=Paris,C=FR"
         p2pPort 10005
@@ -205,6 +208,8 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         // extraConfig = ['h2Settings.address' : '0.0.0.0:20041']
         sshdPort 2224
     }
+
+    // alfa
     node {
         name "O=Prosumer,L=New York,C=US"
         p2pPort 10008
@@ -217,6 +222,8 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         // extraConfig = ['h2Settings.address' : '0.0.0.0:20042']
         sshdPort 2225
     }
+
+    // beta
     node {
         name "O=Customer,L=Sydney,C=AU"
         p2pPort 10011
@@ -229,6 +236,8 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         // extraConfig = ['h2Settings.address' : '0.0.0.0:20043']
         sshdPort 2226
     }
+
+    // beta
     node {
         name "O=Producer,L=Paris,C=FR"
         p2pPort 10014
@@ -241,6 +250,8 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         // extraConfig = ['h2Settings.address' : '0.0.0.0:20044']
         sshdPort 2227
     }
+
+    // gama
     node {
         name "O=GridAuthority,L=Paris,C=FR"
         p2pPort 10017
@@ -253,6 +264,36 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         // extraConfig = ['h2Settings.address' : '0.0.0.0:20047']
         sshdPort 2228
     }
+
+    ///////////////////////// New nodes
+
+    // alfa
+    node {
+        name "O=Producer1,L=Paris,C=FR"
+        p2pPort 10020
+        p2pAddress "192.168.88.251:10020"
+        rpcSettings {
+            address("0.0.0.0:10021")
+            adminAddress("0.0.0.0:10061")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        // extraConfig = ['h2Settings.address' : 'localhost:20050']
+    }
+
+    // gama
+    node {
+        name "O=Customer1,L=Sydney,C=AU"
+        p2pPort 10023
+        p2pAddress "192.168.88.250:10023"
+        rpcSettings {
+            address("0.0.0.0:10024")
+            adminAddress("0.0.0.0:10064")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        // extraConfig = ['h2Settings.address' : 'localhost:20054']
+    }
+
+    ///////////////////////// Extended performance nodes
 
     // alfa
     node {

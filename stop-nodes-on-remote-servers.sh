@@ -23,7 +23,7 @@ EOT
 stop_spring_server_on_remote_machine() {
     local remote_host=("$1")
     local remote_user="nebojsa"
-    ssh $remote_host  'docker exec $(docker ps --filter "ancestor=nhtacc/corda-energy-proxy" --format "{{.ID}}") sh -c "kill 1"'
+    ssh $remote_host  'docker exec $(docker ps --filter "ancestor=nhtacc/corda-energy-proxy:auto-exp-e-3" --format "{{.ID}}") sh -c "kill 1"'
 }
 
 # Do this in order to rewrite node persitance.mv.db files and remove all data from nodes

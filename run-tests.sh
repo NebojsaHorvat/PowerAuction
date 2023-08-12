@@ -5,7 +5,7 @@ experiment_name=$1
 repetition_number=$2
 
 run_non_exec_scripts_on_remote_machine() {
-    local remote_hosts=("alfa" "beta" "gama")   
+    local remote_hosts=("alfa" "beta" "gama")
     local file_name_memory_sum=$1
     local file_name_memory_process=$2
     local save_folder=$3
@@ -22,7 +22,7 @@ EOF
 }
 
 run_create_PP_scripts_on_remote_machine() {
-    local remote_host="omega"   
+    local remote_host="omega"
     local file_name_memory_sum=$1
     local file_name_memory_process=$2
     local number_of_operations=$3
@@ -37,7 +37,7 @@ EOF
 }
 
 run_create_auction_scripts_on_remote_machine() {
-    local remote_host="omega"   
+    local remote_host="omega"
     local file_name_memory_sum=$1
     local file_name_memory_process=$2
     local number_of_operations=$3
@@ -47,12 +47,12 @@ run_create_auction_scripts_on_remote_machine() {
     ssh "$remote_user@$remote_host" << EOF
         cd "\$HOME/energies/project/${experiment_name}/performance_scripts_remote/"
         source bin/activate
-        python3 create_auction_performance.py "createAuction/${file_name_memory_sum}_${remote_host}" "createAuction/${file_name_memory_process}_${remote_host}" ${number_of_operations} 
+        python3 create_auction_performance.py "createAuction/${file_name_memory_sum}_${remote_host}" "createAuction/${file_name_memory_process}_${remote_host}" ${number_of_operations}
 EOF
 }
 
 run_create_bid_scripts_on_remote_machine() {
-    local remote_host="omega"   
+    local remote_host="omega"
     local file_name_memory_sum=$1
     local file_name_memory_process=$2
     local number_of_operations=$3
@@ -67,7 +67,7 @@ EOF
 }
 
 run_issue_cache_to_producer_producer() {
-    local remote_host="omega"   
+    local remote_host="omega"
     remote_user="nebojsa"
 
     echo "SSH connection to remote host: " $remote_host
@@ -77,14 +77,14 @@ run_issue_cache_to_producer_producer() {
 EOF
 }
 
-# Create list which will conteaind all 
+# Create list which will conteaind all
 tries=()
 for (( i = 1; i <= repetition_number; i++ )); do
     # Add the incremented number to the array
     tries+=("$i")
 done
 
-./run-nodes-on-remote-servers.sh "auto-exp-0"
+# ./run-nodes-on-remote-servers.sh "${experiment_name}"
 
 #################################### Crete power promise tests
 
@@ -92,10 +92,10 @@ done
 # test_numbers=(1 10 100)
 
 # for number_of_try in "${tries[@]}"
-# do   
+# do
 #     file_name_memory_base="memory_${experiment_name}_try${number_of_try}_transactions"
 #     file_name_process_base="process_${experiment_name}_try${number_of_try}_transactions"
-#     save_folder="createPP/"  
+#     save_folder="createPP/"
 
 #     run_issue_cache_to_producer_producer
 #     sleep 10s
@@ -107,63 +107,63 @@ done
 #         run_create_PP_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
 #         run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${save_folder}"
 #     done
-    
+
 #     # Restart network before next bach of tests
-#     ./stop-nodes-on-remote-servers.sh "auto-exp-0"
-#     ./run-nodes-on-remote-servers.sh auto-exp-0
+#     ./stop-nodes-on-remote-servers.sh "${experiment_name}"
+#     ./run-nodes-on-remote-servers.sh "${experiment_name}"
 # done
 
 #################################### Crete auction tests
 
 
-test_numbers=(1 10 100)
-# test_numbers=(1)
-
-for number_of_try in "${tries[@]}"
-do   
-    file_name_memory_base="memory_${experiment_name}_try${number_of_try}_transactions"
-    file_name_process_base="process_${experiment_name}_try${number_of_try}_transactions"
-    save_folder="createAuction/"
-    run_issue_cache_to_producer_producer
-    sleep 10s
-    # Run create Auction tests
-    for number_of_tests in "${test_numbers[@]}"
-    do
-        echo "RUNIGN TESTS"
-        file_name_memory="${file_name_memory_base}_creteAuction_${number_of_tests}"
-        file_name_process="${file_name_process_base}_creteAuction_${number_of_tests}"
-        run_create_auction_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
-        run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${save_folder}"
-    done
-    
-    # Restart network before next bach of tests
-    ./stop-nodes-on-remote-servers.sh "auto-exp-0"
-    ./run-nodes-on-remote-servers.sh auto-exp-0
-done
-
-#################################### Crete Bid tests
-
 # test_numbers=(1 10 100)
 # # test_numbers=(1)
 
 # for number_of_try in "${tries[@]}"
-# do   
+# do
 #     file_name_memory_base="memory_${experiment_name}_try${number_of_try}_transactions"
 #     file_name_process_base="process_${experiment_name}_try${number_of_try}_transactions"
-#     save_folder="createBid/"
+#     save_folder="createAuction/"
 #     run_issue_cache_to_producer_producer
 #     sleep 10s
 #     # Run create Auction tests
 #     for number_of_tests in "${test_numbers[@]}"
 #     do
 #         echo "RUNIGN TESTS"
-#         file_name_memory="${file_name_memory_base}_creteBid_${number_of_tests}"
-#         file_name_process="${file_name_process_base}_creteBid_${number_of_tests}"
-#         run_create_bid_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
+#         file_name_memory="${file_name_memory_base}_creteAuction_${number_of_tests}"
+#         file_name_process="${file_name_process_base}_creteAuction_${number_of_tests}"
+#         run_create_auction_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
 #         run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${save_folder}"
 #     done
-    
+
 #     # Restart network before next bach of tests
-#     ./stop-nodes-on-remote-servers.sh "auto-exp-0"
-#     ./run-nodes-on-remote-servers.sh auto-exp-0
+#     ./stop-nodes-on-remote-servers.sh "${experiment_name}"
+#     ./run-nodes-on-remote-servers.sh "${experiment_name}"
 # done
+
+#################################### Crete Bid tests
+
+test_numbers=(1 10 100)
+# test_numbers=(1)
+
+for number_of_try in "${tries[@]}"
+do
+    file_name_memory_base="memory_${experiment_name}_try${number_of_try}_transactions"
+    file_name_process_base="process_${experiment_name}_try${number_of_try}_transactions"
+    save_folder="createBid/"
+    run_issue_cache_to_producer_producer
+    sleep 10s
+    # Run create Auction tests
+    for number_of_tests in "${test_numbers[@]}"
+    do
+        echo "RUNIGN TESTS"
+        file_name_memory="${file_name_memory_base}_creteBid_${number_of_tests}"
+        file_name_process="${file_name_process_base}_creteBid_${number_of_tests}"
+        run_create_bid_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${number_of_tests}"
+        run_non_exec_scripts_on_remote_machine "${file_name_memory}" "${file_name_process}" "${save_folder}"
+    done
+
+    # Restart network before next bach of tests
+    ./stop-nodes-on-remote-servers.sh "${experiment_name}"
+    ./run-nodes-on-remote-servers.sh "${experiment_name}"
+done

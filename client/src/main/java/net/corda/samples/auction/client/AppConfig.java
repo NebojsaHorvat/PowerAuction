@@ -71,6 +71,36 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${customer7.host}")
     private String customer7HostAndPort;
 
+    @Value("${producer3.host}")
+    private String producer3HostAndPort;
+
+    @Value("${producer4.host}")
+    private String producer4HostAndPort;
+
+    @Value("${producer5.host}")
+    private String producer5HostAndPort;
+
+    @Value("${prosumer6.host}")
+    private String prosumer6HostAndPort;
+
+    @Value("${prosumer7.host}")
+    private String prosumer7HostAndPort;
+
+    @Value("${prosumer8.host}")
+    private String prosumer8HostAndPort;
+
+    @Value("${customer8.host}")
+    private String customer8HostAndPort;
+
+    @Value("${customer9.host}")
+    private String customer9HostAndPort;
+
+    @Value("${customer10.host}")
+    private String customer10HostAndPort;
+
+    @Value("${customer11.host}")
+    private String customer11HostAndPort;
+
     @Value("${verificationAgency.host}")
     private String verificationAgencyHostAndPort;
 
@@ -192,6 +222,66 @@ public class AppConfig implements WebMvcConfigurer {
     public CordaRPCOps customer7Proxy() {
         CordaRPCClient customer7Client = new CordaRPCClient(NetworkHostAndPort.parse(customer7HostAndPort));
         return customer7Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps producer3Proxy() {
+        CordaRPCClient producer3Client = new CordaRPCClient(NetworkHostAndPort.parse(producer3HostAndPort));
+        return producer3Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps producer4Proxy() {
+        CordaRPCClient producer4Client = new CordaRPCClient(NetworkHostAndPort.parse(producer4HostAndPort));
+        return producer4Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps producer5Proxy() {
+        CordaRPCClient producer5Client = new CordaRPCClient(NetworkHostAndPort.parse(producer5HostAndPort));
+        return producer5Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps prosumer6Proxy() {
+        CordaRPCClient prosumer6Client = new CordaRPCClient(NetworkHostAndPort.parse(prosumer6HostAndPort));
+        return prosumer6Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps prosumer7Proxy() {
+        CordaRPCClient prosumer7Client = new CordaRPCClient(NetworkHostAndPort.parse(prosumer7HostAndPort));
+        return prosumer7Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps prosumer8Proxy() {
+        CordaRPCClient prosumer8Client = new CordaRPCClient(NetworkHostAndPort.parse(prosumer8HostAndPort));
+        return prosumer8Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps customer8Proxy() {
+        CordaRPCClient customer8Client = new CordaRPCClient(NetworkHostAndPort.parse(customer8HostAndPort));
+        return customer8Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps customer9Proxy() {
+        CordaRPCClient customer9Client = new CordaRPCClient(NetworkHostAndPort.parse(customer9HostAndPort));
+        return customer9Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps customer10Proxy() {
+        CordaRPCClient customer10Client = new CordaRPCClient(NetworkHostAndPort.parse(customer10HostAndPort));
+        return customer10Client.start("user1", "test").getProxy();
+    }
+
+    @Bean(destroyMethod = "")
+    public CordaRPCOps customer11Proxy() {
+        CordaRPCClient customer11Client = new CordaRPCClient(NetworkHostAndPort.parse(customer11HostAndPort));
+        return customer11Client.start("user1", "test").getProxy();
     }
 
     @Bean(destroyMethod = "")

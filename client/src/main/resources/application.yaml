@@ -19,6 +19,12 @@ producer1:
 customer1:
   host: 192.168.88.250:10024
 
+producer2:
+  host: 192.168.88.252:10027
+
+customer2:
+  host: 192.168.88.249:10030
+
 verificationAgency:
   host: 192.168.88.251:10093
 

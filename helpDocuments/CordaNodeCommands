@@ -2,9 +2,9 @@ Docker image build and push:
 # izmeni se client code
 ./gradlew buildAuctionClient
 cd client
-docker build --build-arg JAR_FILE=build/libs/*.jar -t nhtacc/corda-energy-proxy:auto-exp-e-1 .
-docker tag nhtacc/corda-energy-proxy:auto-exp-e-1 nhtacc/corda-energy-proxy:auto-exp-e-1
-docker push nhtacc/corda-energy-proxy:auto-exp-e-1
+docker build --build-arg JAR_FILE=build/libs/*.jar -t nhtacc/corda-energy-proxy:auto-exp-e-2 .
+docker tag nhtacc/corda-energy-proxy:auto-exp-e-2 nhtacc/corda-energy-proxy:auto-exp-e-2
+docker push nhtacc/corda-energy-proxy:auto-exp-e-2
 
 Copy data from remote host to local machine:
 scp -r nebojsa@omega:/home/nebojsa/energies/project/auto-exp-2/performance_scripts_remote/data/* .

@@ -84,7 +84,7 @@ for (( i = 1; i <= repetition_number; i++ )); do
     tries+=("$i")
 done
 
-# ./run-nodes-on-remote-servers.sh "${experiment_name}"
+./run-nodes-on-remote-servers.sh "${experiment_name}"
 
 #################################### Crete power promise tests
 
@@ -167,3 +167,5 @@ do
     ./stop-nodes-on-remote-servers.sh "${experiment_name}"
     ./run-nodes-on-remote-servers.sh "${experiment_name}"
 done
+
+./stop-nodes-on-remote-servers.sh "${experiment_name}"

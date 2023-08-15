@@ -84,9 +84,10 @@ public class Controller {
             String title = powerForm.getPowerSuppliedInKW()*powerForm.getPowerSupplyDurationInMin()/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             double isRenewableChances = Math.random();
-            String productionManner = isRenewableChances < 0.5 ? "solar" : "thermal";
+            // String productionManner = isRenewableChances < 0.5 ? "solar" : "thermal";
+            String productionManner = "solar";
             // TODO locked funds su uvek 10
-            System.out.println("Production manner is: " + productionManner);
+            // System.out.println("Production manner is: " + productionManner);
             activeParty.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",

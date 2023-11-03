@@ -91,81 +91,6 @@ dependencies {
 
 ////////////////////////////////////////////// local ->
 
-// task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
-//     nodeDefaults {
-//         projectCordapp {
-//             deploy = false
-//         }
-//         cordapp("$corda_release_group:corda-finance-contracts:$corda_release_version")
-//         cordapp("$corda_release_group:corda-finance-workflows:$corda_release_version")
-//         cordapp project(':contracts')
-//         cordapp project(':workflows')
-// 	runSchemaMigration = true
-//     }
-//     node {
-//         name "O=Notary,L=London,C=GB"
-//         notary = [validating : false]
-//         p2pPort 10002
-//         rpcSettings {
-//             address("localhost:10003")
-//             adminAddress("localhost:10043")
-//         }
-//         cordapps.clear()
-//     }
-//     node {
-//         name "O=PowerCompany,L=Paris,C=FR"
-//         p2pPort 10005
-//         rpcSettings {
-//             address("localhost:10006")
-//             adminAddress("localhost:10046")
-//         }
-//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-//         extraConfig = ['h2Settings.address' : 'localhost:20041']
-//     }
-//     node {
-//         name "O=Prosumer,L=New York,C=US"
-//         p2pPort 10008
-//         rpcSettings {
-//             address("localhost:10009")
-//             adminAddress("localhost:10049")
-//         }
-//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-//         extraConfig = ['h2Settings.address' : 'localhost:20042']
-//     }
-//     node {
-//         name "O=Customer,L=Sydney,C=AU"
-//         p2pPort 10011
-//         rpcSettings {
-//             address("localhost:10012")
-//             adminAddress("localhost:10052")
-//         }
-//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-//         extraConfig = ['h2Settings.address' : 'localhost:20043']
-//     }
-//     node {
-//         name "O=Producer,L=Paris,C=FR"
-//         p2pPort 10014
-//         rpcSettings {
-//             address("localhost:10015")
-//             adminAddress("localhost:10055")
-//         }
-//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-//         extraConfig = ['h2Settings.address' : 'localhost:20044']
-//     }
-//     node {
-//         name "O=GridAuthority,L=Paris,C=FR"
-//         p2pPort 10017
-//         rpcSettings {
-//             address("localhost:10018")
-//             adminAddress("localhost:10058")
-//         }
-//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-//         extraConfig = ['h2Settings.address' : 'localhost:20047']
-//     }
-// }
-
-////////////////////////////////////////////// remote ->
-
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     nodeDefaults {
         projectCordapp {
@@ -179,81 +104,156 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     }
     node {
         name "O=Notary,L=London,C=GB"
-        notary = [validating : false]   
+        notary = [validating : false]
         p2pPort 10002
-        p2pAddress "192.168.88.252:10002"
         rpcSettings {
-            address("0.0.0.0:10003")
-            adminAddress("0.0.0.0:10043")
-        }
-        projectCordapp {
-            deploy = false
+            address("localhost:10003")
+            adminAddress("localhost:10043")
         }
         cordapps.clear()
-        sshdPort 2222
     }
-
     node {
         name "O=PowerCompany,L=Paris,C=FR"
         p2pPort 10005
-        p2pAddress "192.168.88.252:10005"
         rpcSettings {
-            address("0.0.0.0:10006")
-            adminAddress("0.0.0.0:10046")
+            address("localhost:10006")
+            adminAddress("localhost:10046")
         }
         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-        // extraConfig = ['h2Settings.address' : '0.0.0.0:20041']
-        sshdPort 2224
+        extraConfig = ['h2Settings.address' : 'localhost:20041']
     }
     node {
         name "O=Prosumer,L=New York,C=US"
         p2pPort 10008
-        p2pAddress "192.168.88.251:10008"
         rpcSettings {
-            address("0.0.0.0:10009")
-            adminAddress("0.0.0.0:10049")
+            address("localhost:10009")
+            adminAddress("localhost:10049")
         }
         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-        // extraConfig = ['h2Settings.address' : '0.0.0.0:20042']
-        sshdPort 2225
+        extraConfig = ['h2Settings.address' : 'localhost:20042']
     }
     node {
         name "O=Customer,L=Sydney,C=AU"
         p2pPort 10011
-        p2pAddress "192.168.88.249:10011"
         rpcSettings {
-            address("0.0.0.0:10012")
-            adminAddress("0.0.0.0:10052")
+            address("localhost:10012")
+            adminAddress("localhost:10052")
         }
         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-        // extraConfig = ['h2Settings.address' : '0.0.0.0:20043']
-        sshdPort 2226
+        extraConfig = ['h2Settings.address' : 'localhost:20043']
     }
     node {
         name "O=Producer,L=Paris,C=FR"
         p2pPort 10014
-        p2pAddress "192.168.88.249:10014"
         rpcSettings {
-            address("0.0.0.0:10015")
-            adminAddress("0.0.0.0:10055")
+            address("localhost:10015")
+            adminAddress("localhost:10055")
         }
         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-        // extraConfig = ['h2Settings.address' : '0.0.0.0:20044']
-        sshdPort 2227
+        extraConfig = ['h2Settings.address' : 'localhost:20044']
     }
     node {
         name "O=GridAuthority,L=Paris,C=FR"
         p2pPort 10017
-        p2pAddress "192.168.88.250:10017"
         rpcSettings {
-            address("0.0.0.0:10018")
-            adminAddress("0.0.0.0:10058")
+            address("localhost:10018")
+            adminAddress("localhost:10058")
         }
         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-        // extraConfig = ['h2Settings.address' : '0.0.0.0:20047']
-        sshdPort 2228
+        extraConfig = ['h2Settings.address' : 'localhost:20047']
     }
 }
+
+////////////////////////////////////////////// remote ->
+
+// task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
+//     nodeDefaults {
+//         projectCordapp {
+//             deploy = false
+//         }
+//         cordapp("$corda_release_group:corda-finance-contracts:$corda_release_version")
+//         cordapp("$corda_release_group:corda-finance-workflows:$corda_release_version")
+//         cordapp project(':contracts')
+//         cordapp project(':workflows')
+// 	runSchemaMigration = true
+//     }
+//     node {
+//         name "O=Notary,L=London,C=GB"
+//         notary = [validating : false]   
+//         p2pPort 10002
+//         p2pAddress "192.168.88.252:10002"
+//         rpcSettings {
+//             address("0.0.0.0:10003")
+//             adminAddress("0.0.0.0:10043")
+//         }
+//         projectCordapp {
+//             deploy = false
+//         }
+//         cordapps.clear()
+//         sshdPort 2222
+//     }
+
+//     node {
+//         name "O=PowerCompany,L=Paris,C=FR"
+//         p2pPort 10005
+//         p2pAddress "192.168.88.252:10005"
+//         rpcSettings {
+//             address("0.0.0.0:10006")
+//             adminAddress("0.0.0.0:10046")
+//         }
+//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+//         // extraConfig = ['h2Settings.address' : '0.0.0.0:20041']
+//         sshdPort 2224
+//     }
+//     node {
+//         name "O=Prosumer,L=New York,C=US"
+//         p2pPort 10008
+//         p2pAddress "192.168.88.251:10008"
+//         rpcSettings {
+//             address("0.0.0.0:10009")
+//             adminAddress("0.0.0.0:10049")
+//         }
+//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+//         // extraConfig = ['h2Settings.address' : '0.0.0.0:20042']
+//         sshdPort 2225
+//     }
+//     node {
+//         name "O=Customer,L=Sydney,C=AU"
+//         p2pPort 10011
+//         p2pAddress "192.168.88.249:10011"
+//         rpcSettings {
+//             address("0.0.0.0:10012")
+//             adminAddress("0.0.0.0:10052")
+//         }
+//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+//         // extraConfig = ['h2Settings.address' : '0.0.0.0:20043']
+//         sshdPort 2226
+//     }
+//     node {
+//         name "O=Producer,L=Paris,C=FR"
+//         p2pPort 10014
+//         p2pAddress "192.168.88.249:10014"
+//         rpcSettings {
+//             address("0.0.0.0:10015")
+//             adminAddress("0.0.0.0:10055")
+//         }
+//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+//         // extraConfig = ['h2Settings.address' : '0.0.0.0:20044']
+//         sshdPort 2227
+//     }
+//     node {
+//         name "O=GridAuthority,L=Paris,C=FR"
+//         p2pPort 10017
+//         p2pAddress "192.168.88.250:10017"
+//         rpcSettings {
+//             address("0.0.0.0:10018")
+//             adminAddress("0.0.0.0:10058")
+//         }
+//         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+//         // extraConfig = ['h2Settings.address' : '0.0.0.0:20047']
+//         sshdPort 2228
+//     }
+// }
 
 task installQuasar(type: Copy) {
     destinationDir rootProject.file("lib")

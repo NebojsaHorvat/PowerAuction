@@ -116,3 +116,7 @@ curl --noproxy '*' --header "Content-Type: application/json" \
   --request POST \
   --data '{"amount": "22", "auctionId": "6db39bf1-9a8c-4e4b-b4bd-01b50cd3f388"}' \
   http://localhost:8085/api/auction/placeBid
+
+
+curl --noproxy '*' --request GET http://localhost:8085/api/auction/list
+curl --noproxy '*' --request GET http://localhost:8085/api/auction/history

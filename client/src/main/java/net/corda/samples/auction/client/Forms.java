@@ -123,6 +123,15 @@ public class Forms {
         public void setPowerSupplyDurationInMin(Double powerSupplyDurationInMin) {
             this.powerSupplyDurationInMin = powerSupplyDurationInMin;
         }
+
+        @Override
+        public String toString() {
+            return "PowerForm{" +
+                    "deliveryTime='" + deliveryTime + '\'' +
+                    ", powerSuppliedInKW=" + powerSuppliedInKW +
+                    ", powerSupplyDurationInMin=" + powerSupplyDurationInMin +
+                    '}';
+        }
     }
 
 }

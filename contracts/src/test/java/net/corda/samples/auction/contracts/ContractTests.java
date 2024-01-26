@@ -21,20 +21,20 @@ public class ContractTests {
     public void testVerifyBid() {
         AuctionState input = new AuctionState(null, null, Amount.parseCurrency("100 USD"),
                 Amount.parseCurrency("200 USD"), null, null, null, true, null,
-                null, null);
+                null, null, bidTime);
 
 
         AuctionState input_inactive = new AuctionState(null, null, Amount.parseCurrency("100 USD"),
                 Amount.parseCurrency("200 USD"), null, null, null, false, null,
-                null, null);
+                null, null, bidTime);
 
         AuctionState output = new AuctionState(null, null, Amount.parseCurrency("100 USD"),
                 Amount.parseCurrency("220 USD"), null, null, null, true, null,
-                null, null);
+                null, null, bidTime);
 
         AuctionState output_lt_basePrice = new AuctionState(null, null, Amount.parseCurrency("100 USD"),
                 Amount.parseCurrency("80 USD"), null, null, null, true, null,
-                null, null);
+                null, null, bidTime);
 
 
         // Should fail auction is inactive
@@ -58,7 +58,7 @@ public class ContractTests {
 
         AuctionState output_lt_highestBid = new AuctionState(null, null, Amount.parseCurrency("100 USD"),
                 Amount.parseCurrency("180 USD"), null, null, null, true, null,
-                null, null);
+                null, null, bidTime);
 
         // Should fail bid price is less than previous highest bid
         transaction(ledgerServices, tx -> {
@@ -71,7 +71,7 @@ public class ContractTests {
 
         AuctionState output_eq_highestBid = new AuctionState(null, null, Amount.parseCurrency("100 USD"),
                 Amount.parseCurrency("200 USD"), null, null, null, true, null,
-                null, null);
+                null, null, bidTime);
 
         // Should fail bid price is equal to previous highest bid
         transaction(ledgerServices, tx -> {

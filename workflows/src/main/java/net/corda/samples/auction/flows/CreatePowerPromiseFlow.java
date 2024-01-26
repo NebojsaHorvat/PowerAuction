@@ -55,6 +55,7 @@ public class CreatePowerPromiseFlow {
          */
         public CreatePowerPromiseFlowInitiator(String title, String description, String imageURL, LocalDateTime expires,
                                Double powerSuppliedInKW, Double powerSupplyDurationInMin, Double lockedFundsDouble) {
+            System.out.println("Constructor power promise flow");
             this.title = title;
             this.description = description;
             this.imageURL = imageURL;
@@ -74,6 +75,7 @@ public class CreatePowerPromiseFlow {
              *
              *  * - For production you always want to use Method 2 as it guarantees the expected notary is returned.
              */
+            getLogger().warn("JJ WARNING: Customer - Power promise create power promise flow - call");
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
             final Party gridAuthority = getServiceHub().getNetworkMapCache().getNodeByLegalName(CordaX500Name.parse("O=GridAuthority,L=Paris,C=FR")).getLegalIdentities().get(0);
 
@@ -99,6 +101,7 @@ public class CreatePowerPromiseFlow {
                     getOurIdentity(), getOurIdentity(), expires.atZone(ZoneId.systemDefault()).toInstant(), false, false,
                     powerSuppliedInKW, powerSupplyDurationInMin, gridAuthority, lockedFunds );
 
+            getLogger().warn("JJ - Power promise: " + output);
             // Build the transaction, add the output states and the command to the transaction.
             transactionBuilder.addOutputState(output)
                     .addCommand(new PowerPromiseContract.Commands.CreatePowerPromise(),

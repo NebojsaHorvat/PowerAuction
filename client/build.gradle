@@ -17,11 +17,17 @@ dependencies {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
     }
 
+
     compile "org.springframework.boot:spring-boot-devtools:$spring_boot_version"
 
     compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"
     compile "org.apache.logging.log4j:log4j-web:${log4j_version}"
     compile "org.slf4j:jul-to-slf4j:$slf4j_version"
+//websocket
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+    compile("org.webjars:webjars-locator")
+    compile("org.webjars:sockjs-client:1.0.2")
+    compile("org.webjars:stomp-websocket:2.3.3")
 }
 
 springBoot {

@@ -6,7 +6,6 @@ import net.corda.core.contracts.Amount;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
-import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
@@ -20,8 +19,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 /**
  * This flow is used to create a auction for an asset.
@@ -84,7 +81,7 @@ public class CreateAuctionFlow {
                     new LinearPointer<>(new UniqueIdentifier(null, auctionItem), LinearState.class),
                     UUID.randomUUID(), basePrice, null, null,
                     bidDeadLine.atZone(ZoneId.systemDefault()).toInstant(), null, true, auctioneer,
-                    bidders, null);
+                    bidders, null, null);
 
             // Build the transaction
             TransactionBuilder builder = new TransactionBuilder(notary)

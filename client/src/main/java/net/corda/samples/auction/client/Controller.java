@@ -106,6 +106,7 @@ public class Controller {
 
     @PostMapping("asset/create")
     public APIResponse<Void> createPowerPromise(@RequestBody Forms.PowerForm powerForm){
+        System.out.println("Create power promise");
         try{
             if(activeParty.nodeInfo().getLegalIdentities().get(0).getName().toString().toLowerCase().contains("customer")){
                 return APIResponse.error("Customers can not create Power Promise!");
@@ -115,10 +116,15 @@ public class Controller {
             String title = powerForm.getPowerSuppliedInKW()*powerForm.getPowerSupplyDurationInMin()/60 + "KW/h on " +
                     DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(expires);
             // TODO locked funds su uvek 10
+            System.out.println("Before calling create power promise flow");
+            System.out.println(powerForm);
+//            dodati proveru da li korisnik ima novca za kreiranje promis-a
             activeParty.startFlowDynamic(CreatePowerPromiseFlow.CreatePowerPromiseFlowInitiator.class,
                     title,
                     "",
                     "img/power.png",expires,powerForm.getPowerSuppliedInKW(),powerForm.getPowerSupplyDurationInMin(),10.0);
+
+            System.out.println("After calling create power promise flow");
 
             return APIResponse.success();
         }catch(Exception e){
@@ -169,10 +175,15 @@ public class Controller {
                 return APIResponse.error("Producer can not place bid in order to buy Power Promise!");
             }
 
-            activeParty.startFlowDynamic(BidFlow.BidInitiator.class,
+            System.out.println(activeParty.startFlowDynamic(BidFlow.BidInitiator.class,
                     Amount.parseCurrency(bidForm.getAmount() + " USD"),
                     UUID.fromString(bidForm.getAuctionId()))
-                    .getReturnValue().get();
+                    .getReturnValue().get());
+
+
+            // ovde bih trebala da pokrenem socket koji ce da obavesti tracker app da je bidovano i da sacuva bid u bazu
+            // moram imati kako izgleda bit, tj koliko je bidovano, koja je aukcija, ko je bidovao i vreme
+
             return APIResponse.success();
         }catch (ExecutionException e){
             if(e.getCause() != null && e.getCause().getClass().equals(TransactionVerificationException.ContractRejection.class)){

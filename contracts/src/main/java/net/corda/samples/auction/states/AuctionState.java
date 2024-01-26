@@ -32,23 +32,24 @@ public class AuctionState implements SchedulableState {
     private final List<Party> bidders;
     private final Party winner;
 
+    private final Instant bidTime;
     /**
-     *
-     * @param auctionItem is a pointer to the item in auction
-     * @param auctionId is a unique id of the auction
-     * @param basePrice of the item on auction
-     * @param highestBid made on the auction at any point in time
+     * @param auctionItem   is a pointer to the item in auction
+     * @param auctionId     is a unique id of the auction
+     * @param basePrice     of the item on auction
+     * @param highestBid    made on the auction at any point in time
      * @param highestBidder is the party who made the highest bid at any point in time
-     * @param bidEndTime is the deadline for the auction
-     * @param winningBid is the highest bid made till deadline
-     * @param active defines if the auction is still accepting bids/ deadline has passed
-     * @param auctioneer is the party who started the auction
-     * @param bidders are all the parties who can bid on the auction
-     * @param winner is the party who made the highest bid and won the bidding
+     * @param bidEndTime    is the deadline for the auction
+     * @param winningBid    is the highest bid made till deadline
+     * @param active        defines if the auction is still accepting bids/ deadline has passed
+     * @param auctioneer    is the party who started the auction
+     * @param bidders       are all the parties who can bid on the auction
+     * @param winner        is the party who made the highest bid and won the bidding
+     * @param bidTime       is the time when bid is created
      */
     public AuctionState(LinearPointer<LinearState> auctionItem, UUID auctionId, Amount<Currency> basePrice, Amount<Currency> highestBid,
                         Party highestBidder, Instant bidEndTime, Amount<Currency> winningBid, Boolean active, Party auctioneer,
-                        List<Party> bidders, Party winner) {
+                        List<Party> bidders, Party winner, Instant bidTime) {
         this.auctionItem = auctionItem;
         this.auctionId = auctionId;
         this.basePrice = basePrice;
@@ -60,6 +61,7 @@ public class AuctionState implements SchedulableState {
         this.auctioneer = auctioneer;
         this.bidders = bidders;
         this.winner = winner;
+        this.bidTime = bidTime;
     }
 
     /**
@@ -135,5 +137,7 @@ public class AuctionState implements SchedulableState {
         return active;
     }
 
-    
+    public Instant getBidTime() {
+        return bidTime;
+    }
 }

@@ -56,7 +56,7 @@ public class EndAuctionFlow {
                 AuctionState outputState = new AuctionState(inputState.getAuctionItem(), inputState.getAuctionId(),
                         inputState.getBasePrice(), inputState.getHighestBid(), inputState.getHighestBidder(),
                         inputState.getBidEndTime(), inputState.getHighestBid(), false, inputState.getAuctioneer(),
-                        inputState.getBidders(), inputState.getHighestBidder());
+                        inputState.getBidders(), inputState.getHighestBidder(), inputState.getBidTime());
 
                 // Build the transaction.
                 TransactionBuilder transactionBuilder = new TransactionBuilder(notary)

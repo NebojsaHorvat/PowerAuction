@@ -62,7 +62,7 @@ public class BidFlow {
             //Create the output states
             AuctionState output = new AuctionState(input.getAuctionItem(), input.getAuctionId(), input.getBasePrice(),
                     bidAmount, getOurIdentity(), input.getBidEndTime(), null, true,
-                    input.getAuctioneer(), input.getBidders(), null);
+                    input.getAuctioneer(), input.getBidders(), null, new Date().toInstant());
 
             // Build the transaction. On successful completion of the transaction the current auction states is consumed
             // and a new auction states is create as an output containg tge bid details.

@@ -12,7 +12,6 @@ import net.corda.samples.auction.states.AuctionState;
 import net.corda.samples.auction.states.PowerPromise;
 
 public class DTO {
-    
      public static class AuctionDTO implements Serializable{
         private UUID auctionId;
         private Amount<Currency> basePrice;
@@ -170,5 +169,9 @@ public class DTO {
         public void setOwner(AbstractParty owner) {
             this.owner = owner;
         }
+    }
+
+    public static class BidDTO{
+
     }
 }
